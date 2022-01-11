@@ -1,9 +1,9 @@
 # AvantGarde #
 ## Avalonia XAML Previewer ##
 
-This is currently a placeholder for AvantGarde -- an open source Avalonia (.NET) XAML previewer application I'm
+This is currently a placeholder for **AvantGarde** -- an open source Avalonia (.NET) XAML previewer application I'm
 currently developing. This previewer, unlike others, is IDE independent. I'm primarily targeting LINUX, as currently
-there is no Avalonia previewer available as yet, but it will be cross-platform and support Windows.
+there is no Avalonia previewer available as yet. However, AvantGarde will be cross-platform and support Windows.
 
 Below, a development screenshot:
 
