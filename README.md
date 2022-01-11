@@ -1,4 +1,4 @@
-# AvanteGrade #
+# AvantGarde #
 ## Avalonia XAML Previewer ##
 
 This is currently a placeholder for AvantGarde -- an open source Avalonia (.NET) XAML previewer application I'm
