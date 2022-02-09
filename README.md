@@ -1,4 +1,4 @@
-<img src="Banner.png" style="margin-left:auto;margin-right:0;width:50%;max-width:1200px;margin-bottom:4em;"/>
+<img src="Banner.png" style="margin-left:auto;margin-right:0;display:block;width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
 Avant Garde is an AXAML previewer for the C# Avalonia Framework.
