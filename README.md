@@ -45,9 +45,9 @@ Simply open a *.sln or *.csproj as you would in any IDE.
 By the default, only "*.axaml;*.xaml" and image files are shown in the Project Explorer as these are the primary
 files you will want to see in Avant Garde (the rest of your project will be hidden but see below).
 
-Avant Garde maintains its own "settings" pertaining to each solution you open with the application, along with the
-respective projects. Normally, you will not need to change these. If you do make changes, these changes will be saved
-between launches so that you need only make them once.
+Avant Garde maintains its own "settings" pertaining to each solution you open with the application. Normally, you will
+not need to change these. If you do make changes, these changes will be saved between launches so that you need only
+make them once.
 
 **Important.** For example, in order to generate previews, Avant Garde must find your application assembly which
 must first be built. Normally, if your assembly is in the usual place, i.e. under "project/bin/Debug...", Avant Garde
@@ -56,7 +56,7 @@ you will need to specify this location at the project level (below).
 
 ### Solution Settings ###
 Solution settings pertain on a per solution basis and are saved between launches of Avant Garde. They are specific
-to Avant Garde and changes do not modify any project file on disk (Avant Garde is a read-only wrt to your project).
+to Avant Garde and changes do not modify any project file on disk.
 
 Click "Edit -> Solution", or the "cog icon" in the toolbar.
 
