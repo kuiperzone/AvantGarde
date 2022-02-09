@@ -1,18 +1,32 @@
-# AvantGarde #
-## Avalonia XAML Previewer ##
-
-This is currently a placeholder for **AvantGarde** -- an open source Avalonia (.NET) XAML previewer application I'm
-currently developing. This previewer, unlike others, is IDE independent. I'm primarily targeting LINUX, as currently
-there is no Avalonia previewer available as yet. However, AvantGarde will be cross-platform and support Windows.
-
-Below, a development screenshot:
-
-<p style="text-align:center;background:gray;margin-bottom:4em;">
-    <img src="Screenshot-cropped-scaled.jpg" style="width:75%;max-width:800px;"/>
+<p style="text-align:left;background:gray;margin-bottom:4em;">
+    <img src="Banner.png" style="width:50%;max-width:1200px;"/>
 </p>
 
-Avalonia is WPF-like GUI framework for .NET, but unlike WPF, it is fully cross-platform.
+# Avant Garde #
+Avant Garde is an AXAML previewer for the C# Avalonia Framework.
 
-See: [Avalonia Github page](https://github.com/AvaloniaUI/Avalonia).
+NB. Currently in "alpha".
 
-KuiperZone January, 2022
+It has the following features:
+
+* **Avant Garde** is a standalone application, rather than an IDE extension. This means you can use in conjunction with
+any IDE, where it can be used in "Stay on Top" mode in any area of spare desktop space.
+
+* It provides a read-only view of your Avalonia project, watching for file changes. Previews are updated instantly the
+moment you save AXAML changes from your IDE.
+
+* It's built in **Project Explorer** can be conveniently closed so as to minimize the size the Avant Garde
+window while you focus on a particular form.
+
+* It is currently a read-only previewer, rather than a designer or editor. While it also able to browse image assets
+and text files, the generation of AXAML previews is the primary use case.
+
+Avant Garde requires the installation of the **Avalonia Nuget Package** in order to work because it utilizes the
+"preview host" which ships with Avalonia.
+
+Avant Garde is licensed under GPLv3. See license for details.
+
+
+## Additional Information ##
+Avant Garde was created by Andy Thomas at https://kuiper.zone
+
