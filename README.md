@@ -20,13 +20,60 @@ window while you focus on a particular form.
 and text files, the generation of AXAML previews is the primary use case.
 
 Avant Garde requires the installation of the **Avalonia Nuget Package** in order to work because it utilizes the
-"preview host" which ships with Avalonia.
+"preview host" which ships with Avalonia. It supports only .NET projects (not .NET Framework), and Avalonia
+AXAML forms. It cannot be used to preview WPF XAML.
 
 Avant Garde is licensed under GPLv3. See license for details.
 
-## Screenshot ##
+## Screenshots ##
+Shown, below, Avant Garde in the "Fluent Light" theme with a preview of its "About" window. The display of grid
+highlighting and grid lines are optional.
 
 [![Avant Garde Screenshot](AvantGarde-screenshot-main.png)](AvantGarde-screenshot-main.png)
+
+Here, Avant Garde floating on top of the Visual Code IDE on Linux. This time, the application is shown in the
+Fluent Dark theme and its Project Explorer has been closed.
+
+[![Avant Garde Screenshot](AvantGarde-screenshot-ide.png)](AvantGarde-screenshot-ide.png)
+
+## Using Avant Garde ##
+
+Simply open a *.sln or *.csproj as you would in any IDE.
+
+By the default, only "*.axaml;*.xaml" and image files are shown in the Project Explorer as these are the primary
+files you will want to see in Avant Garde (the rest of your project will be hidden but see below).
+
+Avant Garde maintains its own "settings" pertaining to each solution you open with the application, along with the
+respective projects. Normally, you will not need to change these. If you do make changes, these changes will be saved
+between launches so that you need only make them once.
+
+**Important.** For example, in order to generate previews, Avant Garde must find your application assembly which
+must first be built. Normally, if your assembly is in the usual place, i.e. under "project/bin/Debug...", Avant Garde
+will find it. If, however, if you are using variables or a "Directory.Build.props" file to set your output location,
+you will need to specify this location at the project level (below).
+
+### Solution Settings ###
+Solution settings pertain on a per solution basis and are saved between launches of Avant Garde. They are specific
+to Avant Garde and changes do not modify any project file on disk (Avant Garde is a read-only wrt to your project).
+
+Click "Edit -> Solution", or the "cog icon" in the toolbar.
+
+[![Avant Garde Screenshot](AvantGarde-screenshot-solution.png)](AvantGarde-screenshot-solution.png)
+
+For example, setting "Include File Pattern" to "*" will cause all project files to be shown in the Explorer.
+
+### Project Settings ###
+Project settings pertain to each project within a solution.
+
+Click "Edit -> Project", or the "cog icon" beside the project in the Explorer.
+
+[![Avant Garde Screenshot](AvantGarde-screenshot-solution.png)](AvantGarde-screenshot-solution.png)
+
+As described, if your target assembly output cannot be located on disk, this is the place to specify it, as shown above.
+
+Moreover, if your the is a class library, it will be necessary to specify a relavent application project
+before previews can be generated.
+
 
 ## Additional Information ##
 Avant Garde was created by Andy Thomas at https://kuiper.zone
