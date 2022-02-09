@@ -1,5 +1,5 @@
-<p style="text-align:center;margin-bottom:4em;">
-    <img src="Banner.png" style="width:50%;max-width:1200px;"/>
+<p style="text-align:right;margin-bottom:4em;">
+    <img src="Banner.png" style="width:50%;max-width:800px;"/>
 </p>
 
 # Avant Garde #
