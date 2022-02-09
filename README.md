@@ -7,17 +7,19 @@
 
 It has the following features:
 
-* Avant Garde is a standalone application, rather than an IDE extension. This means you can use in conjunction with
-any IDE where it can be used in "stay on top" mode in any area of spare desktop space.
+* Avant Garde is a standalone application, rather than an IDE extension. This means you can use it in conjunction with
+any IDE where it may be pinned to stay-on-top in any area of spare desktop space.
 
-* It provides a read-only view of your Avalonia project, watching for file changes. Previews are updated instantly the
-moment you save AXAML changes from your IDE.
+* It provides a read-only view of your Avalonia project, watching for file changes. It is currently a read-only
+previewer, rather than a designer or editor (it does not modify your project files). While it is also able to browse
+image assets and text encoded files, the generation of AXAML previews is the primary use case.
 
-* It's built in **Project Explorer** can be conveniently closed so as to minimize the size the Avant Garde
-window while you focus on a particular form.
+* Previews are updated instantly the moment you save AXAML changes from your IDE.
 
-* It is currently a read-only previewer, rather than a designer or editor. While it also able to browse image assets
-and text files, the generation of AXAML previews is the primary use case.
+* It's built-in **Project Explorer** can be conveniently closed to the side so as to minimize the window foot-print
+while you focus on a particular form.
+
+* It support mouse interaction with previews, and a range of other features.
 
 Avant Garde requires the installation of the **Avalonia Nuget Package** in order to work because it utilizes the
 "preview host" which ships with Avalonia. It supports only .NET projects (not .NET Framework), and Avalonia
@@ -71,7 +73,7 @@ Click "Edit -> Project", or the "cog icon" beside the project in the Explorer.
 
 As described, if your target assembly output cannot be located on disk, this is the place to specify it, as shown above.
 
-Moreover, if your the is a class library, it will be necessary to specify a relavent application project
+Moreover, if your project is a class library, it will be necessary to specify a relavent application project
 before previews can be generated.
 
 
