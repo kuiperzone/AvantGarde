@@ -1,14 +1,14 @@
 <img src="Banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
-Avant Garde is an AXAML previewer for the C# Avalonia Framework.
+**Avant Garde** is an AXAML previewer for the C# Avalonia Framework.
 
-NB. Currently in "alpha".
+**NB.** *Currently in "alpha".*
 
 It has the following features:
 
-* **Avant Garde** is a standalone application, rather than an IDE extension. This means you can use in conjunction with
-any IDE, where it can be used in "Stay on Top" mode in any area of spare desktop space.
+* Avant Garde is a standalone application, rather than an IDE extension. This means you can use in conjunction with
+any IDE where it can be used in "stay on top" mode in any area of spare desktop space.
 
 * It provides a read-only view of your Avalonia project, watching for file changes. Previews are updated instantly the
 moment you save AXAML changes from your IDE.
@@ -24,6 +24,9 @@ Avant Garde requires the installation of the **Avalonia Nuget Package** in order
 
 Avant Garde is licensed under GPLv3. See license for details.
 
+## Screenshot ##
+
+[![Avant Garde Screenshot](AvantGarde-screenshot-main.png)](AvantGarde-screenshot-main.png)
 
 ## Additional Information ##
 Avant Garde was created by Andy Thomas at https://kuiper.zone
