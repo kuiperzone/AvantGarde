@@ -67,7 +67,7 @@ Project settings pertain to each project within a solution.
 
 Click "Edit -> Project", or the "cog icon" beside the project in the Explorer.
 
-[![Avant Garde Screenshot](AvantGarde-screenshot-solution.png)](AvantGarde-screenshot-solution.png)
+[![Avant Garde Screenshot](AvantGarde-screenshot-project.png)](AvantGarde-screenshot-project.png)
 
 As described, if your target assembly output cannot be located on disk, this is the place to specify it, as shown above.
 
