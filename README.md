@@ -36,7 +36,7 @@ highlighting and grid lines are optional.
 Here, Avant Garde floating on top of the Visual Code IDE on Linux. This time, the application is shown in the
 Fluent Dark theme and its Project Explorer has been closed.
 
-[![Avant Garde Screenshot](Media/Github-creenshot-ide.png)](Media/Github-screenshot-ide.png)
+[![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
 
 ## Using Avant Garde ##
 
