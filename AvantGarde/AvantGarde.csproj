@@ -9,6 +9,11 @@
 		<None Remove=".gitignore"/>
 		<AvaloniaResource Include="Assets\**"/>
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="cp &quot;$(SolutionDir)/Source/LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
+	</Target>
+
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="0.10.12"/>
 		<PackageReference Include="Avalonia.Desktop" Version="0.10.12"/>

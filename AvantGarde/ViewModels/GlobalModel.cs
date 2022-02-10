@@ -57,8 +57,7 @@ namespace AvantGarde.ViewModels
         /// <summary>
         /// Gets the application version.
         /// </summary>
-        public static string Version { get; } =
-            Assembly.GetAssembly(typeof(Program))?.GetName()?.Version?.ToString(3) ?? "Unknown";
+        public static string Version { get; } = GetVersion();
 
         /// <summary>
         /// Gets the Avalonia framework version.
@@ -217,27 +216,11 @@ namespace AvantGarde.ViewModels
 
         private static string GetVersion()
         {
-            try
-            {
-                var ea = Assembly.GetEntryAssembly();
-
-                if (ea != null)
-                {
-                    var ver = ea.GetName().Version;
-
-                    if (ver != null)
-                    {
-                        return ver.ToString();
-                    }
-
-                }
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-
-            return "Unknown";
+            string rslt = Assembly.GetAssembly(typeof(Program))?.GetName()?.Version?.ToString(3) ?? "Unknown";
+#if DEBUG
+            rslt += " (Debug)";
+#endif
+            return rslt;
         }
 
     }
