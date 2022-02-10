@@ -1,25 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ApplicationIcon>Assets/AvantGarde.ico</ApplicationIcon>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Remove=".gitignore"/>
-		<AvaloniaResource Include="Assets\**"/>
-	</ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>Assets/AvantGarde.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore"/>
+    <AvaloniaResource Include="Assets\**"/>
+  </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="cp &quot;$(ProjectDir)/../LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
-	</Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" Command="copy /Y &quot;$(ProjectDir)\..\LICENSE&quot; &quot;$(TargetDir)\LICENSE&quot;" />
+    <Exec Condition="'$(OS)' != 'Windows_NT'" Command="cp &quot;$(ProjectDir)/../LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
+  </Target>
 
-	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.12"/>
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.12"/>
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.12"/>
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12"/>
-		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12"/>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.12"/>
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.12"/>
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.12"/>
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12"/>
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12"/>
+  </ItemGroup>
 </Project>
