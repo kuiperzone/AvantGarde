@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        Width="500" Height="450"
+        MinWidth="500" MinHeight="450"
+        MaxWidth="500" MaxHeight="500"
+        x:Class="AvantGarde.Views.SolutionWindow"
+        CanResize="False"
+        Title="Solution"
+        WindowStartupLocation="CenterOwner">
+
+        <Grid RowDefinitions="Auto Auto * Auto"
+            Margin="16">
+
+            <Grid.Styles>
+                <Style Selector="TextBlock.mtb">
+                    <Setter Property="Margin" Value="0 24 0 6"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+
+            </Grid.Styles>
+
+            <Grid Grid.Row="0"
+                ColumnDefinitions="* 24 *"
+                RowDefinitions="Auto Auto Auto"
+                Margin="0">
+
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                    Classes="mtb"
+                    Text="File Search Depth"
+                />
+                <NumericUpDown Grid.Column="0" Grid.Row="1"
+                    Name="DepthUpDown"
+                    HorizontalAlignment="Left"
+                    MinWidth="150"
+                    Value="8"
+                    Increment="1"
+                    Minimum="1"
+                    Maximum="30"
+                    ToolTip.Tip="Specify maximum file hierarchy depth"
+                />
+                <CheckBox Grid.Column="0" Grid.Row="2"
+                    Name="ShowEmptyCheck"
+                    Content="Show Empty Directories"
+                    Margin="0 12 0 0"
+                />
+
+                <TextBlock Grid.Column="2" Grid.Row="0"
+                    Classes="mtb"
+                    Text="Assembly"
+                />
+
+                <Grid Grid.Column="2" Grid.Row="1"
+                    Grid.RowSpan="99"
+                    ColumnDefinitions="Auto"
+                    RowDefinitions="Auto Auto">
+
+                    <RadioButton Grid.Row="0"
+                        Name="DebugRadio"
+                        Margin="24 0 0 0"
+                        Content="Debug"
+                        ToolTip.Tip="Look for debug assemblies (default)"
+                    />
+
+                    <RadioButton Grid.Row="1"
+                        Name="ReleaseRadio"
+                        Margin="24 0 0 0"
+                        Content="Release"
+                        ToolTip.Tip="Look for release assemblies"
+                    />
+
+                </Grid>
+
+            </Grid>
+
+
+            <Grid Grid.Row="1"
+                RowDefinitions="Auto Auto Auto, 8, Auto Auto Auto">
+
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                    Classes="mtb"
+                    Text="Include File Patterns"
+                />
+                <TextBox Grid.Column="0" Grid.Row="1"
+                    Name="FilePatternBox"
+                    ToolTip.Tip="Wild-card file include patterns"
+                />
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                    Classes="small"
+                    Margin="0 6 0 0"
+                    FontStyle="Italic"
+                    Text='Accepts wild-cards (i.e. "*.axaml;*.xaml;*.png")'
+                />
+
+                <TextBlock Grid.Column="0" Grid.Row="4"
+                    Classes="mtb"
+                    Text="Exclude Directories"
+                />
+                <TextBox Grid.Column="0" Grid.Row="5"
+                    Name="ExcludeDirectoriesBox"
+                    ToolTip.Tip="Exclude specific sub-directory names"
+                />
+                <TextBlock Grid.Column="0" Grid.Row="6"
+                    Classes="small"
+                    Margin="0 6 0 0"
+                    FontStyle="Italic"
+                    Text='Does not accept wild-cards (i.e. "obj;ref")'
+                />
+
+            </Grid>
+
+            <Grid Grid.Row="3"
+                ColumnDefinitions="* Auto Auto"
+                Margin="0">
+
+                <Button Grid.Column="0"
+                    Classes="std"
+                    Content="Reset All"
+                    ToolTip.Tip="Reset all values to default"
+                    Click="ResetClickHandler"
+                />
+
+                <Button Grid.Column="1"
+                    Classes="std"
+                    Content="OK"
+                    IsDefault="True"
+                    Click="OkClickHandler"
+                />
+
+                <Button Grid.Column="2"
+                    Classes="std"
+                    Margin="6 0 0 0"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Click="CancelClickHandler"
+                />
+
+            </Grid>
+
+        </Grid>
+
+</Window>

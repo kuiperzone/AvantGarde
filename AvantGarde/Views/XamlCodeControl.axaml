@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:AvantGarde.Views"
+    mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+    x:Class="AvantGarde.Views.XamlCodeControl">
+
+    <Grid ColumnDefinitions="*" RowDefinitions="Auto *">
+
+        <Grid.Styles>
+            <Style Selector="TextBox">
+                <Setter Property="IsReadOnly" Value="True"/>
+            </Style>
+        </Grid.Styles>
+
+        <Grid Grid.Column="0" Grid.Row="0"
+            ColumnDefinitions="Auto Auto *"
+            RowDefinitions="Auto"
+            VerticalAlignment="Top">
+
+            <Grid.Styles>
+                <Style Selector="ToggleButton">
+                    <Setter Property="Margin" Value="0 6 6 6"/>
+                    <Setter Property="MinWidth" Value="{Binding MinButtonWidth}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </Grid.Styles>
+
+            <ToggleButton Grid.Column="0"
+                Content="CODE"
+                IsChecked="{Binding IsCodeChecked, Mode=TwoWay}"
+
+            />
+            <ToggleButton Grid.Column="1"
+                Content="OUTPUT"
+                IsChecked="{Binding IsOutputChecked, Mode=TwoWay}"
+            />
+
+        </Grid>
+
+        <views:CodeTextBox Grid.Column="0" Grid.Row="1"
+            Classes="mono"
+            Name="CodeBox"
+            IsVisible="{Binding IsCodeChecked}"
+            Text="{Binding CodeText}"
+        />
+        <views:CodeTextBox Grid.Column="0" Grid.Row="1"
+            Classes="mono"
+            Name="OutputBox"
+            IsVisible="{Binding IsOutputChecked}"
+            Text="{Binding OutputText}"
+        />
+
+    </Grid>
+
+</UserControl>

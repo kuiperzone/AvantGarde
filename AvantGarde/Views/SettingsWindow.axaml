@@ -1,0 +1,148 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+        Width="500" Height="400"
+        MinWidth="500" MinHeight="400"
+        MaxWidth="500" MaxHeight="400"
+        x:Class="AvantGarde.Views.SettingsWindow"
+        CanResize="False"
+        Title="Preferences"
+        WindowStartupLocation="CenterOwner">
+
+        <Grid RowDefinitions="* Auto"
+            Margin="16">
+
+            <Grid.Styles>
+                <Style Selector="TextBlock.mtb">
+                    <Setter Property="Margin" Value="0 24 0 6"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </Grid.Styles>
+
+            <Grid Grid.Row="0"
+                ColumnDefinitions="1* 30 1.5*"
+                RowDefinitions="Auto Auto, Auto Auto Auto Auto"
+                Margin="0 0 0 16">
+
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                    Classes="mtb"
+                    Text="Application Theme"
+                />
+                <Grid Grid.Column="0" Grid.Row="1"
+                    RowDefinitions="Auto Auto">
+                    <RadioButton Grid.Row="0"
+                        Name="LightRadio"
+                        Margin="24 0 0 0"
+                        Content="Light"
+                    />
+                    <RadioButton Grid.Row="1"
+                        Name="DarkRadio"
+                        Margin="24 0 0 0"
+                        Content="Dark"
+                    />
+                </Grid>
+
+
+                <TextBlock Grid.Column="2" Grid.Row="0"
+                    Classes="mtb"
+                    Text="App Font Size"
+                />
+                <Grid Grid.Column="2" Grid.Row="1"
+                    RowDefinitions="Auto Auto">
+                    <NumericUpDown Grid.Row="0"
+                        Name="AppFontUpDown"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        MinWidth="150"
+                        Value="14"
+                        Increment="1"
+                        ToolTip.Tip="Application font size"
+                    />
+                    <TextBlock Grid.Row="1"
+                        Margin="0 6 0 0"
+                        Classes="small"
+                        FontStyle="Italic"
+                        Text="Requires app restart"
+                    />
+                </Grid>
+
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                    Classes="mtb"
+                    Text="Preview Window"
+                />
+                <ComboBox Grid.Column="0" Grid.Row="3"
+                    Name="PreviewCombo"
+                    MinWidth="150"
+                    HorizontalAlignment="Stretch"
+                    ToolTip.Tip="Color used in preview of windows"
+                />
+
+                <TextBlock Grid.Column="2" Grid.Row="2"
+                    Classes="mtb"
+                    Text="Mono Font Size"
+                />
+                <NumericUpDown Grid.Column="2" Grid.Row="3"
+                    Name="MonoFontUpDown"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    MinWidth="150"
+                    Value="14"
+                    Increment="1"
+                    Margin="0"
+                    ToolTip.Tip="Monospace font size"
+                />
+
+                <CheckBox Grid.Column="0" Grid.Row="5"
+                    Name="WelcomeCheck"
+                    VerticalAlignment="Center"
+                    Content="Show Welcome"
+                    ToolTip.Tip="Show open button in explorer when no solution"
+                />
+
+                <TextBlock Grid.Column="2" Grid.Row="4"
+                    Classes="mtb"
+                    Text="Mono Font Family"
+                />
+                <TextBox Grid.Column="2" Grid.Row="5"
+                    Classes="mtb"
+                    Name="MonoFontBox"
+                    VerticalAlignment="Top"
+                    MaxLength="64"
+                    ToolTip.Tip="Monospace font family"
+                />
+
+            </Grid>
+
+            <Grid Grid.Row="1"
+                ColumnDefinitions="* Auto Auto"
+                Margin="0">
+
+                <Button Grid.Column="0"
+                    Classes="std"
+                    Content="Reset All"
+                    ToolTip.Tip="Reset values to default"
+                    Click="ResetClickHandler"
+                />
+
+                <Button Grid.Column="1"
+                    Classes="std"
+                    Content="OK"
+                    IsDefault="True"
+                    Click="OkClickHandler"
+                />
+
+                <Button Grid.Column="2"
+                    Classes="std"
+                    Margin="6 0 0 0"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Click="CancelClickHandler"
+                />
+
+            </Grid>
+
+        </Grid>
+
+</Window>

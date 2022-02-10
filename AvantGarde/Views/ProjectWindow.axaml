@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+        Width="600" Height="450"
+        MinWidth="600" MinHeight="450"
+        MaxWidth="600" MaxHeight="450"
+        x:Class="AvantGarde.Views.ProjectWindow"
+        CanResize="False"
+        Title="Project"
+        WindowStartupLocation="CenterOwner">
+
+        <Grid RowDefinitions="Auto * Auto * Auto"
+            Margin="16 32 16 16">
+
+            <Grid Grid.Row="0"
+                ColumnDefinitions="Auto 24 * Auto 24 Auto"
+                RowDefinitions="Auto 10 Auto 10 Auto 32, Auto, 32, Auto 10 Auto 10 Auto"
+                Margin="0 0 0 32">
+
+                <!-- Header -->
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                    Text="OutputType"
+                    FontWeight="Bold"
+                />
+                <TextBlock Grid.Column="2" Grid.Row="0"
+                    Name="OutputBlock"
+                    Text="OutputBlock"
+                />
+
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                    Text="TargetFramework"
+                    FontWeight="Bold"
+                />
+                <TextBlock Grid.Column="2" Grid.Row="2"
+                    Name="TargetBlock"
+                    Text="TargetBlock"
+                />
+
+                <TextBlock Grid.Column="0" Grid.Row="4"
+                    Text="Avalonia"
+                    FontWeight="Bold"
+                />
+                <TextBlock Grid.Column="2" Grid.Row="4"
+                    Name="AvaloniaBlock"
+                    Text="AvaloniaBlock"
+                />
+
+                <!-- App selection -->
+                <TextBlock Grid.Column="0" Grid.Row="6"
+                    Text="App Project"
+                    FontWeight="Bold"
+                />
+                <ComboBox Grid.Column="2" Grid.Row="6"
+                    Name="AppCombo"
+                    MinWidth="200"
+                    ToolTip.Tip="Select application project"
+                />
+
+                <!-- Assembly -->
+                <TextBlock Grid.Column="0" Grid.Row="8"
+                    Text="Project Assembly"
+                    FontWeight="Bold"
+                />
+
+                <TextBox Grid.Column="0" Grid.Row="10"
+                    Grid.ColumnSpan="3"
+                    Name="AssemblyOverrideBox"
+                    ToolTip.Tip="Specify assembly path where location may be non-standard"
+                />
+                <Button Grid.Column="5" Grid.Row="10"
+                    Classes="std"
+                    Name="BrowseButton"
+                    Content="Browse"
+                    Click="BrowseButtonClickHandler"
+                />
+
+                <CheckBox Grid.Column="0" Grid.Row="12"
+                    Grid.ColumnSpan="99"
+                    Name="AssemblyOverrideCheck"
+                    Content="Specify Custom Location"
+                    Click="AssemblyCheckClickHandler"
+                />
+
+            </Grid>
+
+            <Grid Grid.Row="2"
+                ColumnDefinitions="Auto *"
+                RowDefinitions="Auto Auto"
+                Margin="0">
+
+                <Image Grid.Column="0" Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Name="WarnImage"
+                    Margin="0 0 6 0"
+                    VerticalAlignment="Center"
+                    Height="{Binding Global.LargeIconSize}"
+                    Stretch="Uniform"
+                    Source="{Binding Global.Assets.WarnIcon}"
+                />
+
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    Margin="0"
+                    Name="WarnBlock1"
+                    Text="WarnBlock1"
+                    FontWeight="Bold"
+                />
+
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                    Margin="0"
+                    Name="WarnBlock2"
+                    Text="WarnBlock2"
+                />
+
+            </Grid>
+
+            <Grid Grid.Row="4"
+                ColumnDefinitions="* Auto Auto"
+                Margin="0">
+
+                <Button Grid.Column="1"
+                    Classes="std"
+                    Content="OK"
+                    IsDefault="True"
+                    Click="OkClickHandler"
+                />
+
+                <Button Grid.Column="2"
+                    Classes="std"
+                    Margin="6 0 0 0"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Click="CancelClickHandler"
+                />
+
+            </Grid>
+
+        </Grid>
+
+</Window>

@@ -1,0 +1,120 @@
+###############################################################################
+# Hidden
+###############################################################################
+
+.*
+*~
+~*
+
+**/.*/
+
+*.lock
+*.~lock
+
+# Explicitly Allow
+!.gitignore
+
+Thumbs.db
+desktop.ini
+
+**/*[Ww][Ii][Nn]-[Xx]64*/
+
+
+###############################################################################
+# Ignore Builds & Binaries
+###############################################################################
+
+# Bin, Obj, Out
+**/[Bb][Ii][Nn]/
+**/[Oo][Bb][Jj]/
+**/[Oo][Uu][Tt]/
+**/[Oo][Uu][Tt][Pp][Uu][Tt]/
+
+# Build
+**/[Bb][Ll][Dd]/
+**/[Bb][Uu][Ii][Ll][Dd]*/
+
+# Debug, Release, Profile
+**/[Dd][Ee][Bb][Uu][Gg]*/
+**/*-[Dd][Ee][Bb][Uu][Gg]/
+**/[Rr][Ee][Ll][Ee][Aa][Ss][Ee]*/
+**/*-[Rr][Ee][Ll][Ee][Aa][Ss][Ee]*/
+**/[Pp][Rr][Oo][Ff][Ii][Ll][Ee]*/
+
+# AppDir
+**/[Aa][Pp][Pp][Dd][Ii][Rr]*/
+
+# Temp
+**/[Tt][Mm][Pp]/
+**/[Tt][Ee][Mm][Pp]/
+**/[Ss][Cc][Rr][Aa][Tt][Cc][Hh]/
+
+# Logs
+**/[Ll][Oo][Gg]/
+**/[Ll][Oo][Gg][Ss]/
+
+
+###############################################################################
+# Object files
+###############################################################################
+
+*.slo
+*.lo
+*.o
+*.obj
+
+
+###############################################################################
+# Visual Studio
+###############################################################################
+
+.vs/
+ipch/
+
+*.ipch
+*.sdf
+*.tlog
+*.opensdf
+*.VC.opendb
+*.VC.db
+
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userosscache
+*.sln.docstates
+.nuget/
+_ReSharper.*
+packages/
+artifacts/
+*.userprefs
+*DS_Store
+*.sln.ide
+
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+
+###############################################################################
+# QT
+###############################################################################
+
+*.user
+*.pro.user*
+*.autosave
+*.stash
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+

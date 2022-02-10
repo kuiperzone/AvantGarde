@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
+    x:Class="AvantGarde.Views.PreviewControl">
+
+    <Grid ColumnDefinitions="Auto Auto Auto" RowDefinitions="Auto Auto, Auto Auto">
+
+        <Border Grid.Column="1" Grid.Row="0"
+            BorderBrush="{Binding WindowBorder}"
+            BorderThickness="1">
+
+            <Grid RowDefinitions="Auto Auto"
+                Background="{Binding MainBackground}"
+                MaxWidth="{Binding MaxTotalWidth}">
+
+                <Grid Grid.Row="0"
+                    ColumnDefinitions="Auto * Auto"
+                    RowDefinitions="*"
+                    IsVisible="{Binding IsWindow}"
+                    Background="{Binding WindowTitleBackground}"
+                    TextBlock.Foreground="{Binding WindowTitleForeground}">
+
+                    <Image Grid.Column="0" Grid.Row="0"
+                        Margin="6"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Stretch="Uniform"
+                        Source="{Binding WindowIcon}"
+                        MaxHeight="{Binding WindowIconHeight}"
+                    />
+
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center"
+                        TextTrimming="CharacterEllipsis"
+                        Text="{Binding WindowTitleText}"
+                        FontSize="{Binding WindowTitleFontSize}"
+                        FontWeight="Bold"
+                    />
+
+                    <Image Grid.Column="2" Grid.Row="0"
+                        Margin="6"
+                        VerticalAlignment="Center"
+                        Stretch="Uniform"
+                        Source="{Binding WindowDecorBitmap}"
+                        MaxHeight="{Binding WindowDecorHeight}"
+                    />
+
+                </Grid>
+
+                <Image Grid.Row="1"
+                    Stretch="None"
+                    Source="{Binding MainImage}"
+                    PointerMoved="PreviewPointerMovedHandler"
+                    PointerPressed="PreviewPointerPressedHandler"
+                    PointerReleased="PreviewPointerReleasedHandler"
+                />
+
+            </Grid>
+
+        </Border>
+
+        <TextBlock Grid.Column="0" Grid.Row="0"
+            Margin="0 0 12 0"
+            TextAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="Transparent"
+            Text="{Binding HeightText}"
+            IsVisible="{Binding IsHeightVisible}"
+        />
+
+        <TextBlock Grid.Column="2" Grid.Row="0"
+            Name="HeightBlock"
+            Margin="12 0 0 0"
+            TextAlignment="Center"
+            VerticalAlignment="Center"
+            Text="{Binding HeightText}"
+            IsVisible="{Binding IsHeightVisible}"
+        />
+
+        <TextBlock Grid.Column="1" Grid.Row="1"
+            Name="WidthBlock"
+            Margin="0 12 0 0"
+            TextAlignment="Center"
+            Text="{Binding WidthText}"
+            IsVisible="{Binding IsWidthVisible}"
+        />
+
+        <TextBlock Grid.Column="1" Grid.Row="2"
+            Name="MessageBlock"
+            Margin="0 48 0 0"
+            TextAlignment="Left"
+            HorizontalAlignment="Center"
+            TextWrapping="Wrap"
+            Text="{Binding MessageText}"
+            IsVisible="{Binding IsMessageVisible}"
+            MaxWidth="{Binding MaxMessageWidth}"
+        />
+
+        <Button Grid.Column="1" Grid.Row="3"
+            Margin="0 16 0 0"
+            Content="Goto ..."
+            HorizontalAlignment="Center"
+            IsVisible="{Binding HasErrorLocation}"
+            Click="GotoClickHandler"
+        />
+
+    </Grid>
+
+</UserControl>

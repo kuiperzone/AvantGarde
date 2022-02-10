@@ -1,0 +1,341 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:AvantGarde.Views"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    Width="800"
+    Height="600"
+    Title="Avant Garde"
+    Icon="/Assets/AvantGarde128.png"
+    WindowStartupLocation="CenterScreen"
+    x:Class="AvantGarde.Views.MainWindow">
+
+    <Grid ColumnDefinitions="* Auto" RowDefinitions="Auto *">
+
+        <Grid.Styles>
+            <Style Selector="ToggleButton">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="MaxWidth" Value="{Binding Global.MenuIconSize}"/>
+                <Setter Property="MaxHeight" Value="{Binding Global.MenuIconSize}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </Grid.Styles>
+
+        <Menu Grid.Column="0" Grid.Row="0"
+            Name="MainMenu">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open Solution..."
+                    HotKey="Ctrl+O"
+                    InputGesture="Ctrl+O"
+                    Command="{Binding OpenSolutionCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.OpenIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Open _Recent"
+                    Items="{Binding RecentFiles}"
+                />
+                <MenuItem Header="Close Solution"
+                    Command="{Binding CloseSolutionCommand}"
+                />
+
+                <Separator/>
+                <MenuItem Header="Solution Defaults"
+                    Command="{Binding SolutionDefaultsCommand}"
+                />
+
+                <MenuItem Header="Export Avalonia Schema">
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <CheckBox Content="Formatted"
+                                IsChecked="{Binding IsFormattedXsdChecked}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <CheckBox
+                                Content="Annotations"
+                                IsChecked="{Binding IsAnnotationXsdChecked}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="_Export Now..."
+                        Command="{Binding ExportSchemaCommand}"
+                    />
+                </MenuItem>
+
+                <MenuItem Header="Toggle Explorer"
+                    HotKey="Alt+E"
+                    InputGesture="Alt+E"
+                    Command="{Binding ToggleExplorerViewCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.LeftIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator/>
+                <MenuItem Header="_Exit"
+                    HotKey="Alt+F4"
+                    InputGesture="Alt+F4"
+                    Command="{Binding ExitCommand}"
+                />
+
+            </MenuItem>
+
+            <MenuItem Header="_Edit">
+
+                <MenuItem Header="Solution"
+                    HotKey="Alt+S"
+                    InputGesture="Alt+S"
+                    IsEnabled="{Binding HasSolution}"
+                    Command="{Binding SolutionPropertiesCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.Gear1Icon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Project"
+                    HotKey="Alt+P"
+                    InputGesture="Alt+P"
+                    IsEnabled="{Binding HasProject}"
+                    Command="{Binding ProjectPropertiesCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.Gear2Icon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <!--
+                <Separator/>
+                <MenuItem Header="Copy"
+                    HotKey="Ctrl+C"
+                    InputGesture="Ctrl+C"
+                    Command="{Binding CopyCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.CopyIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                -->
+
+                <Separator/>
+                <MenuItem Header="Preferences"
+                     Command="{Binding PreferencesCommand}"
+                />
+
+            </MenuItem>
+
+            <MenuItem Header="_View">
+
+                <MenuItem Header="Increase Scale"
+                    HotKey="Ctrl+OemPlus"
+                    InputGesture="Ctrl+OemPlus"
+                    Command="{Binding IncScale}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.PlusIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Decrease Scale"
+                    HotKey="Ctrl+OemMinus"
+                    InputGesture="Ctrl+OemMinus"
+                    Command="{Binding DecScale}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.MinusIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Scale 100%"
+                    HotKey="Ctrl+D0"
+                    InputGesture="Ctrl+D0"
+                    Command="{Binding SetNormScale}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.ScaleX1Icon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator/>
+                <MenuItem Header="Preview Options">
+
+                    <MenuItem
+                        HotKey="Ctrl+D1"
+                        InputGesture="Ctrl+D1"
+                        Command="{Binding GridLinesToggle}">
+                        <MenuItem.Header>
+                            <CheckBox Content="Grid Lines"
+                                IsChecked="{Binding IsGridLinesChecked, Mode=TwoWay}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem
+                        HotKey="Ctrl+D2"
+                        InputGesture="Ctrl+D2"
+                        Command="{Binding GridColorsToggle}">
+                        <MenuItem.Header>
+                            <CheckBox Content="Grid Colors"
+                                IsChecked="{Binding IsGridColorsChecked, Mode=TwoWay}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem
+                        HotKey="Ctrl+D3"
+                        InputGesture="Ctrl+D3"
+                        Command="{Binding DisableEventsToggle}">
+                        <MenuItem.Header>
+                            <CheckBox Content="Disable Events"
+                                IsChecked="{Binding IsDisableEventsChecked, Mode=TwoWay}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem
+                        HotKey="Ctrl+D4"
+                        InputGesture="Ctrl+D4"
+                        Command="{Binding PrefetchAssetsToggle}">
+                        <MenuItem.Header>
+                            <CheckBox Content="Prefetch Assets"
+                                IsChecked="{Binding IsPrefetchAssetsChecked, Mode=TwoWay}"
+                            />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <Separator/>
+                    <MenuItem Header="Clear All"
+                        HotKey="Ctrl+Space"
+                        InputGesture="Ctrl+Space"
+                        Command="{Binding ClearLoadFlags}"
+                    />
+
+                </MenuItem>
+
+                <MenuItem Header="Restart Host"
+                    HotKey="Alt+R"
+                    InputGesture="Alt+R"
+                    Command="{Binding RestartCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.ReloadIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+
+                <MenuItem Header="Toggle XAML Code"
+                    HotKey="Alt+X"
+                    InputGesture="Alt+X"
+                    IsEnabled="{Binding IsXamlViewable}"
+                    Command="{Binding ToggleXamlCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.UpIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="_Help">
+                <MenuItem Header="{Binding Global.WebpageName}"
+                    Command="{Binding WebpageCommand}"
+                />
+                <MenuItem Header="About"
+                    Command="{Binding AboutCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="{Binding Global.Assets.InfoIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+        </Menu>
+
+        <ToggleButton Grid.Column="1" Grid.Row="0"
+            Margin="0 1 3 1"
+            ToolTip.Tip="Stay on top"
+            IsChecked="{Binding IsTopmost, Mode=TwoWay}">
+            <Image Source="{Binding Global.Assets.SmallPinIcon}"/>
+        </ToggleButton>
+
+        <Grid Grid.Column="0" Grid.Row="1"
+            Grid.ColumnSpan="99"
+            ColumnDefinitions="Auto Auto *"
+            RowDefinitions="*"
+            Name="SplitGrid">
+
+            <views:ExplorerPane
+                Grid.Column="0" Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Name="ExplorerPane"
+            />
+            <Grid Grid.Column="0" Grid.Row="0"
+                ColumnDefinitions="* Auto *"
+                RowDefinitions="1* Auto Auto 2*"
+                IsVisible="{Binding IsWelcomeVisible}">
+
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    Classes="large"
+                    FontFamily="{Binding Global.Assets.ThemeFont}"
+                    VerticalAlignment="Bottom"
+                    TextAlignment="Center"
+                    Margin="0 0 0 10"
+                    Text="Avant Garde"
+                />
+
+                <Button Grid.Column="1" Grid.Row="1"
+                    Content="Open Solution"
+                    MinWidth="{Binding WelcomeWidth}"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="{Binding Global.Colors.AvantBackground}"
+                    Foreground="{Binding Global.Colors.AvantForeground}"
+                    MinHeight="{Binding Global.MinStdButtonHeight}"
+                    Command="{Binding OpenSolutionCommand}"
+                />
+
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                    VerticalAlignment="Top"
+                    TextAlignment="Center"
+                    Margin="0 10 0 0"
+                    MaxWidth="{Binding WelcomeWidth}"
+                    TextWrapping="Wrap"
+                    Text="Open a solution or project to get started"
+                />
+
+                <views:LinkBlock Grid.Column="1" Grid.Row="3"
+                    Margin="0 8 0 0"
+                    TextAlignment="Center"
+                    Foreground="{Binding Global.Colors.LinkForeground}"
+                    HoverForeground="{Binding Global.Colors.LinkHover}"
+                    Text="About"
+                    PointerPressed="AboutPressedHandler"
+                />
+
+            </Grid>
+
+            <views:CustomSplitter Grid.Column="1" Grid.Row="0"
+                Width="6"
+                Background="{Binding Global.Colors.WindowBackground}"
+                Highlight="{Binding Global.Colors.AvantBackground}"
+                ResizeDirection="Columns"
+                ResizeBehavior="PreviousAndNext"
+                DragDelta="SplitterDragHandler"
+            />
+
+            <views:PreviewPane
+                Grid.Column="2" Grid.Row="0"
+                Name="PreviewPane"
+            />
+        </Grid>
+
+    </Grid>
+
+</Window>

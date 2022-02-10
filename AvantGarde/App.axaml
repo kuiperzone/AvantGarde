@@ -1,0 +1,41 @@
+<Application xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:AvantGarde.Views"
+        x:Class="AvantGarde.App">
+
+    <Application.Styles>
+        <FluentTheme Mode="Light"/>
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{Binding Global.Colors.WindowBackground}"/>
+        </Style>
+
+        <Style Selector="TextBlock.small">
+            <Setter Property="FontSize" Value="{Binding Global.SmallFontSize}"/>
+        </Style>
+
+        <Style Selector="TextBlock.large">
+            <Setter Property="FontSize" Value="{Binding Global.LargeFontSize}"/>
+        </Style>
+
+        <Style Selector="TextBlock.huge">
+            <Setter Property="FontSize" Value="{Binding Global.HugeFontSize}"/>
+        </Style>
+
+        <Style Selector="Button.std">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="{Binding Global.MinStdButtonWidth}"/>
+            <Setter Property="MinHeight" Value="{Binding Global.MinStdButtonHeight}"/>
+        </Style>
+
+        <Style Selector="TextBox.mono">
+            <Setter Property="FontSize" Value="{Binding Global.MonoFontSize}"/>
+            <Setter Property="FontFamily" Value="{Binding Global.MonoFontFamily}"/>
+            <Setter Property="Foreground" Value="{Binding Global.Colors.CodeBoxForeground}"/>
+            <Setter Property="SelectionForegroundBrush" Value="{Binding Global.Colors.CodeBoxSelectionForeground}"/>
+        </Style>
+
+    </Application.Styles>
+
+</Application>

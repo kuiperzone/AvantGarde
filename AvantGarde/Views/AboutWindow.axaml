@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:AvantGarde.Views"
+    mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="750"
+    Width="500"
+    Height="750"
+    MaxWidth="500"
+    MaxHeight="750"
+    CanResize="False"
+    Title="About..."
+    WindowStartupLocation="CenterOwner"
+    x:Class="AvantGarde.Views.AboutWindow">
+
+    <Grid RowDefinitions="Auto Auto, Auto, Auto Auto Auto, *"
+        Margin="24 24 24 16">
+
+        <Grid.Styles>
+            <Style Selector="TextBlock.mtb">
+                <Setter Property="Margin" Value="0 8 0 0"/>
+            </Style>
+        </Grid.Styles>
+
+        <Image Grid.Row="0"
+            Name="BrandImage"
+            Stretch="Uniform"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Source="{Binding Global.Assets.AboutImage}"
+        />
+
+        <Grid Grid.Row="0"
+            ColumnDefinitions="* 16 *"
+            VerticalAlignment="Bottom"
+            Margin="0 32 0 0">
+
+            <TextBlock Grid.Column="0" Grid.Row="0"
+                Classes="huge"
+                FontFamily="{Binding Global.Assets.ThemeFont}"
+                TextAlignment="Right"
+                Text="Avant"
+            />
+            <TextBlock Grid.Column="2" Grid.Row="0"
+                Classes="huge"
+                FontFamily="{Binding Global.Assets.ThemeFont}"
+                TextAlignment="Left"
+                Text="Garde"
+            />
+        </Grid>
+
+        <TextBlock Grid.Row="1"
+            Classes="large"
+            FontFamily="{Binding Global.Assets.ThemeFont}"
+            TextAlignment="Center"
+            Text="AXAML Preview for Avalonia"
+        />
+
+        <Grid Grid.Row="2"
+            ColumnDefinitions="* 16 *"
+            RowDefinitions="Auto 8 Auto"
+            Margin="0 32 0 16">
+
+            <TextBlock Grid.Column="0" Grid.Row="0"
+                Classes="large"
+                TextAlignment="Right"
+                FontWeight="Bold"
+                Text="Version"
+            />
+            <TextBlock Grid.Column="2" Grid.Row="0"
+                Classes="large"
+                TextAlignment="Left"
+                Text="{Binding Global.Version}"
+            />
+
+            <TextBlock Grid.Column="0" Grid.Row="2"
+                Classes="large"
+                HorizontalAlignment="Right"
+                FontWeight="Bold"
+                Text="Avalonia"
+            />
+            <TextBlock Grid.Column="2" Grid.Row="2"
+                Classes="large"
+                TextAlignment="Left"
+                Text="{Binding Global.Avalonia}"
+            />
+
+        </Grid>
+
+        <TextBlock Grid.Row="3"
+            TextAlignment="Center"
+            Text="Copyright 2022 Andy Thomas"
+        />
+
+        <TextBlock Grid.Row="4"
+            Margin="0 8 0 0"
+            TextAlignment="Center"
+            Text="License GPLv3"
+        />
+
+        <views:LinkBlock Grid.Row="5"
+            Margin="0 8 0 0"
+            TextAlignment="Center"
+            Foreground="{Binding Global.Colors.LinkForeground}"
+            HoverForeground="{Binding Global.Colors.LinkHover}"
+            Text="{Binding Global.WebpageName}"
+            PointerPressed="WebPressedHandler"
+        />
+
+        <Grid Grid.Row="6"
+            ColumnDefinitions="* Auto"
+            VerticalAlignment="Bottom"
+            Margin="0">
+
+            <Button Grid.Column="1"
+                Classes="std"
+                Content="OK"
+                IsDefault="True"
+                Click="OkClickHandler"
+            />
+        </Grid>
+
+    </Grid>
+
+</Window>
