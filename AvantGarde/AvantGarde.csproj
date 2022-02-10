@@ -11,7 +11,7 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="cp &quot;$(SolutionDir)/Source/LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
+		<Exec Command="cp &quot;$(ProjectDir)/../LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
 	</Target>
 
 	<ItemGroup>
