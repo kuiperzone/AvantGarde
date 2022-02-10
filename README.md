@@ -1,4 +1,4 @@
-<img src="Banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
+<img src="Media/Github-banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
 **Avant Garde** is an AXAML previewer for the C# Avalonia Framework.
@@ -31,12 +31,12 @@ Avant Garde is licensed under GPLv3. See license for details.
 Shown, below, Avant Garde in the "Fluent Light" theme with a preview of its "About" window. The display of grid
 highlighting and grid lines are optional.
 
-[![Avant Garde Screenshot](AvantGarde-screenshot-main.png)](AvantGarde-screenshot-main.png)
+[![Avant Garde Screenshot](Media/Github-screenshot-main.png)](Media/Github-screenshot-main.png)
 
 Here, Avant Garde floating on top of the Visual Code IDE on Linux. This time, the application is shown in the
 Fluent Dark theme and its Project Explorer has been closed.
 
-[![Avant Garde Screenshot](AvantGarde-screenshot-ide.png)](AvantGarde-screenshot-ide.png)
+[![Avant Garde Screenshot](Media/Github-creenshot-ide.png)](Media/Github-screenshot-ide.png)
 
 ## Using Avant Garde ##
 
@@ -60,7 +60,7 @@ to Avant Garde and changes do not modify any project file on disk.
 
 Click "Edit -> Solution", or the "cog icon" in the toolbar.
 
-[![Avant Garde Screenshot](AvantGarde-screenshot-solution.png)](AvantGarde-screenshot-solution.png)
+[![Avant Garde Solution Settings](Media/Github-screenshot-solution.png)](Media/Github-screenshot-solution.png)
 
 For example, setting "Include File Pattern" to "*" will cause all project files to be shown in the Explorer.
 
@@ -69,7 +69,7 @@ Project settings pertain to each project within a solution.
 
 Click "Edit -> Project", or the "cog icon" beside the project in the Explorer.
 
-[![Avant Garde Screenshot](AvantGarde-screenshot-project.png)](AvantGarde-screenshot-project.png)
+[![Avant Garde Project Settings](Media/Github-screenshot-project.png)](Media/Github-screenshot-project.png)
 
 As described, if your target assembly output cannot be located on disk, this is the place to specify it, as shown above.
 
@@ -78,5 +78,5 @@ before previews can be generated.
 
 
 ## Additional Information ##
-Avant Garde was created by Andy Thomas at https://kuiper.zone
+Avant Garde was created by Andy Thomas.
 
