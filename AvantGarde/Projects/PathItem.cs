@@ -184,7 +184,7 @@ namespace AvantGarde.Projects
         /// </summary>
         public static string CleanPath(string path)
         {
-            if (Path.PathSeparator == '\\')
+            if (Path.DirectorySeparatorChar == '\\')
             {
                 return path.Trim().Replace('/', '\\');
             }
