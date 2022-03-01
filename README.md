@@ -95,15 +95,14 @@ There are a number of options associated with preview generations, as shown by t
 
 [![Avant Garde Screenshot](Media/Github-screenshot-flags.png)](Media/Github-screenshot-flags.png)
 
-The "Grid Lines/Colors" options will cause XAML `Grid` lines and shade colors to be shown, so as to high-light
-grid areas.
+The "Grid Lines/Colors" options will cause XAML `Grid` to be shown with line and shade high-lights.
 
 The "Disable Events" option not only disables mouse interaction with the preview, but strips out all Avalonia Control
-events prior to generation of the preview. This means that events can be added and modified to source *without* having
-to re-build the assembly in preview.
+events prior to generation of the preview. This means that events can be added and modified in the source code
+*without* having to re-build the assembly each time.
 
-Whereas "Prefetch Assets" causes asset files to be located in the file system rather than the assembly. This is, again,
-so that assets may be added or updated without having to rebuild.
+Whereas "Prefetch Assets" causes asset files to be located within the file system rather than the assembly.
+This is, again, so that assets may be added or updated without having to rebuild.
 
 
 ## Command Line Options ##
