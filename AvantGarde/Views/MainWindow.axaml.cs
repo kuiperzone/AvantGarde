@@ -334,7 +334,7 @@ namespace AvantGarde.Views
                 var path = App.Arguments.Value;
                 Debug.WriteLine(App.Arguments.ToString());
 
-                var open = !App.Arguments.Get("c", false);
+                var open = !(App.Arguments.Get("m", false) || App.Arguments.Get("min-explorer", false));
 
                 if (open)
                 {
@@ -369,7 +369,7 @@ namespace AvantGarde.Views
                         foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.csproj"))
                         {
                             OpenSolution(file.FullName, open);
-                            _explorerPane.TrySelect(App.Arguments.Get<string>("s", null) ?? fullname);
+                            _explorerPane.TrySelect(App.Arguments.Get<string>("s", null) ?? App.Arguments.Get<string>("select", null) ?? fullname);
                             return;
                         }
                     }

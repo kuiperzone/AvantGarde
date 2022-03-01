@@ -43,27 +43,24 @@ AXAML forms. It cannot be used to preview WPF XAML.
 
 * It supports both a light and dark theme so as to match your desktop. See the application "Preferences".
 
-Below, Visual Code on Linux with Avant Garde floating in stay-on-top mode to the right. Note, here, that the
-Avant Garde project explorer has been closed (to the side) so as to focus on the form while minimizing the window
-footprint. The preview will updated as changes to the AXAML are saved to file from the IDE.
-
-[![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
-
-This time, the application is shown
-in the Fluent Dark theme and its Project Explorer has been closed.
-
-
 ## Using Avant Garde ##
 
 Simply open a *.sln or *.csproj as you would in any IDE.
 
 By the default, only "*.axaml;*.xaml" and image files are shown in the Project Explorer as these are the primary
-files you will want to see in Avant Garde (the rest of your project will be hidden but see below).
+files you will want to see in Avant Garde (the rest of your project will be hidden but see "Solution Settings" below).
+
+Below, Visual Code on Linux with Avant Garde floating in stay-on-top mode to the right. Note, here, that the
+Avant Garde project explorer has been closed (to the side) so as to focus on the form while minimizing the window
+footprint. The preview will updated as AXAML changes saved to file from the IDE.
+
+[![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
 
 **Important.** In order to generate previews, Avant Garde must find your application assembly which must first be
 built. Normally, if your assembly is in the usual place, i.e. under "project/bin/Debug...", Avant Garde will find it.
 If, however, if you are using variables or a "Directory.Build.props" file to set your output location, you will need
 to specify this location at the project level (see below).
+
 
 ### Solution Settings ###
 Each solution (or project file) you open in Avant Garde has its own "settings". These are specific to Avant Garde and,
@@ -90,6 +87,49 @@ As described, if your target assembly output cannot be located on disk, this is 
 
 Moreover, if your project is a class library, it will be necessary to specify a relavent application project
 before previews can be generated.
+
+
+## Command Line Options ##
+Command line options can be utilitized to launch Avant Garde from an IDE, as supported.
+
+**Usage:**
+
+    AvantGarde [filename] [-options]
+
+This assumes `AvantGarde` is in the path.
+
+Typically, filename is expected to be .sln or .csproj file. However, it is also possible to launch AvantGarde with
+*any file* within the project hierarchy provided there exists a .csproj file in a parent directory above the file.
+
+**Options:**
+
+    -h, --help
+    Show help information.
+
+    -v, --version
+    Show version information.
+
+    -m, --min-explorer
+    Show with minimized explorer and non-maximized main window.
+
+    -s=name, --select=name
+    Select and preview given item on opening. Name can be a leaf name or fully qualified path.
+
+**Examples:**
+
+    AvantGarde ~/MyProject/MyProject.sln --select=MainWindow.axaml
+
+Above, opens a solution with AvantGarde and selects/previews `MainWindow.axaml` on opening.
+
+    AvantGarde ~/MyProject/MyProject.sln -min-explorer -s=MainWindow.axaml
+
+As with the first example, except that the project explorer will be minimized to the side of the window.
+
+    AvantGarde ~/MyProject/Views/MainWindow.axaml
+
+Above, actually does the same as the first example. Here an .axaml file is supplied instead of .sln or .csproj, and
+AvantGarde will locate the first .csproj file it finds in the directory structure above the supplied path level.
+The `MainWindow.axaml` preview will be shown on opening so that the "--select" option is not necessary here.
 
 
 ## Copyright & License ##

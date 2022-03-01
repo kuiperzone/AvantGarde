@@ -61,12 +61,13 @@ namespace AvantGarde
                     Console.WriteLine(Indent + "Show version information.");
                     Console.WriteLine();
 
-                    Console.WriteLine(Indent + "-c");
-                    Console.WriteLine(Indent + "Show with closed explorer and window not maximized.");
+                    Console.WriteLine(Indent + "-m, --min-explorer");
+                    Console.WriteLine(Indent + "Show with minimized explorer and non-maximized main window.");
                     Console.WriteLine();
 
                     Console.WriteLine(Indent + "-s=name");
-                    Console.WriteLine(Indent + "Select given item name on opening");
+                    Console.WriteLine(Indent + "Select and preview given item on opening.");
+                    Console.WriteLine(Indent + "Name can be a leaf name or fully qualified path.");
                     Console.WriteLine();
                     return 0;
                 }
