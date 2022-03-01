@@ -43,7 +43,9 @@ AXAML forms. It cannot be used to preview WPF XAML.
 
 * It supports both a light and dark theme so as to match your desktop. See the application "Preferences".
 
-Below, Avant Garde floating in stay-on-top mode over the Visual Code IDE on Linux.
+Below, Visual Code on Linux with Avant Garde floating in stay-on-top mode to the right. Note, here, that the
+Avant Garde project explorer has been closed (to the side) so as to focus on the form while minimizing the window
+footprint. The preview will updated as changes to the AXAML are saved to file from the IDE.
 
 [![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
 
