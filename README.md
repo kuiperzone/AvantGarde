@@ -1,10 +1,10 @@
 <img src="Media/Github-banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
-**Avant Garde** is a cross-platform previewer for the C# Avalonia Framework. At the time of its creation, it was
-the only Avalonia preview solution for Linux.
+**Avant Garde** is a cross-platform previewer for the C# Avalonia Framework. It was the first Avalonia preview
+solution for Linux.
 
-[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)
+**[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
 Downloads include AppImages for Linux and Setup files for Windows. Don't forget to set the "Execute" permission
 for AppImage files.
