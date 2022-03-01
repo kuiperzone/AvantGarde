@@ -52,7 +52,7 @@ files you will want to see in Avant Garde (the rest of your project will be hidd
 
 Below, Visual Code on Linux with Avant Garde floating in stay-on-top mode to the right. Note, here, that the
 Avant Garde project explorer has been closed (to the side) so as to focus on the form while minimizing the window
-footprint. The preview will updated as AXAML changes saved to file from the IDE.
+footprint. The preview will be updated as AXAML changes are saved to file from the IDE.
 
 [![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
 
