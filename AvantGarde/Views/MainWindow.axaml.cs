@@ -1,12 +1,24 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas
-// LICENSE   : GPLv3
+// COPYRIGHT : Andy Thomas (C) 2022
+// LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+//
+// Avant Garde is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Avant Garde is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -29,6 +41,8 @@ namespace AvantGarde.Views
         private readonly SolutionCache _cache = new();
         private readonly RemoteLoader _loader;
         private readonly DispatcherTimer _refreshTimer;
+
+        private bool _writeSettingsFlag;
 
         public MainWindow()
             : base(new MainWindowViewModel())
@@ -65,8 +79,8 @@ namespace AvantGarde.Views
             Model.WelcomeWidth = _explorerPane.MinWorkingWidth;
             _previewPane.Theme = App.Settings.PreviewTheme;
 
+            PropertyChanged += PropertyChangedHandler;
             LoadFlagCheckedHandler(_previewPane.LoadFlags);
-
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -83,15 +97,23 @@ namespace AvantGarde.Views
             dialog.Title = "Open Solution or Project";
             dialog.Filters.Add(new FileDialogFilter() { Name = "Solutions (*.sln; *.csproj)", Extensions = { "sln", "csproj" } });
 
-            var paths = await dialog.ShowAsync(this);
-
-            if (paths?.Length > 0)
+            try
             {
-                OpenSolution(paths[0]);
+                StartDialog();
+                var paths = await dialog.ShowAsync(this);
+
+                if (paths?.Length > 0)
+                {
+                    OpenSolution(paths[0]);
+                }
+            }
+            finally
+            {
+                EndDialog();
             }
         }
 
-        public void OpenSolution(string path)
+        public void OpenSolution(string path, bool open = true)
         {
             Debug.WriteLine($"{nameof(MainWindow)}.{nameof(MainWindow.OpenSolution)}");
             Debug.WriteLine(path);
@@ -115,11 +137,10 @@ namespace AvantGarde.Views
                 Model.IsWelcomeVisible = GetIsWelcomeVisible(true);
 
                 App.Settings.UpsertRecent(path);
-                App.Settings.Write();
+                _writeSettingsFlag = true;
 
-                ResetSplitter();
+                SetExplorerView(open);
                 _previewPane.Update(null);
-                _refreshTimer.Start();
             }
             catch (Exception e)
             {
@@ -137,6 +158,7 @@ namespace AvantGarde.Views
                 dialog.Filters.Add(new FileDialogFilter() { Name = "XSD (*.xsd)", Extensions = { "xsd" } });
                 dialog.InitialFileName = "AvaloniaSchema-" + MarkupDictionary.Version + ".xsd";
 
+                StartDialog();
                 var path = await dialog.ShowAsync(this);
 
                 if (!string.IsNullOrEmpty(path))
@@ -148,6 +170,10 @@ namespace AvantGarde.Views
             {
                 ShowError(e);
             }
+            finally
+            {
+                EndDialog();
+            }
         }
 
         public async void ShowSolutionDefaultsDialog()
@@ -156,9 +182,18 @@ namespace AvantGarde.Views
             dialog.Title = "Solution Defaults";
             dialog.Properties = App.Settings.SolutionDefaults;
 
-            if (await dialog.ShowDialog<bool>(this))
+            try
             {
-                App.Settings.Write();
+                StartDialog();
+
+                if (await dialog.ShowDialog<bool>(this))
+                {
+                    App.Settings.Write();
+                }
+            }
+            finally
+            {
+                EndDialog();
             }
         }
 
@@ -166,16 +201,15 @@ namespace AvantGarde.Views
         {
             Debug.WriteLine($"{nameof(MainWindow)}.{nameof(MainWindow.CloseSolution)}");
             _explorerPane.Solution = null;
-            _refreshTimer.Stop();
 
             Model.HasSolution = false;
             Model.HasProject = false;
             Model.IsWelcomeVisible = GetIsWelcomeVisible(false);
         }
 
-        public void ToggleExplorerView()
+        public void SetExplorerView(bool? open = null)
         {
-            _explorerPane.IsViewOpen = !_explorerPane.IsViewOpen;
+            _explorerPane.IsViewOpen = open ?? !_explorerPane.IsViewOpen;
             ResetSplitter();
         }
 
@@ -195,11 +229,20 @@ namespace AvantGarde.Views
                 var dialog = new SolutionWindow();
                 dialog.Properties = _explorerPane.Solution.Properties;
 
-                // Leave it to timer to pick up change
-                if (await dialog.ShowDialog<bool>(this))
+                try
                 {
-                    _cache.Upsert(_explorerPane.Solution);
-                    _cache.Write();
+                    StartDialog();
+
+                    // Leave it to timer to pick up change
+                    if (await dialog.ShowDialog<bool>(this))
+                    {
+                        _cache.Upsert(_explorerPane.Solution);
+                        _cache.Write();
+                    }
+                }
+                finally
+                {
+                    EndDialog();
                 }
             }
         }
@@ -215,11 +258,20 @@ namespace AvantGarde.Views
                 var dialog = new ProjectWindow();
                 dialog.Project = project;
 
-                // Leave it to timer to pick up change
-                if (await dialog.ShowDialog<bool>(this))
+                try
                 {
-                    _cache.Upsert(_explorerPane.Solution);
-                    _cache.Write();
+                    StartDialog();
+
+                    // Leave it to timer to pick up change
+                    if (await dialog.ShowDialog<bool>(this))
+                    {
+                        _cache.Upsert(_explorerPane.Solution);
+                        _cache.Write();
+                    }
+                }
+                finally
+                {
+                    EndDialog();
                 }
             }
         }
@@ -229,12 +281,21 @@ namespace AvantGarde.Views
             var dialog = new SettingsWindow();
             dialog.Settings = App.Settings;
 
-            if (await dialog.ShowDialog<bool>(this))
+            try
             {
-                App.Settings.Write();
-                Model.IsWelcomeVisible = GetIsWelcomeVisible(_explorerPane.Solution != null);
-                _previewPane.Theme = App.Settings.PreviewTheme;
-                _explorerPane.Refresh(true);
+                StartDialog();
+
+                if (await dialog.ShowDialog<bool>(this))
+                {
+                    App.Settings.Write();
+                    Model.IsWelcomeVisible = GetIsWelcomeVisible(_explorerPane.Solution != null);
+                    _previewPane.Theme = App.Settings.PreviewTheme;
+                    _explorerPane.Refresh(true);
+                }
+            }
+            finally
+            {
+                EndDialog();
             }
         }
 
@@ -252,19 +313,69 @@ namespace AvantGarde.Views
 
         public async void ShowAboutDialog()
         {
+            StartDialog();
             var dialog = new AboutWindow();
             await dialog.ShowDialog(this);
+            EndDialog();
         }
 
         protected override void OnOpened(EventArgs e)
         {
+            Debug.WriteLine($"{nameof(MainWindow)}.{nameof(MainWindow.OnOpened)}");
+
+            Width = App.Settings.Width;
+            Height = App.Settings.Height;
+
             base.OnOpened(e);
+            _refreshTimer.Start();
 
-            var args = Environment.GetCommandLineArgs();
-
-            if (args.Length > 1)
+            if (App.Arguments != null)
             {
-                OpenSolution(args[1]);
+                var path = App.Arguments.Value;
+                Debug.WriteLine(App.Arguments.ToString());
+
+                var open = !App.Arguments.Get("c", false);
+
+                if (open)
+                {
+                    // Don't allow topmost if maximized
+                    App.Settings.IsTopmost &= !App.Settings.IsMaximized;
+                    Topmost = App.Settings.IsTopmost;
+                    Model.IsTopmost = App.Settings.IsTopmost;
+
+                    WindowState = App.Settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+                }
+                else
+                {
+
+                }
+
+                if (path != null)
+                {
+                    var item = new PathItem(path, PathKind.AnyFile);
+
+                    if (item.Kind == PathKind.Solution)
+                    {
+                        OpenSolution(item.FullName, open);
+                        return;
+                    }
+
+                    var fullname = item.FullName;
+
+                    while (item.ParentDirectory.Length != 0 && item.Exists)
+                    {
+                        item = new PathItem(item.ParentDirectory, PathKind.Directory);
+
+                        foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.csproj"))
+                        {
+                            OpenSolution(file.FullName, open);
+                            _explorerPane.TrySelect(App.Arguments.Get<string>("s", null) ?? fullname);
+                            return;
+                        }
+                    }
+                }
+
+                SetExplorerView(open);
             }
         }
 
@@ -278,6 +389,31 @@ namespace AvantGarde.Views
         private void AboutPressedHandler(object? sender, PointerPressedEventArgs e)
         {
             ShowAboutDialog();
+        }
+
+        private void PropertyChangedHandler(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            switch (e.Property.Name)
+            {
+                case nameof(Window.Width):
+                    if (WindowState != WindowState.Maximized && App.Settings.Width != Width)
+                    {
+                        App.Settings.Width = Width;
+                        _writeSettingsFlag = true;
+                    }
+                    break;
+                case nameof(Window.Height):
+                    if (WindowState != WindowState.Maximized && App.Settings.Height != Height)
+                    {
+                        App.Settings.Height = Height;
+                        _writeSettingsFlag = true;
+                    }
+                    break;
+                case nameof(Window.WindowState):
+                    App.Settings.IsMaximized = WindowState == WindowState.Maximized;
+                    _writeSettingsFlag = true;
+                    break;
+            }
         }
 
         private bool GetIsWelcomeVisible(bool hasSolution)
@@ -366,6 +502,14 @@ namespace AvantGarde.Views
                     // Non-blocking
                     UpdateLoader(_explorerPane.SelectedItem);
                 }
+
+                if (_writeSettingsFlag)
+                {
+                    Debug.WriteLine("Write settings");
+                    Debug.WriteLine("WRITE WIDTH: " + App.Settings.Width);
+                    _writeSettingsFlag = false;
+                    App.Settings.Write();
+                }
             }
             catch (Exception x)
             {
@@ -376,16 +520,33 @@ namespace AvantGarde.Views
 
         private async void ShowError(Exception e)
         {
-            var enabled = _refreshTimer.IsEnabled;
-            _refreshTimer.Stop();
-
-            await MessageBox.ShowDialog(this, e);
-
-            if (enabled)
+            try
             {
-                _refreshTimer.Start();
+                StartDialog();
+                await MessageBox.ShowDialog(this, e);
+            }
+            finally
+            {
+                EndDialog();
             }
         }
 
+        private void StartDialog()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Temporary fix
+                // https://github.com/AvaloniaUI/Avalonia/issues/7694
+                Topmost = false;
+            }
+
+            _refreshTimer.Stop();
+        }
+
+        private void EndDialog()
+        {
+            Topmost = App.Settings.IsTopmost;
+            _refreshTimer.Start();
+        }
     }
 }

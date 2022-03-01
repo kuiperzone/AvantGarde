@@ -5,15 +5,14 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>Assets/AvantGarde.ico</ApplicationIcon>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove=".gitignore"/>
     <AvaloniaResource Include="Assets\**"/>
+    <None Include="$(ProjectDir)\..\LICENSE" Link="LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Condition="'$(OS)' == 'Windows_NT'" Command="copy /Y &quot;$(ProjectDir)\..\LICENSE&quot; &quot;$(TargetDir)\LICENSE&quot;" />
-    <Exec Condition="'$(OS)' != 'Windows_NT'" Command="cp &quot;$(ProjectDir)/../LICENSE&quot; &quot;$(TargetDir)/LICENSE&quot;" />
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.12"/>

@@ -3,11 +3,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:AvantGarde.Views"
-    mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="750"
-    Width="500"
-    Height="750"
-    MaxWidth="500"
-    MaxHeight="750"
+    mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="640"
+    Width="400"
+    Height="640"
+    MaxWidth="400"
+    MaxHeight="640"
     CanResize="False"
     Title="About..."
     WindowStartupLocation="CenterOwner"
@@ -89,13 +89,13 @@
 
         <TextBlock Grid.Row="3"
             TextAlignment="Center"
-            Text="Copyright 2022 Andy Thomas"
+            Text="{Binding Global.Copyright}"
         />
 
         <TextBlock Grid.Row="4"
             Margin="0 8 0 0"
             TextAlignment="Center"
-            Text="License GPLv3"
+            Text="License GPL-3.0-or-later"
         />
 
         <views:LinkBlock Grid.Row="5"
@@ -103,7 +103,7 @@
             TextAlignment="Center"
             Foreground="{Binding Global.Colors.LinkForeground}"
             HoverForeground="{Binding Global.Colors.LinkHover}"
-            Text="{Binding Global.WebpageName}"
+            Text="{Binding Global.WebPage}"
             PointerPressed="WebPressedHandler"
         />
 

@@ -40,14 +40,20 @@
         </Grid>
 
         <views:CodeTextBox Grid.Column="0" Grid.Row="1"
-            Classes="mono"
             Name="CodeBox"
+            FontSize="{Binding Global.MonoFontSize}"
+            FontFamily="{Binding Global.MonoFontFamily}"
+            Foreground="{Binding Global.Colors.CodeBoxForeground}"
+            SelectionForegroundBrush="{Binding Global.Colors.CodeBoxSelectionForeground}"
             IsVisible="{Binding IsCodeChecked}"
             Text="{Binding CodeText}"
         />
         <views:CodeTextBox Grid.Column="0" Grid.Row="1"
-            Classes="mono"
             Name="OutputBox"
+            FontSize="{Binding Global.MonoFontSize}"
+            FontFamily="{Binding Global.MonoFontFamily}"
+            Foreground="{Binding Global.Colors.CodeBoxForeground}"
+            SelectionForegroundBrush="{Binding Global.Colors.CodeBoxSelectionForeground}"
             IsVisible="{Binding IsOutputChecked}"
             Text="{Binding OutputText}"
         />

@@ -1,0 +1,11 @@
+VERSION 1.0.0
+o Now accepts command arguments to facilitate launch from IDE. See project page for details.
+o Main window now remembers size and whether maximized.
+o Added installer on Windows.
+o Updated license details.
+o Updated webpage link.
+o Bug fix - Not showing relative assembly paths on Windows.
+
+
+VERSION 0.1.0-alpha
+o Initial version

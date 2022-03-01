@@ -1,8 +1,19 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas
-// LICENSE   : GPLv3
+// COPYRIGHT : Andy Thomas (C) 2022
+// LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+//
+// Avant Garde is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Avant Garde is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -123,6 +134,39 @@ namespace AvantGarde.Projects
 
             _hashCode = hash;
             return changed;
+        }
+
+        /// <summary>
+        /// Looks for an item in the solution. If name is a leaf name only, the first matching item is returned.
+        /// </summary>
+        public PathItem? Find(string? name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                foreach (var project in Projects.Values)
+                {
+                    if (project.Name.Equals(name, PathItem.PlatformComparison) || project.FullName.Equals(name, PathItem.PlatformComparison))
+                    {
+                        return project;
+                    }
+
+                    var item = project.Contents.FindExact(name);
+
+                    if (item != null)
+                    {
+                        return item;
+                    }
+
+                    item = project.Contents.FindFirst(name, true) ?? project.Contents.FindFirst(name, false);
+
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

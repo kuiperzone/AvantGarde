@@ -1,8 +1,19 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas
-// LICENSE   : GPLv3
+// COPYRIGHT : Andy Thomas (C) 2022
+// LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+//
+// Avant Garde is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Avant Garde is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -20,6 +31,7 @@ namespace AvantGarde.ViewModels
     public class MainWindowViewModel : PreviewOptionsViewModel
     {
         private MainWindow? _owner;
+
         private bool _isTopmost;
         private bool _isWelcomeVisible;
         private double _welcomeWidth = 150;
@@ -31,8 +43,8 @@ namespace AvantGarde.ViewModels
 
         public MainWindowViewModel()
         {
-            _isTopmost = App.Settings.IsTopmost;
             _isWelcomeVisible = App.Settings.ShowWelcome;
+            _isTopmost = App.Settings.IsTopmost;
             UpdateRecentMenu();
         }
 
@@ -139,7 +151,7 @@ namespace AvantGarde.ViewModels
 
         public void ToggleExplorerViewCommand()
         {
-            Owner?.ToggleExplorerView();
+            Owner?.SetExplorerView();
         }
 
         public void ExitCommand()
@@ -179,7 +191,7 @@ namespace AvantGarde.ViewModels
 
         public void WebpageCommand()
         {
-            ShellOpen.Start(GlobalModel.WebpageUrl);
+            ShellOpen.Start(GlobalModel.WebUrl);
         }
 
         public void AboutCommand()

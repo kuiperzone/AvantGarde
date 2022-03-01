@@ -1,8 +1,19 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas
-// LICENSE   : GPLv3
+// COPYRIGHT : Andy Thomas (C) 2022
+// LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+//
+// Avant Garde is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Avant Garde is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -50,9 +61,11 @@ namespace AvantGarde.ViewModels
         /// </summary>
         public const string DefaultMonoFamily = "Source Code Pro, monospace";
 
-        public static string WebpageName { get; } = "Project Page";
+        public static string WebPage { get; } = "Project Page";
 
-        public static string WebpageUrl { get; } = "https://github.com/kuiperzone/AvantGarde";
+        public static string WebUrl { get; } = "https://kuiper.zone/avantgarde-avalonia/";
+
+        public static string Copyright { get; } = "Copyright 2022 Andy Thomas";
 
         /// <summary>
         /// Gets the application version.
@@ -133,7 +146,7 @@ namespace AvantGarde.ViewModels
         /// </summary>
         public double HugeFontSize
         {
-            get { return AppFontSize * 5.0; }
+            get { return AppFontSize * 3.5; }
         }
 
         /// <summary>
@@ -156,6 +169,7 @@ namespace AvantGarde.ViewModels
         public FontFamily MonoFontFamily
         {
             get { return _monoFontFamily; }
+
             set
             {
                 if (_monoFontFamily.Name != value)

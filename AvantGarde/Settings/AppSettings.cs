@@ -1,13 +1,25 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas
-// LICENSE   : GPLv3
+// COPYRIGHT : Andy Thomas (C) 2022
+// LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+//
+// Avant Garde is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Avant Garde is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Themes.Fluent;
 using AvantGarde.Projects;
 using AvantGarde.ViewModels;
@@ -145,7 +157,7 @@ namespace AvantGarde.Settings
 
                 if (_app != null)
                 {
-                    GlobalModel.Global.MonoFontFamily = value;
+                    GlobalModel.Global.MonoFontFamily = new FontFamily(value);
                 }
             }
         }
@@ -159,6 +171,21 @@ namespace AvantGarde.Settings
         /// Gets or sets whether to pin main window.
         /// </summary>
         public bool IsTopmost { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether window is maximized.
+        /// </summary>
+        public bool IsMaximized { get; set; }
+
+        /// <summary>
+        /// Gets or sets the window width.
+        /// </summary>
+        public double Width { get; set; } = 800;
+
+        /// <summary>
+        /// Gets or sets the window height.
+        /// </summary>
+        public double Height { get; set; } = 600;
 
         /// <summary>
         /// Gets or sets welcome message.
@@ -234,6 +261,9 @@ namespace AvantGarde.Settings
             return ReadInternal();
         }
 
+        /// <summary>
+        /// Critical that new properties are assigned here.
+        /// </summary>
         public void AssignFrom(AppSettings other)
         {
             IsDarkTheme = other.IsDarkTheme;
@@ -242,6 +272,9 @@ namespace AvantGarde.Settings
             MonoFontFamily = other.MonoFontFamily;
             PreviewTheme = other.PreviewTheme;
             IsTopmost = other.IsTopmost;
+            IsMaximized = other.IsMaximized;
+            Width = other.Width;
+            Height = other.Height;
             ShowWelcome = other.ShowWelcome;
             SolutionDefaults = other.SolutionDefaults;
             RecentFiles = other.RecentFiles;

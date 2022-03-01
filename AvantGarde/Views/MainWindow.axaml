@@ -242,7 +242,7 @@
             </MenuItem>
 
             <MenuItem Header="_Help">
-                <MenuItem Header="{Binding Global.WebpageName}"
+                <MenuItem Header="{Binding Global.WebPage}"
                     Command="{Binding WebpageCommand}"
                 />
                 <MenuItem Header="About"

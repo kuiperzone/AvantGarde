@@ -29,13 +29,6 @@
             <Setter Property="MinHeight" Value="{Binding Global.MinStdButtonHeight}"/>
         </Style>
 
-        <Style Selector="TextBox.mono">
-            <Setter Property="FontSize" Value="{Binding Global.MonoFontSize}"/>
-            <Setter Property="FontFamily" Value="{Binding Global.MonoFontFamily}"/>
-            <Setter Property="Foreground" Value="{Binding Global.Colors.CodeBoxForeground}"/>
-            <Setter Property="SelectionForegroundBrush" Value="{Binding Global.Colors.CodeBoxSelectionForeground}"/>
-        </Style>
-
     </Application.Styles>
 
 </Application>
