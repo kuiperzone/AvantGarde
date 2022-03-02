@@ -35,7 +35,7 @@ modify your project files or write to your project directories.
 
 * Command line arguments provide for integration with an IDEs where supported. For example, it is possible to launch
 Avant Garde with so that a particular AXAML file is selected and shown on opening. It is also possible to launch it
-with its built-in **Project Explorer** closed (to the side) so as to minimize the application window foot-print.
+with its built-in **Project Explorer** hidden so as to minimize the application window foot-print.
 
 * Avant Garde requires the installation of the **Avalonia Nuget Package** in order to work because it utilizes the
 "preview host" which ships with Avalonia. It supports only .NET projects (not .NET Framework), and Avalonia
@@ -51,7 +51,7 @@ By the default, only "*.axaml;*.xaml" and image files are shown in the Project E
 files you will want to see in Avant Garde (the rest of your project will be hidden but see "Solution Settings" below).
 
 Below, Visual Code on Linux with Avant Garde floating in stay-on-top mode to the right. Note, here, that the
-Avant Garde project explorer has been closed (to the side) so as to focus on the form while minimizing the window
+Avant Garde project explorer has been hidden so as to focus on the form while minimizing the window
 footprint. The preview will be updated as AXAML changes are saved to file from the IDE.
 
 [![Avant Garde Screenshot](Media/Github-screenshot-ide.png)](Media/Github-screenshot-ide.png)
