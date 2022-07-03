@@ -15,7 +15,7 @@ Alternatively, clone and build the source. There are no special build requiremen
 
 For further information see the **main project page**:
 
-[https://kuiper.zone/avantgarde-avalonia/](https://kuiper.zone/avantgarde-avalonia/)
+[https://github.com/kuiperzone/AvantGarde](https://github.com/kuiperzone/AvantGarde)
 
 **Note.** Avant Garde is licensed under GPLv3 or later.
 

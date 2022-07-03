@@ -2,7 +2,7 @@
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022
 // LICENSE   : GPL-3.0-or-later
-// HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+// HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
 // Avant Garde is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -95,7 +94,7 @@ namespace AvantGarde.Views
         {
             var dialog = new OpenFileDialog();
             dialog.Title = "Open Solution or Project";
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Solutions (*.sln; *.csproj)", Extensions = { "sln", "csproj" } });
+            dialog.Filters?.Add(new FileDialogFilter() { Name = "Solutions (*.sln; *.csproj)", Extensions = { "sln", "csproj" } });
 
             try
             {
@@ -155,7 +154,7 @@ namespace AvantGarde.Views
             {
                 var dialog = new SaveFileDialog();
                 dialog.Title = "Export Schema";
-                dialog.Filters.Add(new FileDialogFilter() { Name = "XSD (*.xsd)", Extensions = { "xsd" } });
+                dialog.Filters?.Add(new FileDialogFilter() { Name = "XSD (*.xsd)", Extensions = { "xsd" } });
                 dialog.InitialFileName = "AvaloniaSchema-" + MarkupDictionary.Version + ".xsd";
 
                 StartDialog();
@@ -334,7 +333,7 @@ namespace AvantGarde.Views
                 var path = App.Arguments.Value;
                 Debug.WriteLine(App.Arguments.ToString());
 
-                var open = !(App.Arguments.Get("m", false) || App.Arguments.Get("min-explorer", false));
+                var open = !(App.Arguments.GetOrDefault("m", false) || App.Arguments.GetOrDefault("min-explorer", false));
 
                 if (open)
                 {
@@ -369,7 +368,7 @@ namespace AvantGarde.Views
                         foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.csproj"))
                         {
                             OpenSolution(file.FullName, open);
-                            _explorerPane.TrySelect(App.Arguments.Get<string>("s", null) ?? App.Arguments.Get<string>("select", null) ?? fullname);
+                            _explorerPane.TrySelect(App.Arguments["s"] ?? App.Arguments["select"] ?? fullname);
                             return;
                         }
                     }

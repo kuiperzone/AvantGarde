@@ -2,7 +2,7 @@
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022
 // LICENSE   : GPL-3.0-or-later
-// HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+// HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
 // Avant Garde is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -16,8 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace AvantGarde.Markup

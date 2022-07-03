@@ -16,44 +16,39 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-namespace AvantGarde.Settings
+using System;
+using Avalonia.Controls;
+using AvantGarde.Test.Internal;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace AvantGarde.Utility.Test
 {
-    public class RecentFile : IComparable, IComparable<RecentFile>
+    public class TypeExtensionTest : TestUtilBase
     {
-        public RecentFile()
+        public TypeExtensionTest(ITestOutputHelper helper)
+            : base(helper)
         {
-            Path = string.Empty;
         }
 
-        public RecentFile(string path)
+        [Fact]
+        public void GetFriendlyType_TupleInt()
         {
-            Path = path;
-            Update();
+            var temp = typeof(Tuple<int, string>);
+            var name = temp.GetFriendlyName();
+
+            WriteLine(name);
+            Assert.Equal("Tuple<int, string>", name);
         }
 
-        public string Path { get; set; }
-
-        public long Timestamp { get; set; }
-
-        public void Update()
+        [Fact]
+        public void GetFriendlyType_GenericEvent()
         {
-            Timestamp = DateTime.UtcNow.Ticks;
+            var temp = typeof(TextBlock).GetEvent("PointerMoved");
+            var name = temp?.EventHandlerType.GetFriendlyName();
+
+            WriteLine(name);
+            Assert.Equal("EventHandler<PointerEventArgs>", name);
         }
-
-        public int CompareTo(RecentFile? other)
-        {
-            if (other == null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other.Timestamp.CompareTo(Timestamp);
-        }
-
-        public int CompareTo(object? other)
-        {
-            return CompareTo(other as RecentFile);
-        }
-
     }
 }

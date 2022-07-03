@@ -2,7 +2,7 @@
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022
 // LICENSE   : GPL-3.0-or-later
-// HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+// HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
 // Avant Garde is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -35,7 +35,7 @@ namespace AvantGarde
             {
                 App.Arguments = new ArgumentParser(args);
 
-                if (App.Arguments.Get("v", false) || App.Arguments.Get("version", false))
+                if (App.Arguments.GetOrDefault("v", false) || App.Arguments.GetOrDefault("version", false))
                 {
                     Console.WriteLine("Avant Garde: " + GlobalModel.Version);
                     Console.WriteLine(GlobalModel.Copyright);
@@ -43,7 +43,7 @@ namespace AvantGarde
                     return 0;
                 }
 
-                if (App.Arguments.Get("h", false) || App.Arguments.Get("help", false))
+                if (App.Arguments.GetOrDefault("h", false) || App.Arguments.GetOrDefault("help", false))
                 {
                     var Indent = new string(' ', 4);
                     Console.WriteLine("Usage:");

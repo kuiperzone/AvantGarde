@@ -2,7 +2,7 @@
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022
 // LICENSE   : GPL-3.0-or-later
-// HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+// HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
 // Avant Garde is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -16,9 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -36,19 +33,24 @@ namespace AvantGarde.Utility
     {
         // This code was originally derived from MIT licensed work by Richard Lopes but has been
         // substantially modified from: https://www.codeproject.com/Articles/3111/C-NET-Command-Line-Arguments-Parser
-        private static readonly Regex ArgSplitter = new Regex(@"^-{1,2}|=|:", RegexOptions.Compiled);
+        private const string KeyExists = "Repeated option value: ";
+        private const string MultipleValues = "Contains more than one value: ";
+
+        private static readonly Regex ArgSplitter = new Regex(@"^-{1,2}|=", RegexOptions.Compiled);
         private static readonly Regex QuoteRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.Compiled);
         private static readonly Regex StringSplitter = new Regex("(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", RegexOptions.Compiled);
 
+        private readonly char _sep = ' ';
         private readonly string? _string;
-        private readonly StringDictionary _dictionary = new();
+        private readonly List<string> _keys = new();
+        private readonly Dictionary<string, string> _dictionary = new();
 
         /// <summary>
         /// Constructor with argument string.
         /// See: <see cref="ArgumentParser(IEnumerable{string}, bool)"/>.
         /// </summary>
         public ArgumentParser(string args, bool strict = true)
-            : this(SplitSingle(args), strict, false, null)
+            : this(SplitString(args), args, strict)
         {
         }
 
@@ -58,173 +60,153 @@ namespace AvantGarde.Utility
         /// strict is false, repeated keys and repeated floating values are ignored.
         /// </summary>
         public ArgumentParser(IEnumerable<string> args, bool strict = true)
-            : this(args, strict, false, null)
+            : this(args, null, strict)
         {
         }
 
-        private ArgumentParser(IEnumerable<string> args, bool strict, bool stripValue, string[]? stripKeys)
+        private ArgumentParser(IEnumerable<string> args, string? str, bool strict)
         {
-            const string KeyExits = "Repeated option value: ";
-            const string MultipleValues = "Contains more than one value: ";
+            StringBuilder? sb = str == null ? new(128) : null;
+            Tuple<string?, string?, string?>? lastKey = null;
 
-            string[] parts;
-            string? key = null;
-            string? appendStr = null;
-            var sb = new StringBuilder();
-
-            // Valid parameters forms:
-            // {-,/,--}param{ ,=,:}((",')value(",'))
-            // Examples:
-            // -param1 value1 --param2 /param3:"Test-:-work"
-            //   /param4=happy -param5 '--=nice=--'
-            foreach (var str in args)
+            foreach (var temp in args)
             {
-                if (string.IsNullOrWhiteSpace(str))
+                if (sb != null)
+                {
+                    if (sb.Length != 0)
+                    {
+                        sb.Append(' ');
+                    }
+
+                    sb.Append(temp);
+                }
+
+                var part = SplitPart(temp);
+
+                if (part == null)
                 {
                     continue;
                 }
-                appendStr = null;
 
-                // Look for new parameters (-,/ or --)
-                // and a possible enclosed value (=,:)
-                parts = ArgSplitter.Split(str, 3);
-
-                switch (parts.Length)
+                if (part.Item2 != null && part.Item3 != null)
                 {
-                case 1:
+                    // Key AND value
+                    AddTrailingKey(lastKey, strict);
+                    lastKey = null;
 
-                    // Found a value for the last parameter
-                    // found (space separator)
-                    parts[0] = QuoteRemover.Replace(parts[0], "$1");
-
-                    if (key != null)
+                    // Handle this key and value
+                    if (_dictionary.TryAdd(part.Item2.ToLowerInvariant(), part.Item3))
                     {
-                        if (!_dictionary.ContainsKey(key))
+                        _sep = '=';
+                        _keys.Add(part.Item2);
+                    }
+                    else
+                    if (strict)
+                    {
+                        throw new FormatException(KeyExists + part.Item2);
+                    }
+                }
+                else
+                if (part.Item2 != null && part.Item3 == null)
+                {
+                    // Key only
+                    AddTrailingKey(lastKey, strict);
+
+                    // Hold
+                    lastKey = part;
+                }
+                else
+                if (part.Item2 == null && part.Item3 != null)
+                {
+                    if (lastKey?.Item2 != null)
+                    {
+                        if (_dictionary.TryAdd(lastKey.Item2.ToLowerInvariant(), part.Item3))
                         {
-                            appendStr = str;
-                            _dictionary.Add(key, parts[0]);
+                            _keys.Add(lastKey.Item2);
                         }
                         else
                         if (strict)
                         {
-                            throw new FormatException(KeyExits + key);
+                            throw new FormatException(KeyExists + part.Item2);
                         }
 
-                        key = null;
+                        lastKey = null;
                     }
                     else
                     if (Value == null)
                     {
-                        if (!stripValue)
-                        {
-                            appendStr = str;
-                            Value = parts[0];
-                        }
+                        Value = part.Item3;
                     }
                     else
                     if (strict)
                     {
                         // Error: no parameter waiting for a value
-                        throw new FormatException(MultipleValues + str);
+                        throw new FormatException(MultipleValues + part.Item3);
                     }
-
-                    break;
-
-                case 2:
-                    // Found just a parameter
-                    // The last parameter is still waiting.
-                    // With no value, set it to true.
-                    if (key != null)
-                    {
-                        if (!_dictionary.ContainsKey(key))
-                        {
-                            appendStr = str;
-                            _dictionary.Add(key, bool.TrueString);
-                        }
-                        else
-                        if (strict)
-                        {
-                            throw new FormatException(KeyExits + key);
-                        }
-                    }
-
-                    key = Strip(parts[1], stripKeys);
-                    break;
-
-                case 3:
-                    // Parameter with enclosed value.
-                    // The last parameter is still waiting.
-                    // With no value, set it to true.
-                    if (key != null)
-                    {
-                        if (!_dictionary.ContainsKey(key))
-                        {
-                            _dictionary.Add(key, bool.TrueString);
-                        }
-                        else
-                        if (strict)
-                        {
-                            throw new FormatException(KeyExits + key);
-                        }
-                    }
-
-                    key = parts[1];
-
-                    // Remove possible enclosing characters (",')
-                    if (!_dictionary.ContainsKey(key))
-                    {
-                        key = Strip(key, stripKeys);
-
-                        if (key != null)
-                        {
-                            appendStr = str;
-                            parts[2] = QuoteRemover.Replace(parts[2], "$1");
-                            _dictionary.Add(key, parts[2]);
-                        }
-                    }
-                    else
-                    if (strict)
-                    {
-                        throw new FormatException(KeyExits + key);
-                    }
-
-                    key = null;
-                    break;
                 }
-
-                if (appendStr != null)
-                {
-                    sb.Append(appendStr);
-                    sb.Append(" ");
-                }
-
-                // Leave for below
-                appendStr = str;
             }
 
-            // In case a parameter is still waiting
-            if (key != null)
+            AddTrailingKey(lastKey, strict);
+
+            if (_keys.Count != _dictionary.Count)
             {
-                if (!_dictionary.ContainsKey(key))
-                {
-                    sb.Append(appendStr);
-                    _dictionary.Add(key, bool.TrueString);
-                }
-                else
-                if (strict)
-                {
-                    throw new FormatException(KeyExits + key);
-                }
+                throw new InvalidOperationException("Error - key and dictionary counts different in constructor");
             }
 
-            _string = sb.ToString()?.Trim();
-            Strict = strict;
+            _string = str ?? sb?.ToString();
+            IsStrict = strict;
+        }
+
+        private ArgumentParser(List<string> keys, Dictionary<string, string> dict, string? value, string? str,
+            char sep, bool strict)
+        {
+            // Clone only
+            _sep = sep;
+            _keys = keys;
+            _dictionary = dict;
+
+            Value = value;
+
+            _string = str;
+            IsStrict = strict;
+
+            if (_string == null)
+            {
+                var sb = new StringBuilder(Quote(value), 128);
+
+                foreach (var name in keys)
+                {
+                    if (sb.Length != 0)
+                    {
+                        sb.Append(' ');
+                    }
+
+                    if (name.Length > 1)
+                    {
+                        sb.Append('-');
+                    }
+
+                    sb.Append('-');
+                    sb.Append(name);
+
+                    var temp = dict[name.ToLowerInvariant()];
+
+                    if (temp.Length != 0)
+                    {
+                        sb.Append(sep);
+                        sb.Append(Quote(temp));
+                    }
+                }
+
+                _string = sb.ToString();
+            }
+
         }
 
         /// <summary>
         /// Gets whether the input was strictly parsed. See the constructor for details.
         /// </summary>
-        public bool Strict { get; }
+        public bool IsStrict { get; }
 
         /// <summary>
         /// Gets the floating value (or command) contained in the input. A floating value is one
@@ -251,7 +233,64 @@ namespace AvantGarde.Utility
         /// </summary>
         public string? this[string? key]
         {
-            get { return string.IsNullOrEmpty(key) ? Value : _dictionary[key]; }
+            get
+            {
+                if (string.IsNullOrEmpty(key))
+                {
+                    return Value;
+                }
+
+                if (_dictionary.TryGetValue(key.ToLowerInvariant(), out string? rslt))
+                {
+                    if (rslt.Length == 0)
+                    {
+                        // Default
+                        return bool.TrueString;
+                    }
+
+                    return rslt;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Static utility which adds quotes around a string if it contains a space and does not
+        /// begin with a quote character. If the string is null, the result is null.
+        /// </summary>
+        public static string? Quote(string? s)
+        {
+            if (s != null && !s.StartsWith('"') && s.Contains(' '))
+            {
+                return $"\"{s}\"";
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Gets a mandatory string value for the given key. If the key does not exist, ArgumentException is
+        /// thrown. If the key exists but value cannot be parsed, FormatException is thrown. Key case is ignored.
+        /// If key is null, <see cref="Value"/> converted and returned.
+        /// </summary>
+        /// <exception cref="ArgumentException">Mandatory value not specified</exception>
+        /// <exception cref="ArgumentException">Mandatory key not specified</exception>
+        public string GetOrThrow(string? key)
+        {
+            var str = this[key];
+
+            if (str == null)
+            {
+                if (key == null)
+                {
+                    throw new ArgumentException($"Mandatory value not specified");
+                }
+
+                throw new ArgumentException($"Mandatory '{key}' not specified");
+            }
+
+            return str;
         }
 
         /// <summary>
@@ -260,9 +299,9 @@ namespace AvantGarde.Utility
         /// the key exists but value cannot be parsed, FormatException is thrown. Key case is ignored. If
         /// key is null, <see cref="Value"/> converted and returned.
         /// </summary>
-        /// <exception cref="ArgumentException">Mandatory value not specified<exception>
-        /// <exception cref="ArgumentException">Mandatory key not specified<exception>
-        public T Get<T>(string? key)
+        /// <exception cref="ArgumentException">Mandatory value not specified</exception>
+        /// <exception cref="ArgumentException">Mandatory key not specified</exception>
+        public T GetOrThrow<T>(string? key)
             where T : IConvertible
         {
             var str = this[key];
@@ -284,70 +323,81 @@ namespace AvantGarde.Utility
         /// Gets an optional value for the given key. The value is converted to the specified type
         /// using InvariantCulture. If the key does not exist, the given default value is returned
         /// instead. If the key exists but value cannot be parsed, FormatException is thrown if
-        /// <see cref="Strict"/> is true (otherwise def is returned). Key case is ignored. If
+        /// <see cref="IsStrict"/> is true (otherwise def is returned). Key case is ignored. If
         /// key is null, <see cref="Value"/> converted and returned.
         /// </summary>
-        public T? Get<T>(string? key, T? def)
+        public T GetOrDefault<T>(string? key, T def)
             where T : IConvertible
         {
             var str = this[key];
 
             if (str != null)
             {
-                return ConvertType(str, Strict, def);
+                return ConvertType(str, IsStrict, def);
             }
 
             return def;
         }
 
         /// <summary>
-        /// Gets an array of key names. The order is undefined and values will be lowercase.
-        /// A new array instance is returned on each call.
+        /// Gets an array of key names. A new array instance is returned on each call.
         /// </summary>
         public string[] GetKeys()
         {
-            int count = _dictionary.Count;
-            var result = Array.Empty<string>();
-
-            if (count > 0)
-            {
-                result = new string[count];
-                count = 0;
-
-                foreach (string key in _dictionary.Keys)
-                {
-                    result[count++] = key;
-                }
-            }
-
-            return result;
+            return _keys.ToArray();
         }
 
         /// <summary>
         /// Clones the instance, allowing the removal of specified keys. The <see cref="Value"/>
         /// of the result will be null if stripValue is true.
         /// </summary>
-        public ArgumentParser Clone(bool stripValue, params string[] stripKeys)
+        public ArgumentParser Clone(bool stripValue = false, params string[] stripKeys)
         {
-            if (stripKeys != null)
+            var keys = _keys;
+            var dict = _dictionary;
+            var value = !stripValue ? Value : null;
+            var str = Value == value ? _string : null;
+
+            if (stripKeys != null && stripKeys.Length != 0)
             {
-                // Clean up
+                keys = new(_keys);
+                dict = new(_dictionary);
+
                 for (int n = 0; n < stripKeys.Length; ++n)
                 {
-                    stripKeys[n] = stripKeys[n].Trim().TrimStart('-', '/');
+                    var temp = stripKeys[n].Trim().TrimStart('-').ToLowerInvariant();
+
+                    if (dict.Remove(temp))
+                    {
+                        str = null;
+
+                        for (int k = 0; k < keys.Count; ++k)
+                        {
+                            if (keys[k].Equals(temp, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                Console.WriteLine("Removed from keys: " + temp);
+                                keys.RemoveAt(k);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (keys.Count != dict.Count)
+                {
+                    throw new InvalidOperationException("Error - key and dictionary counts different in clone");
                 }
             }
 
-            return new ArgumentParser(SplitSingle(_string), Strict, stripValue, stripKeys);
+            return new ArgumentParser(keys, dict, value, str, _sep, IsStrict);
         }
 
         /// <summary>
-        /// Overrides ToString() and returns the command line as a string. The result will be
-        /// cleaned of superfluous spaces and any arguments that were ignored.
+        /// Overrides and returns string.
         /// </summary>
         public override string ToString()
         {
-            return _string ?? string.Empty;
+            return _string ?? "";
         }
 
         private static T ConvertType<T>(string s)
@@ -372,28 +422,49 @@ namespace AvantGarde.Utility
             return (T)Convert.ChangeType(s, typeof(T), CultureInfo.InvariantCulture);
         }
 
-        private static T? ConvertType<T>(string s, bool strict, T? def)
+        private static T ConvertType<T>(string s, bool strict, T def)
             where T : IConvertible
         {
-            if (!strict)
+            if (strict)
             {
-                try
+                return ConvertType<T>(s);
+            }
+
+            try
+            {
+                return ConvertType<T>(s);
+            }
+            catch
+            {
+                return def;
+            }
+        }
+
+        private bool AddTrailingKey(Tuple<string?, string?, string?>? part, bool strict)
+        {
+            if (part?.Item2 != null)
+            {
+                // No value
+                if (_dictionary.TryAdd(part.Item2.ToLowerInvariant(), ""))
                 {
-                    return ConvertType<T>(s);
+                    // Assume flag is true
+                    _keys.Add(part.Item2);
+                    return true;
                 }
-                catch
+
+                if (strict)
                 {
-                    return def;
+                    throw new FormatException(KeyExists + part.Item2);
                 }
             }
 
-            return ConvertType<T>(s);
+            return false;
         }
 
-        private static string[] SplitSingle(string? args)
+        private static string[] SplitString(string? args)
         {
-            // Map: "-size=100 /height:'400' -string \"Dir\\Folder/Path Name!\" --debug"
-            // To : { "-size=100", "/height:'400'", "-string", "\"Dir\\Folder/Path Name!\"", "--debug" };
+            // Map: "-size=100 -height:'400' -string \"Dir\\Folder/Path Name!\" --debug"
+            // To : { "-size=100", "-height:'400'", "-string", "\"Dir\\Folder/Path Name!\"", "--debug" };
 
             if (!string.IsNullOrEmpty(args))
             {
@@ -403,22 +474,32 @@ namespace AvantGarde.Utility
             return Array.Empty<string>();
         }
 
-        private static string? Strip(string? key, string[]? stripKeys)
+        private static Tuple<string?, string?, string?>? SplitPart(string? str)
         {
-            if (key == null || stripKeys == null)
+            // Item1 = prefix ("--" or "-")
+            // Item2 = key
+            // Item3 = value
+            if (!string.IsNullOrEmpty(str))
             {
-                return key;
-            }
+                // Look for new parameters (-,/ or --)
+                // and a possible enclosed value (=,:)
+                var parts = ArgSplitter.Split(str, 3);
 
-            foreach (var k in stripKeys)
-            {
-                if (string.Equals(k, key, StringComparison.InvariantCultureIgnoreCase))
+                switch(parts.Length)
                 {
-                    return null;
+                    case 1:
+                        // Found a value only (but may belong to previous key)
+                        return new Tuple<string?, string?, string?>(null, null, QuoteRemover.Replace(parts[0], "$1"));
+                    case 2:
+                        // Found a key only
+                        return new Tuple<string?, string?, string?>(parts[0], parts[1], null);
+                    case 3:
+                        return new Tuple<string?, string?, string?>(parts[0], parts[1], QuoteRemover.Replace(parts[2], "$1"));
                 }
             }
 
-            return key;
+            return null;
         }
+
     }
 }

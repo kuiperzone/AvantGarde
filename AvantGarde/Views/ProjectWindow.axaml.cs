@@ -2,7 +2,7 @@
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022
 // LICENSE   : GPL-3.0-or-later
-// HOMEPAGE  : https://kuiper.zone/avantgarde-avalonia/
+// HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
 // Avant Garde is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -16,8 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
@@ -216,7 +214,7 @@ namespace AvantGarde.Views
             {
                 var dialog = new OpenFileDialog();
                 dialog.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
-                dialog.Filters.Add(new FileDialogFilter() { Name = "Assembly (*.dll)", Extensions = { "dll" } });
+                dialog.Filters?.Add(new FileDialogFilter() { Name = "Assembly (*.dll)", Extensions = { "dll" } });
                 dialog.Directory = Project?.Solution?.ParentDirectory;
 
                 var path = await dialog.ShowAsync(this);
