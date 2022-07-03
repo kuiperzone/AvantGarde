@@ -16,9 +16,6 @@ Avant Garde is licensed under GPLv3 or later.
 **NOTE.** Avant Garde supports only .NET projects (not .NET Framework), and Avalonia XAML (AXAML) forms. It cannot be
 used to preview WPF XAML.
 
-It requires the installation of the **Avalonia Nuget Package** in order to work because it utilizes the
-"preview host" which ships with Avalonia. If your project references Avalonia, then no action is required as the
-Avalonia Nuget Package should already be available on your system.
 
 ## Features ##
 
