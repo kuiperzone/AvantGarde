@@ -30,9 +30,10 @@ desktop.ini
 **/[Oo][Uu][Tt]/
 **/[Oo][Uu][Tt][Pp][Uu][Tt]/
 
-# Build
+# Build, Deploy
 **/[Bb][Ll][Dd]/
 **/[Bb][Uu][Ii][Ll][Dd]*/
+**/[Dd][Ee][Pp][Ll][Oo][Yy]*/
 
 # Debug, Release, Profile
 **/[Dd][Ee][Bb][Uu][Gg]*/
