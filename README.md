@@ -93,10 +93,10 @@ There are a number of options associated with preview generation, as shown by th
 #### Grid Lines & Colors ####
 The "Grid Lines & Colors" options will cause XAML `Grid` to be high-lighted with lines and background shade colours.
 
-#### Disabe Events ####
+#### Disable Events ####
 The "Disable Events" option disables mouse interaction with the preview. This may be useful because it strips out
-all known Avalonia Control events prior to generation of the preview. When disabled, events can be added and changed
-in the source code *without* having to re-build the assembly each time.
+all known Avalonia Control events from the XML prior to generation of the preview. When disabled, events can be added
+and changed in the source code *without* having to re-build the assembly each time.
 
 #### Prefetch Assets ####
 When checked, the "Prefetch Assets" option will cause Avant Garde to locate asset files (i.e. images) within your
