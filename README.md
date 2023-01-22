@@ -6,8 +6,7 @@ solution for Linux.
 
 **[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
-Downloads include AppImages for Linux and Setup files for Windows. Don't forget to set the "Execute" permission
-for AppImage files. Alternatively, clone and build the source. There are no special build requirements.
+Downloads include AppImages for Linux and Setup files for Windows. It isn't actively tested on MacOS, although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/issues/6). However, you will need to clone and build from source. There are no special build requirements. 
 
 Avant Garde is licensed under GPLv3 or later.
 
