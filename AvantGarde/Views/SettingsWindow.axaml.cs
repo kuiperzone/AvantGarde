@@ -50,12 +50,12 @@ namespace AvantGarde.Views
             _darkRadio = this.FindOrThrow<RadioButton>("DarkRadio");
 
             _appFontUpDown = this.FindOrThrow<NumericUpDown>("AppFontUpDown");
-            _appFontUpDown.Minimum = GlobalModel.MinFontSize;
-            _appFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            _appFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            _appFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
 
             _monoFontUpDown = this.FindOrThrow<NumericUpDown>("MonoFontUpDown");
-            _monoFontUpDown.Minimum = GlobalModel.MinFontSize;
-            _monoFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            _monoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            _monoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
 
             _monoFontBox = this.FindOrThrow<TextBox>("MonoFontBox");
             _previewCombo = this.FindOrThrow<ComboBox>("PreviewCombo");
@@ -88,8 +88,8 @@ namespace AvantGarde.Views
         {
             _lightRadio.IsChecked = !settings.IsDarkTheme;
             _darkRadio.IsChecked = settings.IsDarkTheme;
-            _appFontUpDown.Value = settings.AppFontSize;
-            _monoFontUpDown.Value = settings.MonoFontSize;
+            _appFontUpDown.Value = (decimal)settings.AppFontSize;
+            _monoFontUpDown.Value = (decimal)settings.MonoFontSize;
             _monoFontBox.Text = settings.MonoFontFamily;
             _previewCombo.SelectedItem = settings.PreviewTheme;
             _welcomeCheck.IsChecked = settings.ShowWelcome;

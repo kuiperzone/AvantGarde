@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Assets/AvantGarde.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove=".gitignore"/>
-		<AvaloniaResource Include="Assets\**"/>
+		<None Remove=".gitignore" />
+		<AvaloniaResource Include="Assets\**" />
 		<None Include="$(ProjectDir)\..\LICENSE" Link="LICENSE">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -17,11 +17,12 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.17"/>
+		<PackageReference Include="Avalonia" Version="11.0.0-preview4" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview4" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.0-preview4" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview4" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.17"/>
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview4" />
 	</ItemGroup>
 </Project>
