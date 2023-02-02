@@ -7,8 +7,8 @@
 		<ApplicationIcon>Assets/AvantGarde.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove=".gitignore"/>
-		<AvaloniaResource Include="Assets\**"/>
+		<None Remove=".gitignore" />
+		<AvaloniaResource Include="Assets\**" />
 		<None Include="$(ProjectDir)\..\LICENSE" Link="LICENSE">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -17,11 +17,11 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.17"/>
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.17"/>
+		<PackageReference Include="Avalonia" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.18" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.17"/>
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
 	</ItemGroup>
 </Project>

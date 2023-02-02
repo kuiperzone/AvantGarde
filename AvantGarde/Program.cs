@@ -16,7 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using Avalonia;
 using AvantGarde.Utility;
 using AvantGarde.ViewModels;

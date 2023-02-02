@@ -58,7 +58,6 @@ namespace AvantGarde.Markup.Test
             WriteLine(temp.Width);
             WriteLine(temp.MinWidth);
             WriteLine(temp.MaxWidth);
-
         }
 
     }
