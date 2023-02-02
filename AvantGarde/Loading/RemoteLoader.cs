@@ -137,12 +137,14 @@ namespace AvantGarde.Loading
         /// </summary>
         public static int GetFreePort()
         {
+            Debug.WriteLine(nameof(GetFreePort));
             var l = new TcpListener(IPAddress.Loopback, 0);
             l.Start();
 
             int port = ((IPEndPoint)l.LocalEndpoint).Port;
             l.Stop();
 
+            Debug.WriteLine("Port: " + port);
             return port;
         }
 
@@ -321,7 +323,10 @@ namespace AvantGarde.Loading
                 {
                     Debug.WriteLine("EXCEPTION:" + e);
                     StopNoSync();
-                    InvokePreviewReady(CreatePreview(factory, new PreviewError(e.Message)));
+
+                    // TBD
+                    InvokePreviewReady(CreatePreview(factory, new PreviewError(e.ToString())));
+                    // InvokePreviewReady(CreatePreview(factory, new PreviewError(e.Message)));
                 }
             }
         }
@@ -364,6 +369,7 @@ namespace AvantGarde.Loading
 
         private void StartHostNoSync(LoadPayload load)
         {
+Console.WriteLine("HERE");
             Debug.WriteLine($"{nameof(RemoteLoader)}.{nameof(StartHostNoSync)}");
             Debug.WriteLine("AppAssembly: " + load.AppAssembly);
 
@@ -377,6 +383,11 @@ namespace AvantGarde.Loading
             var host = FindDesignerHost(load.AppAvaloniaVersion);
             var port = GetFreePort();
             var args = $@"exec --runtimeconfig ""{load.AppConfigPath}"" --depsfile ""{load.AppDepsPath}"" ""{host}"" --transport tcp-bson://127.0.0.1:{port}/ ""{load.AppAssembly}""";
+
+            Console.WriteLine("HOST: " + host);
+            Console.WriteLine("Port: " + port);
+            Console.WriteLine("Args: " + args);
+            Console.WriteLine("Current: " + Environment.CurrentDirectory);
 
             v_listener = new BsonTcpTransport().Listen(IPAddress.Loopback, port, c => { v_connection = c; });
 
