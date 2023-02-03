@@ -112,7 +112,7 @@ namespace AvantGarde.Views
             }
         }
 
-        public void OpenSolution(string path, bool open = true)
+        public void OpenSolution(string path, bool openExplorer = true)
         {
             Debug.WriteLine($"{nameof(MainWindow)}.{nameof(MainWindow.OpenSolution)}");
             Debug.WriteLine(path);
@@ -138,7 +138,7 @@ namespace AvantGarde.Views
                 App.Settings.UpsertRecent(path);
                 _writeSettingsFlag = true;
 
-                SetExplorerView(open);
+                SetExplorerView(openExplorer);
                 _previewPane.Update(null);
             }
             catch (Exception e)
@@ -333,20 +333,17 @@ namespace AvantGarde.Views
                 var path = App.Arguments.Value;
                 Debug.WriteLine(App.Arguments.ToString());
 
-                var open = !(App.Arguments.GetOrDefault("m", false) || App.Arguments.GetOrDefault("min-explorer", false));
+                var openExplorer = !(App.Arguments.GetOrDefault("m", false) || App.Arguments.GetOrDefault("min-explorer", false));
 
-                if (open)
+                if (openExplorer)
                 {
                     // Don't allow topmost if maximized
                     App.Settings.IsTopmost &= !App.Settings.IsMaximized;
+
                     Topmost = App.Settings.IsTopmost;
                     Model.IsTopmost = App.Settings.IsTopmost;
 
                     WindowState = App.Settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-                }
-                else
-                {
-
                 }
 
                 if (path != null)
@@ -355,7 +352,7 @@ namespace AvantGarde.Views
 
                     if (item.Kind == PathKind.Solution)
                     {
-                        OpenSolution(item.FullName, open);
+                        OpenSolution(item.FullName, openExplorer);
                         return;
                     }
 
@@ -367,14 +364,14 @@ namespace AvantGarde.Views
 
                         foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.csproj"))
                         {
-                            OpenSolution(file.FullName, open);
+                            OpenSolution(file.FullName, openExplorer);
                             _explorerPane.TrySelect(App.Arguments["s"] ?? App.Arguments["select"] ?? fullname);
                             return;
                         }
                     }
                 }
 
-                SetExplorerView(open);
+                SetExplorerView(openExplorer);
             }
         }
 

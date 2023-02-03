@@ -295,7 +295,7 @@ namespace AvantGarde.Loading
 
                 if (v_process != null && (current == null || current.Load.AppAssemblyHashCode != factory.Load.AppAssemblyHashCode))
                 {
-                    // Re-start if app asssembly changes
+                    // Re-start if app assembly changes
                     Debug.WriteLine("App assembly change");
                     StopNoSync();
                 }
@@ -324,9 +324,7 @@ namespace AvantGarde.Loading
                     Debug.WriteLine("EXCEPTION:" + e);
                     StopNoSync();
 
-                    // TBD
-                    InvokePreviewReady(CreatePreview(factory, new PreviewError(e.ToString())));
-                    // InvokePreviewReady(CreatePreview(factory, new PreviewError(e.Message)));
+                    InvokePreviewReady(CreatePreview(factory, new PreviewError(e.Message)));
                 }
             }
         }
@@ -369,7 +367,6 @@ namespace AvantGarde.Loading
 
         private void StartHostNoSync(LoadPayload load)
         {
-Console.WriteLine("HERE");
             Debug.WriteLine($"{nameof(RemoteLoader)}.{nameof(StartHostNoSync)}");
             Debug.WriteLine("AppAssembly: " + load.AppAssembly);
 
@@ -384,11 +381,6 @@ Console.WriteLine("HERE");
             var port = GetFreePort();
             var args = $@"exec --runtimeconfig ""{load.AppConfigPath}"" --depsfile ""{load.AppDepsPath}"" ""{host}"" --transport tcp-bson://127.0.0.1:{port}/ ""{load.AppAssembly}""";
 
-            Console.WriteLine("HOST: " + host);
-            Console.WriteLine("Port: " + port);
-            Console.WriteLine("Args: " + args);
-            Console.WriteLine("Current: " + Environment.CurrentDirectory);
-
             v_listener = new BsonTcpTransport().Listen(IPAddress.Loopback, port, c => { v_connection = c; });
 
             var info = new ProcessStartInfo
@@ -399,6 +391,9 @@ Console.WriteLine("HERE");
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
+
+                // IMPORTANT: Needed for Flatpak (found with trial and error)
+                WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             };
 
             var proc = Process.Start(info) ??
@@ -550,11 +545,15 @@ Console.WriteLine("HERE");
             try
             {
                 Debug.WriteLine($"{nameof(RemoteLoader)}.{nameof(MessageHandler)}");
+                Debug.WriteLine($"Message type: {msg.GetType().Name}");
+
                 var factory = v_factory;
 
                 if (msg is FrameMessage frame)
                 {
                     Debug.WriteLine($"FRAME: {frame.SequenceId}, {frame.Width} x {frame.Height} px, {frame.Data.Length} bytes");
+                    Debug.WriteLine($"factory null: {factory == null}");
+                    Debug.WriteLine($"IsImmediate: {factory?.IsImmediate == true}");
 
                     if (factory?.IsImmediate == false)
                     {
@@ -576,7 +575,6 @@ Console.WriteLine("HERE");
                     Debug.WriteLine("UPDATE");
                     Debug.WriteLine("Exception: " + update.Exception?.Message);
                     Debug.WriteLine("Error: " + update.Error);
-
 
                     if (factory != null)
                     {
