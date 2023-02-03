@@ -17,9 +17,6 @@
 Thumbs.db
 desktop.ini
 
-**/*[Ww][Ii][Nn]-[Xx]64*/
-
-
 ###############################################################################
 # Ignore Builds & Binaries
 ###############################################################################
@@ -29,11 +26,7 @@ desktop.ini
 **/[Oo][Bb][Jj]/
 **/[Oo][Uu][Tt]/
 **/[Oo][Uu][Tt][Pp][Uu][Tt]/
-
-# Build, Deploy
-**/[Bb][Ll][Dd]/
-**/[Bb][Uu][Ii][Ll][Dd]*/
-**/[Dd][Ee][Pp][Ll][Oo][Yy]*/
+**/*[Ww][Ii][Nn]-[Xx]64*/
 
 # Debug, Release, Profile
 **/[Dd][Ee][Bb][Uu][Gg]*/
@@ -41,6 +34,12 @@ desktop.ini
 **/[Rr][Ee][Ll][Ee][Aa][Ss][Ee]*/
 **/*-[Rr][Ee][Ll][Ee][Aa][Ss][Ee]*/
 **/[Pp][Rr][Oo][Ff][Ii][Ll][Ee]*/
+
+# Build, Deploy, Internal
+**/[Bb][Ll][Dd]/
+**/[Bb][Uu][Ii][Ll][Dd]*/
+**/[Dd][Ee][Pp][Ll][Oo][Yy]*/
+**/[Ii][Nn][Tt][Ee][Rr][Nn][Aa][Ll]*/
 
 # AppDir
 **/[Aa][Pp][Pp][Dd][Ii][Rr]*/

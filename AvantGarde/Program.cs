@@ -17,8 +17,8 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia;
-using AvantGarde.Utility;
 using AvantGarde.ViewModels;
+using KuiperZone.Utility.Yaap;
 
 namespace AvantGarde
 {

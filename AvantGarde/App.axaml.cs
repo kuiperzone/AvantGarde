@@ -21,9 +21,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using AvantGarde.Settings;
-using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 using AvantGarde.Views;
+using KuiperZone.Utility.Yaap;
 
 namespace AvantGarde
 {
