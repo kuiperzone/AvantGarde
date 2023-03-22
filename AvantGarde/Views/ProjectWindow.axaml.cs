@@ -30,7 +30,7 @@ namespace AvantGarde.Views
     /// <summary>
     /// Shows project properties.
     /// </summary>
-    public class ProjectWindow : AvantWindow
+    public partial class ProjectWindow : AvantWindow
     {
         private readonly TextBlock _outputBlock;
         private readonly TextBlock _targetBlock;

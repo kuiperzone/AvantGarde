@@ -38,7 +38,7 @@ namespace AvantGarde.Loading
         /// <summary>
         /// Constructor. Mouse move.
         /// </summary>
-        public PointerEventMessage(IVisual sender, PointerEventArgs e)
+        public PointerEventMessage(Visual sender, PointerEventArgs e)
         {
             IsMoved = true;
             _position = GetModifiers(sender, e, _modifiers);
@@ -47,7 +47,7 @@ namespace AvantGarde.Loading
         /// <summary>
         /// Constructor. Pointer pressed.
         /// </summary>
-        public PointerEventMessage(IVisual sender, PointerPressedEventArgs e)
+        public PointerEventMessage(Visual sender, PointerPressedEventArgs e)
         {
             IsPressed = true;
             _position = GetModifiers(sender, e, _modifiers);
@@ -57,7 +57,7 @@ namespace AvantGarde.Loading
         /// <summary>
         /// Constructor. Pointer released.
         /// </summary>
-        public PointerEventMessage(IVisual sender, PointerReleasedEventArgs e)
+        public PointerEventMessage(Visual sender, PointerReleasedEventArgs e)
         {
             IsReleased = true;
             _position = GetModifiers(sender, e, _modifiers);
@@ -176,7 +176,7 @@ namespace AvantGarde.Loading
             }
         }
 
-        private static ProtocolButton GetPressButton(IVisual sender, PointerEventArgs e)
+        private static ProtocolButton GetPressButton(Visual sender, PointerEventArgs e)
         {
             var p = e.GetCurrentPoint(sender);
 
@@ -198,7 +198,7 @@ namespace AvantGarde.Loading
             return ProtocolButton.None;
         }
 
-        private static Point GetModifiers(IVisual sender, PointerEventArgs e, List<ProtocolModifiers> mods)
+        private static Point GetModifiers(Visual sender, PointerEventArgs e, List<ProtocolModifiers> mods)
         {
             var p = e.GetCurrentPoint(sender);
 

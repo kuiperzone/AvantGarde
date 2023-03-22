@@ -49,7 +49,7 @@ namespace AvantGarde.Views
         {
             base.OnOpened(e);
             ScaleSize();
-            this.SetCenterFix();
+            // this.SetCenterFix();  TBD
         }
 
         private void ScaleSize()

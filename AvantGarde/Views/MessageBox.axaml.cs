@@ -66,7 +66,7 @@ namespace AvantGarde.Views
         /// </summary>
         public string Message
         {
-            get { return _text.Text; }
+            get { return _text.Text ?? ""; }
             set { _text.Text = value; }
         }
 

@@ -22,7 +22,7 @@ using Avalonia.Controls;
 namespace AvantGarde.Utility
 {
     /// <summary>
-    /// Provies extension methods.
+    /// Provides extension methods.
     /// </summary>
     public static class ControlExtension
     {
@@ -30,7 +30,7 @@ namespace AvantGarde.Utility
         /// Finds control or throws.
         /// </summary>
         /// <exception cref="ArgumentException">Control not found</exception>
-        public static T FindOrThrow<T>(this IControl control, string name) where T : class, IControl
+        public static T FindOrThrow<T>(this Control control, string name) where T : Control
         {
             return control.FindControl<T>(name) ??
                 throw new ArgumentException($"Child control {name} not found in parent {control.Name ?? "control"}");
@@ -61,7 +61,7 @@ namespace AvantGarde.Utility
         /// Gets the owner Window of the control.
         /// </summary>
         /// <exception cref="ArgumentException">Control has no owner window</exception>
-        public static Window GetOwnerWindow(this IControl control)
+        public static Window GetOwnerWindow(this StyledElement control)
         {
             if (control is Window window)
             {
@@ -73,7 +73,7 @@ namespace AvantGarde.Utility
                 return GetOwnerWindow(control.Parent);
             }
 
-            throw new ArgumentException("Control has no owner window");
+            throw new ArgumentException("Element has no owner window");
         }
 
         private static PixelPoint GetOwnerOrScreenCenter(Window window)

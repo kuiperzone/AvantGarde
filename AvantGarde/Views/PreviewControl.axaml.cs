@@ -183,7 +183,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerMovedHandler(object? sender, PointerEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }
@@ -191,7 +191,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerPressedHandler(object? sender, PointerPressedEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }
@@ -199,7 +199,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerReleasedHandler(object? sender, PointerReleasedEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }

@@ -1,12 +1,17 @@
 <img src="Media/Github-banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
-**Avant Garde** is a cross-platform XAML previewer for the C# Avalonia Framework. It was the first Avalonia preview
-solution for Linux.
+**Avant Garde** is a cross-platform XAML previewer for the C# [Avalonia Framework](https://github.com/AvaloniaUI/Avalonia).
+It operates as a standalone application that works with your IDE, rather than an extension to an IDE. This means that
+Avant Garde is completely IDE agnostic.
 
 **[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
-Downloads include AppImages for Linux and Setup files for Windows. It isn't actively tested on MacOS, although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/issues/6). However, you will need to clone and build from source. There are no special build requirements. 
+*If you like this project, don't forget to like and share.*
+
+Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer** for Windows. It isn't actively tested on MacOS,
+although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/issues/6). However, you will
+need to clone and build from source. This, however, is straigh-forward as there are no special build requirements.
 
 Avant Garde is licensed under GPLv3 or later.
 
@@ -18,7 +23,8 @@ used to preview WPF XAML.
 
 ## Features ##
 
-* Avant Garde is a standalone application rather than an extension for an IDE. This means that is IDE agnostic.
+* Avant Garde is a standalone application rather than an extension for an IDE. Set its main window to stay-on-top,
+and it will update the moment you save your files from your IDE.
 
 * It provides a read-only view of your Avalonia project, watching for file changes. Previews are updated the
 moment you save changes from your IDE.
