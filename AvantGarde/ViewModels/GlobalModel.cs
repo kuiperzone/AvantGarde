@@ -63,7 +63,7 @@ namespace AvantGarde.ViewModels
 
         public static string WebUrl { get; } = "https://github.com/kuiperzone/AvantGarde";
 
-        public static string Copyright { get; } = "Copyright 2022 Andy Thomas";
+        public static string Copyright { get; } = "Copyright 2023 Andy Thomas";
 
         /// <summary>
         /// Gets the application version.
