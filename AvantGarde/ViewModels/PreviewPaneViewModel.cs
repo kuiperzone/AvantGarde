@@ -25,7 +25,7 @@ namespace AvantGarde.ViewModels
     {
         private string? _caretText;
 
-        public PreviewPane? Owner;
+        public PreviewPane? Owner { get; set; }
 
         public string? StatusText
         {

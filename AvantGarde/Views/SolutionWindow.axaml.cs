@@ -90,11 +90,15 @@ namespace AvantGarde.Views
         {
             if (Properties != null)
             {
-                Properties.SearchDepth = (int)_depthUpDown.Value;
+                if (_depthUpDown.Value != null)
+                {
+                    Properties.SearchDepth = (int)_depthUpDown.Value;
+                }
+
                 Properties.ShowEmptyDirectories = _showEmptyCheck.IsChecked == true;
                 Properties.Build = _debugRadio.IsChecked == true ? BuildKind.Debug : BuildKind.Release;
-                Properties.FilePatterns = _filePatternBox.Text;
-                Properties.ExcludeDirectories = _excludeDirectoriesBox.Text;
+                Properties.FilePatterns = _filePatternBox.Text ?? "";
+                Properties.ExcludeDirectories = _excludeDirectoriesBox.Text ?? "";
             }
 
             Close(true);

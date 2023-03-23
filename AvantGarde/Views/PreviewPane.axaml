@@ -5,8 +5,7 @@
     xmlns:views="clr-namespace:AvantGarde.Views"
     mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
 
-    xmlns:vm="using:AvantGarde.ViewModels"
-    x:DataType="vm:PreviewPaneViewModel"
+    x:CompileBindings="False"
 
     x:Class="AvantGarde.Views.PreviewPane">
 
@@ -47,9 +46,10 @@
                 DragDelta="SplitterDragHandler"
             />
 
-            <!-- IsVisible="{Binding $parent.DataContext.IsXamlViewable}" TBD in below -->
             <views:XamlCodeControl Grid.Row="2"
                 Name="XamlCode"
+                IsVisible="{Binding $parent.DataContext.IsXamlViewable}"
+
             />
 
         </Grid>

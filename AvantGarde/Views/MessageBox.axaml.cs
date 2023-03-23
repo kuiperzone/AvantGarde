@@ -30,19 +30,13 @@ namespace AvantGarde.Views
     /// </summary>
     public partial class MessageBox : AvantWindow
     {
-        private readonly StackPanel _panel;
-        private readonly TextBlock _text;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         public MessageBox()
         {
             AvaloniaXamlLoader.Load(this);
-
             Title = App.Current?.Name ?? string.Empty;
-            _text = this.FindControl<TextBlock>("Text");
-            _panel = this.FindControl<StackPanel>("Buttons");
         }
 
         /// <summary>
@@ -66,8 +60,8 @@ namespace AvantGarde.Views
         /// </summary>
         public string Message
         {
-            get { return _text.Text ?? ""; }
-            set { _text.Text = value; }
+            get { return MessageText.Text ?? ""; }
+            set { MessageText.Text = value; }
         }
 
         /// <summary>
@@ -186,7 +180,7 @@ namespace AvantGarde.Views
 
             btn.Click += (_, __) => { this.Close(rslt); };
 
-            _panel.Children.Add(btn);
+            ButtonsPanel.Children.Add(btn);
         }
     }
 

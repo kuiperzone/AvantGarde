@@ -61,7 +61,7 @@ namespace AvantGarde.Views
             _previewCombo = this.FindOrThrow<ComboBox>("PreviewCombo");
             _welcomeCheck = this.FindOrThrow<CheckBox>("WelcomeCheck");
 
-            _previewCombo.Items = Enum.GetValues(typeof(PreviewWindowTheme));
+            _previewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
             _previewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
 
 #if DEBUG

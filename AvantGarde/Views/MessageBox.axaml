@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterOwner">
 
     <StackPanel HorizontalAlignment="Center" Margin="12">
-        <TextBlock Name="Text"
+        <TextBlock Name="MessageText"
             TextWrapping="Wrap"
             Margin="0 24 0 0"
             MinWidth="250"

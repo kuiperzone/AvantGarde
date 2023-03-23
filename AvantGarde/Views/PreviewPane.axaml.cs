@@ -60,6 +60,8 @@ namespace AvantGarde.Views
             _xamlGrid = this.FindOrThrow<Grid>("XamlGrid");
             _xamlCode = this.FindOrThrow<XamlCodeControl>("XamlCode");
 
+            _xamlCode.IsVisible = false;
+
             _timer = new(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, TimerHandler);
             _timer.Start();
 
@@ -89,10 +91,10 @@ namespace AvantGarde.Views
         /// <summary>
         /// Gets or sets the preview window color.
         /// </summary>
-        public PreviewWindowTheme Theme
+        public PreviewWindowTheme WindowTheme
         {
-            get { return _previewControl.Theme; }
-            set { _previewControl.Theme = value; }
+            get { return _previewControl.WindowTheme; }
+            set { _previewControl.WindowTheme = value; }
         }
 
         /// <summary>

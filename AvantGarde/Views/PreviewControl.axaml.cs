@@ -48,7 +48,7 @@ namespace AvantGarde.Views
         }
 
         /// <summary>
-        /// Occurs when the user interracts with the preview.
+        /// Occurs when the user interacts with the preview.
         /// </summary>
         public Action<PointerEventMessage>? PointerEventOccurred;
 
@@ -60,7 +60,7 @@ namespace AvantGarde.Views
         /// <summary>
         /// Gets or sets the preview window color.
         /// </summary>
-        public PreviewWindowTheme Theme
+        public PreviewWindowTheme WindowTheme
         {
             get { return _model.Theme; }
             set { _model.Theme = value; }

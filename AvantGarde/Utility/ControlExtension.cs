@@ -32,6 +32,7 @@ namespace AvantGarde.Utility
         /// <exception cref="ArgumentException">Control not found</exception>
         public static T FindOrThrow<T>(this Control control, string name) where T : Control
         {
+            // Not needed? TBD
             return control.FindControl<T>(name) ??
                 throw new ArgumentException($"Child control {name} not found in parent {control.Name ?? "control"}");
         }
@@ -42,16 +43,20 @@ namespace AvantGarde.Utility
         /// </summary>
         public static bool SetCenterFix(this Window window)
         {
+            // Not needed? TBD
             if (window.WindowStartupLocation != WindowStartupLocation.Manual && !OperatingSystem.IsWindows())
             {
                 var size = GetWindowPixelSize(window);
                 var center = GetOwnerOrScreenCenter(window);
 
-                var x = center.X - size.Width / 2;
-                var y = center.Y - size.Height / 2;
-                window.WindowStartupLocation = WindowStartupLocation.Manual;
-                window.Position = new PixelPoint(x, y);
-                return true;
+                if (size != null && center != null)
+                {
+                    var x = center.Value.X - size.Value.Width / 2;
+                    var y = center.Value.Y - size.Value.Height / 2;
+                    window.WindowStartupLocation = WindowStartupLocation.Manual;
+                    window.Position = new PixelPoint(x, y);
+                    return true;
+                }
             }
 
             return false;
@@ -76,26 +81,42 @@ namespace AvantGarde.Utility
             throw new ArgumentException("Element has no owner window");
         }
 
-        private static PixelPoint GetOwnerOrScreenCenter(Window window)
+        private static PixelPoint? GetOwnerOrScreenCenter(Window window)
         {
             if (window.Owner is Window owner && window.WindowStartupLocation == WindowStartupLocation.CenterOwner)
             {
                 var oz = GetWindowPixelSize(owner);
-                var pos = owner.Position;
-                return new PixelPoint(pos.X + oz.Width / 2, pos.Y + oz.Height / 2);
+
+                if (oz != null)
+                {
+                    var pos = owner.Position;
+                    return new PixelPoint(pos.X + oz.Value.Width / 2, pos.Y + oz.Value.Height / 2);
+                }
+
+                return null;
             }
 
-            // Default to screen
-            var sz = window.Screens.Primary.WorkingArea.Size;
-            return new PixelPoint(sz.Width / 2, sz.Height / 2);
+            if (window.Screens.Primary != null)
+            {
+                // Default to screen
+                var sz = window.Screens.Primary.WorkingArea.Size;
+                return new PixelPoint(sz.Width / 2, sz.Height / 2);
+            }
+
+            return null;
         }
 
-        private static PixelSize GetWindowPixelSize(WindowBase window)
+        private static PixelSize? GetWindowPixelSize(WindowBase window)
         {
-            var scale = window.PlatformImpl.DesktopScaling;
-            double w = double.IsFinite(window.Width) ? window.Width : window.DesiredSize.Width;
-            double h = double.IsFinite(window.Height) ? window.Height : window.DesiredSize.Height;
-            return PixelSize.FromSize(new Size(double.IsFinite(w) ? w : 800, double.IsFinite(h) ? h : 800), scale);
+            if (window.PlatformImpl != null)
+            {
+                var scale = window.PlatformImpl.DesktopScaling;
+                double w = double.IsFinite(window.Width) ? window.Width : window.DesiredSize.Width;
+                double h = double.IsFinite(window.Height) ? window.Height : window.DesiredSize.Height;
+                return PixelSize.FromSize(new Size(double.IsFinite(w) ? w : 800, double.IsFinite(h) ? h : 800), scale);
+            }
+
+            return null;
         }
 
     }
