@@ -5,6 +5,8 @@
     xmlns:views="clr-namespace:AvantGarde.Views"
     mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
 
+    xmlns:vm="using:AvantGarde.ViewModels"
+    x:DataType="vm:PreviewPaneViewModel"
     x:CompileBindings="False"
 
     x:Class="AvantGarde.Views.PreviewPane">
