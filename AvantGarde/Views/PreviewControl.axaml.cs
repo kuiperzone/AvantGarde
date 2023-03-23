@@ -24,7 +24,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.VisualTree;
 using AvantGarde.Loading;
 using AvantGarde.Settings;
 using AvantGarde.ViewModels;

@@ -11,6 +11,10 @@
     CanResize="False"
     Title="About..."
     WindowStartupLocation="CenterOwner"
+
+    xmlns:vm="using:AvantGarde.ViewModels"
+    x:DataType="vm:AvantViewModel"
+
     x:Class="AvantGarde.Views.AboutWindow">
 
     <Grid RowDefinitions="Auto Auto, Auto, Auto Auto Auto, *"

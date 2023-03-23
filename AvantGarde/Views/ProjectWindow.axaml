@@ -6,10 +6,14 @@
         Width="600" Height="450"
         MinWidth="600" MinHeight="450"
         MaxWidth="600" MaxHeight="450"
-        x:Class="AvantGarde.Views.ProjectWindow"
-        CanResize="False"
         Title="Project"
-        WindowStartupLocation="CenterOwner">
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+
+        xmlns:vm="using:AvantGarde.ViewModels"
+        x:DataType="vm:AvantViewModel"
+
+        x:Class="AvantGarde.Views.ProjectWindow">
 
         <Grid RowDefinitions="Auto * Auto * Auto"
             Margin="16 32 16 16">

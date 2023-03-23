@@ -5,6 +5,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
     	<IsPackable>false</IsPackable>
 		<IsPublishable>true</IsPublishable>
 		<PublishReadyToRun>true</PublishReadyToRun>
@@ -19,7 +23,6 @@
 		<PackageProjectUrl>https://github.com/kuiperzone/AvantGarde</PackageProjectUrl>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 
-
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove=".gitignore" />
@@ -31,6 +34,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="11.0.0-preview6" />
 		<PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview6" />

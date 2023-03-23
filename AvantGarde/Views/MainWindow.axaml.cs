@@ -88,7 +88,7 @@ namespace AvantGarde.Views
         /// <summary>
         /// Gets main menu. Need access to this to ensure it gets closed.
         /// </summary>
-        // public Menu MainMenu; TBD
+        // public Menu MainMenu; // TBD
 
         public async void OpenSolutionDialog()
         {

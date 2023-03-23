@@ -9,6 +9,10 @@
         x:Class="AvantGarde.Views.SolutionWindow"
         CanResize="False"
         Title="Solution"
+
+        xmlns:vm="using:AvantGarde.ViewModels"
+        x:DataType="vm:AvantViewModel"
+
         WindowStartupLocation="CenterOwner">
 
         <Grid RowDefinitions="Auto Auto * Auto"

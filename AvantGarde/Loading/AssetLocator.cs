@@ -18,7 +18,6 @@
 
 using System.Diagnostics;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using AvantGarde.Markup;
 using AvantGarde.Projects;
@@ -33,7 +32,7 @@ namespace AvantGarde.Loading
         // NOTES: https://github.com/AvaloniaUI/Avalonia/discussions/6997
         // https://github.com/AvaloniaUI/Avalonia/blob/5ece272a597ead5875fed27a7baf1cdc8a05324f/src/Markup/Avalonia.Markup.Xaml.Loader/CompilerExtensions/AvaloniaXamlIlLanguage.cs#L117-L126
         private static readonly Type[] s_assetTypes = new[] { typeof(IImage), typeof(WindowIcon),
-            typeof(IResourceProvider), typeof(ResourceInclude) };
+            typeof(IResourceProvider) }; // , typeof(ResourceInclude) TBD
 
         /// <summary>
         /// Constructor.

@@ -82,7 +82,7 @@ namespace AvantGarde.Views
         public event Action<PreviewOptionsViewModel>? ScaleChanged;
 
         /// <summary>
-        /// Occurs when the user interracts with the preview.
+        /// Occurs when the user interacts with the preview.
         /// </summary>
         public Action<PointerEventMessage>? PointerEventOccurred;
 

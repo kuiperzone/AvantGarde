@@ -78,7 +78,7 @@ namespace AvantGarde.Views
 
                     Refresh();
 
-                    if (_treeView.ItemCount != 0)
+                    if (_treeView.Items != null)
                     {
                         foreach (var p in _treeView.Items)
                         {
