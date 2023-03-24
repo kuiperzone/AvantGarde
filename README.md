@@ -177,7 +177,7 @@ not necessary here.
 
 ## Copyright & License ##
 
-Copyright (C) Andy Thomas, 2022.
+Copyright (C) Andy Thomas, 2022-23.
 Website: https://kuiper.zone
 
 Avant Garde Previewer for Avalonia is free software: you can redistribute it and/or modify it under the terms of

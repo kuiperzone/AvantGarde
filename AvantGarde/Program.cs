@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia;
+using Avalonia.ReactiveUI;
 using AvantGarde.ViewModels;
 using KuiperZone.Utility.Yaap;
 
@@ -84,7 +85,7 @@ namespace AvantGarde
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
-            return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace();
+            return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace().UseReactiveUI();
         }
     }
 }
