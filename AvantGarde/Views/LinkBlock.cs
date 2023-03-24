@@ -29,8 +29,8 @@ namespace AvantGarde.Views
     /// </summary>
     public class LinkBlock : TextBlock, IStyleable
     {
-        private IBrush _holdForeground;
-        private TextDecorationCollection _holdDecor;
+        private IBrush? _holdForeground;
+        private TextDecorationCollection? _holdDecor;
 
         /// <summary>
         /// Constructor.
@@ -43,8 +43,8 @@ namespace AvantGarde.Views
             FontWeight = FontWeight.SemiBold;
             Foreground = _holdForeground;
             Cursor = new Cursor(StandardCursorType.Hand);
-            PointerEnter += PointerEnterHandler;
-            PointerLeave += PointerLeaveHandler;
+            PointerEntered += PointerEnteredHandler;
+            PointerExited += PointerExitedHandler;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace AvantGarde.Views
             set { SetValue(HoverForegroundProperty, value); }
         }
 
-        private void PointerEnterHandler(object? _, PointerEventArgs e)
+        private void PointerEnteredHandler(object? _, PointerEventArgs e)
         {
             _holdForeground = Foreground;
             _holdDecor = TextDecorations;
@@ -79,7 +79,7 @@ namespace AvantGarde.Views
             TextDecorations = Avalonia.Media.TextDecorations.Underline;
         }
 
-        private void PointerLeaveHandler(object? _, PointerEventArgs e)
+        private void PointerExitedHandler(object? _, PointerEventArgs e)
         {
             Foreground = _holdForeground;
             TextDecorations = _holdDecor;

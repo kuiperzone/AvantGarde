@@ -21,6 +21,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Projects;
 using AvantGarde.Utility;
@@ -30,7 +31,7 @@ namespace AvantGarde.Views
     /// <summary>
     /// Shows project properties.
     /// </summary>
-    public class ProjectWindow : AvantWindow
+    public partial class ProjectWindow : AvantWindow
     {
         private readonly TextBlock _outputBlock;
         private readonly TextBlock _targetBlock;
@@ -180,13 +181,13 @@ namespace AvantGarde.Views
                     }
 
                     _appCombo.IsEnabled = true;
-                    _appCombo.Items = temp;
+                    _appCombo.ItemsSource = temp;
                     _appCombo.SelectedItem = Project.GetApp()?.ProjectName;
                 }
                 else
                 {
                     _appCombo.IsEnabled = false;
-                    _appCombo.Items = new string[] { "N/A" };
+                    _appCombo.ItemsSource = new string[] { "N/A" };
                     _appCombo.SelectedIndex = 0;
                 }
 
@@ -212,17 +213,20 @@ namespace AvantGarde.Views
         {
             try
             {
-                var dialog = new OpenFileDialog();
-                dialog.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
-                dialog.Filters?.Add(new FileDialogFilter() { Name = "Assembly (*.dll)", Extensions = { "dll" } });
-                dialog.Directory = Project?.Solution?.ParentDirectory;
+                var opts = new FilePickerOpenOptions();
+                opts.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
+                opts.AllowMultiple = false;
 
-                var path = await dialog.ShowAsync(this);
+                var type = new FilePickerFileType("Assembly (*.dll)");
+                type.Patterns = new string[] { "*.dll" };
+                opts.FileTypeFilter = new FilePickerFileType[] { type };
 
-                if (path?.Length > 0)
+                var paths = await StorageProvider.OpenFilePickerAsync(opts);
+
+                if (paths?.Count > 0)
                 {
-                    Debug.WriteLine("BrowseButtonClickHandler: " + path[0]);
-                    UpdateAssemblyPathControls(path[0]);
+                    Debug.WriteLine("BrowseButtonClickHandler: " + paths[0].Path.AbsolutePath);
+                    UpdateAssemblyPathControls(paths[0].Path.AbsolutePath);
                 }
             }
             catch (Exception x)

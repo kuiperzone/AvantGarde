@@ -60,7 +60,7 @@ namespace AvantGarde.Views
             int line = 1;
             int col = 1;
 
-            string text = Text;
+            var text = Text;
 
             if (text != null)
             {

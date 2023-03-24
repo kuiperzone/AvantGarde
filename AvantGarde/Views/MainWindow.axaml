@@ -9,6 +9,10 @@
     Title="Avant Garde"
     Icon="/Assets/AvantGarde128.png"
     WindowStartupLocation="CenterScreen"
+
+    xmlns:vm="using:AvantGarde.ViewModels"
+    x:DataType="vm:MainWindowViewModel"
+
     x:Class="AvantGarde.Views.MainWindow">
 
     <Grid ColumnDefinitions="* Auto" RowDefinitions="Auto *">

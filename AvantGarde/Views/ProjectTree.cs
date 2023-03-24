@@ -16,9 +16,7 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -78,9 +76,9 @@ namespace AvantGarde.Views
 
                     Refresh();
 
-                    if (_treeView.ItemCount != 0)
+                    if (_treeView.ItemsSource != null)
                     {
-                        foreach (var p in _treeView.Items)
+                        foreach (var p in _treeView.ItemsSource)
                         {
                             _selectedView = (TreeViewItem?)p;
                             _selectedItem = (PathItem?)_selectedView?.Tag;
@@ -163,7 +161,7 @@ namespace AvantGarde.Views
                 }
             }
 
-            _treeView.Items = items;
+            _treeView.ItemsSource = items;
             _selectedItem = (PathItem?)selected?.Tag;
             _treeView.SelectedItem = selected;
         }
@@ -174,7 +172,7 @@ namespace AvantGarde.Views
         public void CollapseAll()
         {
             var selected = (TreeViewItem?)_treeView.SelectedItem;
-            Collapse(_treeView.Items);
+            Collapse(_treeView.ItemsSource);
 
             if (selected?.Tag is NodeItem node && _treeView.SelectedItem != node.Project?.Tag)
             {
@@ -191,7 +189,7 @@ namespace AvantGarde.Views
                 foreach (var item in items)
                 {
                     var view = (TreeViewItem)item;
-                    Collapse(view.Items);
+                    Collapse(view.ItemsSource);
                     view.IsExpanded = false;
                 }
             }
@@ -262,7 +260,7 @@ namespace AvantGarde.Views
                 list.Add(CreateViewItem(item, ref selected));
             }
 
-            view.Items = list;
+            view.ItemsSource = list;
             return view;
         }
 
@@ -355,7 +353,7 @@ namespace AvantGarde.Views
                     list.Add(CreateViewItem(item, ref selected));
                 }
 
-                view.Items = list;
+                view.ItemsSource = list;
             }
 
             return view;

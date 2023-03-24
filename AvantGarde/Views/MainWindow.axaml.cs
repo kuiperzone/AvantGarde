@@ -22,6 +22,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Loading;
 using AvantGarde.Markup;
@@ -76,7 +77,7 @@ namespace AvantGarde.Views
             _refreshTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Normal, RefreshTimerHandler);
 
             Model.WelcomeWidth = _explorerPane.MinWorkingWidth;
-            _previewPane.Theme = App.Settings.PreviewTheme;
+            _previewPane.WindowTheme = App.Settings.PreviewTheme;
 
             PropertyChanged += PropertyChangedHandler;
             LoadFlagCheckedHandler(_previewPane.LoadFlags);
@@ -85,30 +86,21 @@ namespace AvantGarde.Views
 #endif
         }
 
-        /// <summary>
-        /// Gets main menu. Need access to this to ensure it gets closed.
-        /// </summary>
-        public Menu MainMenu;
-
         public async void OpenSolutionDialog()
         {
-            var dialog = new OpenFileDialog();
-            dialog.Title = "Open Solution or Project";
-            dialog.Filters?.Add(new FileDialogFilter() { Name = "Solutions (*.sln; *.csproj)", Extensions = { "sln", "csproj" } });
+            var opts = new FilePickerOpenOptions();
+            opts.Title = "Open Solution or Project";
+            opts.AllowMultiple = false;
 
-            try
-            {
-                StartDialog();
-                var paths = await dialog.ShowAsync(this);
+            var type = new FilePickerFileType("Solution (*.sln; *.csproj)");
+            type.Patterns = new string[] { "*.sln", "*.csproj" };
+            opts.FileTypeFilter = new FilePickerFileType[] { type };
 
-                if (paths?.Length > 0)
-                {
-                    OpenSolution(paths[0]);
-                }
-            }
-            finally
+            var paths = await StorageProvider.OpenFilePickerAsync(opts);
+
+            if (paths?.Count > 0)
             {
-                EndDialog();
+                OpenSolution(paths[0].Path.AbsolutePath);
             }
         }
 
@@ -152,17 +144,21 @@ namespace AvantGarde.Views
         {
             try
             {
-                var dialog = new SaveFileDialog();
-                dialog.Title = "Export Schema";
-                dialog.Filters?.Add(new FileDialogFilter() { Name = "XSD (*.xsd)", Extensions = { "xsd" } });
-                dialog.InitialFileName = "AvaloniaSchema-" + MarkupDictionary.Version + ".xsd";
+                var opts = new FilePickerSaveOptions();
+                opts.Title = "Export Avalonia Schema";
+                opts.DefaultExtension = "xsd";
+                opts.ShowOverwritePrompt = true;
+                opts.SuggestedFileName = "AvaloniaSchema-" + MarkupDictionary.Version + ".xsd";
 
-                StartDialog();
-                var path = await dialog.ShowAsync(this);
+                var type = new FilePickerFileType("XSD (*.xsd)");
+                type.Patterns = new string[] { "*.xsd" };
+                opts.FileTypeChoices = new FilePickerFileType[] { type };
 
-                if (!string.IsNullOrEmpty(path))
+                var path = await StorageProvider.SaveFilePickerAsync(opts);
+
+                if (path != null)
                 {
-                    SchemaGenerator.SaveDocument(path, Model.IsFormattedXsdChecked, Model.IsAnnotationXsdChecked);
+                    SchemaGenerator.SaveDocument(path.Path.AbsolutePath, Model.IsFormattedXsdChecked, Model.IsAnnotationXsdChecked);
                 }
             }
             catch (Exception e)
@@ -288,7 +284,7 @@ namespace AvantGarde.Views
                 {
                     App.Settings.Write();
                     Model.IsWelcomeVisible = GetIsWelcomeVisible(_explorerPane.Solution != null);
-                    _previewPane.Theme = App.Settings.PreviewTheme;
+                    _previewPane.WindowTheme = App.Settings.PreviewTheme;
                     _explorerPane.Refresh(true);
                 }
             }
@@ -527,6 +523,7 @@ namespace AvantGarde.Views
             }
         }
 
+        // TBD - for possible removal
         private void StartDialog()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -539,6 +536,7 @@ namespace AvantGarde.Views
             _refreshTimer.Stop();
         }
 
+        // TBD - for possible removal
         private void EndDialog()
         {
             Topmost = App.Settings.IsTopmost;

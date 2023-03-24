@@ -4,6 +4,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:AvantGarde.Views"
     mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+
+    xmlns:vm="using:AvantGarde.ViewModels"
+    x:DataType="vm:XamlTextControlViewModel"
+
     x:Class="AvantGarde.Views.XamlCodeControl">
 
     <Grid ColumnDefinitions="*" RowDefinitions="Auto *">

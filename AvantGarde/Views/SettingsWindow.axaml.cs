@@ -50,18 +50,18 @@ namespace AvantGarde.Views
             _darkRadio = this.FindOrThrow<RadioButton>("DarkRadio");
 
             _appFontUpDown = this.FindOrThrow<NumericUpDown>("AppFontUpDown");
-            _appFontUpDown.Minimum = GlobalModel.MinFontSize;
-            _appFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            _appFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            _appFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
 
             _monoFontUpDown = this.FindOrThrow<NumericUpDown>("MonoFontUpDown");
-            _monoFontUpDown.Minimum = GlobalModel.MinFontSize;
-            _monoFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            _monoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            _monoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
 
             _monoFontBox = this.FindOrThrow<TextBox>("MonoFontBox");
             _previewCombo = this.FindOrThrow<ComboBox>("PreviewCombo");
             _welcomeCheck = this.FindOrThrow<CheckBox>("WelcomeCheck");
 
-            _previewCombo.Items = Enum.GetValues(typeof(PreviewWindowTheme));
+            _previewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
             _previewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
 
 #if DEBUG
@@ -88,8 +88,8 @@ namespace AvantGarde.Views
         {
             _lightRadio.IsChecked = !settings.IsDarkTheme;
             _darkRadio.IsChecked = settings.IsDarkTheme;
-            _appFontUpDown.Value = settings.AppFontSize;
-            _monoFontUpDown.Value = settings.MonoFontSize;
+            _appFontUpDown.Value = (decimal)settings.AppFontSize;
+            _monoFontUpDown.Value = (decimal)settings.MonoFontSize;
             _monoFontBox.Text = settings.MonoFontFamily;
             _previewCombo.SelectedItem = settings.PreviewTheme;
             _welcomeCheck.IsChecked = settings.ShowWelcome;
@@ -107,9 +107,18 @@ namespace AvantGarde.Views
             if (Settings != null)
             {
                 Settings.IsDarkTheme = _darkRadio.IsChecked == true;
-                Settings.AppFontSize = (int)_appFontUpDown.Value;
-                Settings.MonoFontSize = (int)_monoFontUpDown.Value;
-                Settings.MonoFontFamily = _monoFontBox.Text;
+
+                if (_appFontUpDown.Value != null)
+                {
+                    Settings.AppFontSize = (double)_appFontUpDown.Value;
+                }
+
+                if (_monoFontUpDown.Value != null)
+                {
+                    Settings.MonoFontSize = (double)_monoFontUpDown.Value;
+                }
+
+                Settings.MonoFontFamily = _monoFontBox.Text ?? Settings.MonoFontFamily;
                 Settings.PreviewTheme = (PreviewWindowTheme?)_previewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
                 Settings.ShowWelcome = _welcomeCheck.IsChecked == true;
                 Debug.WriteLine(Settings.PreviewTheme);

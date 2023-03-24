@@ -24,7 +24,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.VisualTree;
 using AvantGarde.Loading;
 using AvantGarde.Settings;
 using AvantGarde.ViewModels;
@@ -49,7 +48,7 @@ namespace AvantGarde.Views
         }
 
         /// <summary>
-        /// Occurs when the user interracts with the preview.
+        /// Occurs when the user interacts with the preview.
         /// </summary>
         public Action<PointerEventMessage>? PointerEventOccurred;
 
@@ -61,7 +60,7 @@ namespace AvantGarde.Views
         /// <summary>
         /// Gets or sets the preview window color.
         /// </summary>
-        public PreviewWindowTheme Theme
+        public PreviewWindowTheme WindowTheme
         {
             get { return _model.Theme; }
             set { _model.Theme = value; }
@@ -183,7 +182,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerMovedHandler(object? sender, PointerEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }
@@ -191,7 +190,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerPressedHandler(object? sender, PointerPressedEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }
@@ -199,7 +198,7 @@ namespace AvantGarde.Views
 
         private void PreviewPointerReleasedHandler(object? sender, PointerReleasedEventArgs e)
         {
-            if (sender is IVisual visual)
+            if (sender is Visual visual)
             {
                 PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
             }
