@@ -116,7 +116,7 @@
             </Grid>
 
             <Grid Grid.Row="1"
-                ColumnDefinitions="* Auto Auto"
+                ColumnDefinitions="Auto * Auto Auto"
                 Margin="0">
 
                 <Button Grid.Column="0"
@@ -126,14 +126,14 @@
                     Click="ResetClickHandler"
                 />
 
-                <Button Grid.Column="1"
+                <Button Grid.Column="2"
                     Classes="std"
                     Content="OK"
                     IsDefault="True"
                     Click="OkClickHandler"
                 />
 
-                <Button Grid.Column="2"
+                <Button Grid.Column="3"
                     Classes="std"
                     Margin="6 0 0 0"
                     Content="Cancel"

@@ -34,6 +34,9 @@ namespace AvantGarde.Views
         {
             Model = model;
             DataContext = Model;
+
+            // TBD
+            FontSize = GlobalModel.Global.AppFontSize;
         }
 
         /// <summary>
