@@ -9,7 +9,7 @@
         RequestedThemeVariant="Default">
 
     <Application.Styles>
-        <FluentTheme DensityStyle="Compact" />
+        <FluentTheme />
     </Application.Styles>
 
     <Application.Styles>

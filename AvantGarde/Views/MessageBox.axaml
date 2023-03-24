@@ -8,6 +8,7 @@
         MaxHeight="800"
         CanResize="False"
         Title="Title"
+
         WindowStartupLocation="CenterOwner">
 
     <StackPanel HorizontalAlignment="Center" Margin="12">

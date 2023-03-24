@@ -20,7 +20,6 @@ using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Themes.Fluent;
 using AvantGarde.Settings;
 using AvantGarde.ViewModels;
 using AvantGarde.Views;
