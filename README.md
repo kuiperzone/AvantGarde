@@ -13,6 +13,8 @@ Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer*
 although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will
 need to clone and build from source. This, however, is straigh-forward as there are no special build requirements.
 
+*( * ) Coming soon.*
+
 Avant Garde is licensed under GPLv3 or later.
 
 [![Avant Garde Screenshot](Media/Screenshot-main.png)](Media/Screenshot-main.png)
