@@ -30,6 +30,7 @@ namespace AvantGarde.ViewModels
     {
         private double _appFontSize = DefaultFontSize;
         private double _monoFontSize = DefaultFontSize;
+        private FontFamily _appFontFamily = DefaultAppFamily;
         private FontFamily _monoFontFamily = DefaultMonoFamily;
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace AvantGarde.ViewModels
         /// <summary>
         /// Maximum font size.
         /// </summary>
-        public const double MaxFontSize = 24;
+        public const double MaxFontSize = 32;
 
         /// <summary>
         /// Default font size.
@@ -55,14 +56,28 @@ namespace AvantGarde.ViewModels
         public const double DefaultFontSize = 14;
 
         /// <summary>
+        /// Default app font family.
+        /// </summary>
+        public const string DefaultAppFamily = "Ubuntu, Noto Sans, sans";
+
+        /// <summary>
         /// Default mono font family.
         /// </summary>
         public const string DefaultMonoFamily = "Source Code Pro, monospace";
 
+        /// <summary>
+        /// Gets the web page link name.
+        /// </summary>
         public static string WebPage { get; } = "Project Page";
 
+        /// <summary>
+        /// Gets the web page link URL.
+        /// </summary>
         public static string WebUrl { get; } = "https://github.com/kuiperzone/AvantGarde";
 
+        /// <summary>
+        /// Gets the copyright string.
+        /// </summary>
         public static string Copyright { get; } = "Copyright 2023 Andy Thomas";
 
         /// <summary>
@@ -158,6 +173,23 @@ namespace AvantGarde.ViewModels
             {
                 value = Math.Clamp(value, MinFontSize, MaxFontSize);
                 this.RaiseAndSetIfChanged(ref _monoFontSize, value, nameof(MonoFontSize));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the application font family.
+        /// </summary>
+        public FontFamily AppFontFamily
+        {
+            get { return _appFontFamily; }
+
+            set
+            {
+                if (_appFontFamily.Name != value)
+                {
+                    _appFontFamily = value;
+                    this.RaisePropertyChanged(nameof(AppFontFamily));
+                }
             }
         }
 

@@ -22,8 +22,8 @@
             </Grid.Styles>
 
             <Grid Grid.Row="0"
-                ColumnDefinitions="1* 30 1.5*"
-                RowDefinitions="Auto Auto, Auto Auto Auto Auto"
+                ColumnDefinitions="1.5* 30 1*"
+                RowDefinitions="Auto Auto, Auto Auto Auto, Auto Auto, *"
                 Margin="0 0 0 16">
 
                 <TextBlock Grid.Column="0" Grid.Row="0"
@@ -44,46 +44,54 @@
                     />
                 </Grid>
 
-
                 <TextBlock Grid.Column="2" Grid.Row="0"
-                    Classes="mtb"
-                    Text="App Font Size"
-                />
-                <Grid Grid.Column="2" Grid.Row="1"
-                    RowDefinitions="Auto Auto">
-                    <NumericUpDown Grid.Row="0"
-                        Name="AppFontUpDown"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        MinWidth="150"
-                        Value="14"
-                        Increment="1"
-                        ToolTip.Tip="Application font size"
-                    />
-                    <TextBlock Grid.Row="1"
-                        Margin="0 6 0 0"
-                        Classes="small"
-                        FontStyle="Italic"
-                        Text="Requires app restart"
-                    />
-                </Grid>
-
-                <TextBlock Grid.Column="0" Grid.Row="2"
                     Classes="mtb"
                     Text="Preview Window"
                 />
-                <ComboBox Grid.Column="0" Grid.Row="3"
+                <ComboBox Grid.Column="2" Grid.Row="1"
                     Name="PreviewCombo"
                     MinWidth="150"
-                    HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Left"
                     ToolTip.Tip="Color used in preview of windows"
+                />
+
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                    Classes="mtb"
+                    Text="App Font Family"
+                />
+                <TextBox Grid.Column="0" Grid.Row="3"
+                    Classes="mtb"
+                    Name="AppFontBox"
+                    VerticalAlignment="Top"
+                    MaxLength="64"
+                    ToolTip.Tip="Application font family"
+                />
+                <TextBlock Grid.Column="0" Grid.Row="4"
+                    Margin="0 6 0 0"
+                    Classes="small"
+                    FontStyle="Italic"
+                    Text="Requires app restart"
                 />
 
                 <TextBlock Grid.Column="2" Grid.Row="2"
                     Classes="mtb"
-                    Text="Mono Font Size"
+                    Text="App Font Size"
                 />
                 <NumericUpDown Grid.Column="2" Grid.Row="3"
+                    Name="AppFontUpDown"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    MinWidth="150"
+                    Value="14"
+                    Increment="1"
+                    ToolTip.Tip="Application font size"
+                />
+
+                <TextBlock Grid.Column="2" Grid.Row="5"
+                    Classes="mtb"
+                    Text="Mono Font Size"
+                />
+                <NumericUpDown Grid.Column="2" Grid.Row="6"
                     Name="MonoFontUpDown"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
@@ -94,23 +102,24 @@
                     ToolTip.Tip="Monospace font size"
                 />
 
-                <CheckBox Grid.Column="0" Grid.Row="5"
-                    Name="WelcomeCheck"
-                    VerticalAlignment="Center"
-                    Content="Show Welcome"
-                    ToolTip.Tip="Show open button in explorer when no solution"
-                />
 
-                <TextBlock Grid.Column="2" Grid.Row="4"
+                <TextBlock Grid.Column="0" Grid.Row="5"
                     Classes="mtb"
                     Text="Mono Font Family"
                 />
-                <TextBox Grid.Column="2" Grid.Row="5"
+                <TextBox Grid.Column="0" Grid.Row="6"
                     Classes="mtb"
                     Name="MonoFontBox"
                     VerticalAlignment="Top"
                     MaxLength="64"
                     ToolTip.Tip="Monospace font family"
+                />
+
+                <CheckBox Grid.Column="0" Grid.Row="7"
+                    Name="WelcomeCheck"
+                    VerticalAlignment="Center"
+                    Content="Show Welcome"
+                    ToolTip.Tip="Show open button in explorer when no solution"
                 />
 
             </Grid>

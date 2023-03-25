@@ -34,8 +34,7 @@ namespace AvantGarde.Views
         {
             Model = model;
             DataContext = Model;
-
-            // TBD
+            FontFamily = GlobalModel.Global.AppFontFamily;
             FontSize = GlobalModel.Global.AppFontSize;
         }
 
@@ -56,7 +55,7 @@ namespace AvantGarde.Views
 
         private void ScaleSize()
         {
-            double f = GlobalModel.Global.AppFontSize / GlobalModel.DefaultFontSize;
+            double f = GlobalModel.Global.Scale;
             var w = Width * f;
             var h = Height * f;
             var mw = MinWidth * f;

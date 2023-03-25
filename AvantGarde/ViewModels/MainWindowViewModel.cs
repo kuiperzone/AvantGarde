@@ -42,7 +42,6 @@ namespace AvantGarde.ViewModels
         public MainWindowViewModel()
         {
             _isWelcomeVisible = App.Settings.ShowWelcome;
-            _isTopmost = App.Settings.IsTopmost;
             UpdateRecentMenu();
         }
 
@@ -75,9 +74,6 @@ namespace AvantGarde.ViewModels
                     {
                         Owner.Topmost = value;
                     }
-
-                    App.Settings.IsTopmost = value;
-                    App.Settings.Write();
 
                     this.RaisePropertyChanged(nameof(IsTopmost));
                 }

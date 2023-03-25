@@ -278,7 +278,7 @@ namespace AvantGarde.Views
 
             try
             {
-                StartDialog();
+                // StartDialog();
 
                 if (await dialog.ShowDialog<bool>(this))
                 {
@@ -290,7 +290,7 @@ namespace AvantGarde.Views
             }
             finally
             {
-                EndDialog();
+                // EndDialog();
             }
         }
 
@@ -331,15 +331,9 @@ namespace AvantGarde.Views
 
                 var openExplorer = !(App.Arguments.GetOrDefault("m", false) || App.Arguments.GetOrDefault("min-explorer", false));
 
-                if (openExplorer)
+                if (openExplorer && App.Settings.IsMaximized)
                 {
-                    // Don't allow topmost if maximized
-                    App.Settings.IsTopmost &= !App.Settings.IsMaximized;
-
-                    Topmost = App.Settings.IsTopmost;
-                    Model.IsTopmost = App.Settings.IsTopmost;
-
-                    WindowState = App.Settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+                    WindowState = WindowState.Maximized;
                 }
 
                 if (path != null)
@@ -539,7 +533,7 @@ namespace AvantGarde.Views
         // TBD - for possible removal
         private void EndDialog()
         {
-            Topmost = App.Settings.IsTopmost;
+            Topmost = Model.IsTopmost;
             _refreshTimer.Start();
         }
     }
