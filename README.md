@@ -25,11 +25,11 @@ used to preview WPF XAML.
 
 ## Features ##
 
-* Avant Garde is a standalone application rather than an extension for an IDE. Set its main window to stay-on-top,
-and it will update the moment you save your files from your IDE.
+* Avant Garde is a standalone application rather than an extension for an IDE.
 
-* It provides a read-only view of your Avalonia project, watching for file changes. Previews are updated the
-moment you save changes from your IDE.
+* It provides a read-only view of your Avalonia project, watching for file changes.
+
+* Set its main window to stay-on-top, and it will update the moment you save your files from your IDE.
 
 * While Avant Garde looks like a simple IDE and, indeed, can be used to browse your entire project, the generation
 of XAML previews is the primary use case. Currently, it is not a XAML designer or an editor. It does not modify your
@@ -42,7 +42,7 @@ and export an Avalonia schema (XSD) file. See below for information.
 Avant Garde so that a particular AXAML file is selected and shown on opening. It is also possible to launch it
 with its built-in **Project Explorer** hidden so as to minimize the application window foot-print.
 
-* It supports both a light and dark theme so as to match your desktop. See the application "Preferences".
+* It supports a **dark theme**, so can match your desktop. See the application "Preferences".
 
 ## Using Avant Garde ##
 
