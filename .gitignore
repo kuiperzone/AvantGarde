@@ -3,6 +3,7 @@
 ###############################################################################
 
 TODO
+/INTERNAL
 
 ###############################################################################
 # Hidden
@@ -41,13 +42,9 @@ desktop.ini
 **/*-[Rr][Ee][Ll][Ee][Aa][Ss][Ee]*/
 **/[Pp][Rr][Oo][Ff][Ii][Ll][Ee]*/
 
-# Build, Deploy, Internal
+# Build, AppDir
 **/[Bb][Ll][Dd]/
 **/[Bb][Uu][Ii][Ll][Dd]*/
-**/[Dd][Ee][Pp][Ll][Oo][Yy]*/
-**/[Ii][Nn][Tt][Ee][Rr][Nn][Aa][Ll]*/
-
-# AppDir
 **/[Aa][Pp][Pp][Dd][Ii][Rr]*/
 
 # Temp

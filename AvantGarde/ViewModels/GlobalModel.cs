@@ -78,7 +78,7 @@ namespace AvantGarde.ViewModels
         /// <summary>
         /// Gets the copyright string.
         /// </summary>
-        public static string Copyright { get; } = "Copyright 2023 Andy Thomas";
+        public static string Copyright { get; } = "Copyright (C) 2022-23 Andy Thomas";
 
         /// <summary>
         /// Gets the application version.

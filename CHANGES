@@ -1,7 +1,8 @@
-+ VERSION 1.1.0-P6; Pre-release with Avalonia 11 P6;
-- Internal changes to comply with new Avalonia 11
-
-
++ VERSION 1.1.0
+- Added new "application font" preference
+- Added new Linux deployment packages
+- Built with Avalonia 0.10.19
+- Internal changes to make ready for Avalonia 11
 
 + VERSION 1.0.2
 - Built with Avalonia 0.10.18 and .NET7
