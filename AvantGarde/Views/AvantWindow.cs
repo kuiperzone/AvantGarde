@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia.Controls;
+using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
 namespace AvantGarde.Views
@@ -34,8 +35,7 @@ namespace AvantGarde.Views
         {
             Model = model;
             DataContext = Model;
-
-            // TBD
+            FontFamily = GlobalModel.Global.AppFontFamily;
             FontSize = GlobalModel.Global.AppFontSize;
         }
 
@@ -51,12 +51,13 @@ namespace AvantGarde.Views
         {
             base.OnOpened(e);
             ScaleSize();
-            // this.SetCenterFix();  // TBD
+
+            this.SetCenterFix();  // TBD not necessary in Avalonia 11
         }
 
         private void ScaleSize()
         {
-            double f = GlobalModel.Global.AppFontSize / GlobalModel.DefaultFontSize;
+            double f = GlobalModel.Global.Scale;
             var w = Width * f;
             var h = Height * f;
             var mw = MinWidth * f;

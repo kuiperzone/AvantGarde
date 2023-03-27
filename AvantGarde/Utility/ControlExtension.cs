@@ -75,7 +75,8 @@ namespace AvantGarde.Utility
 
             if (control.Parent != null)
             {
-                return GetOwnerWindow(control.Parent);
+                // TBD remove cast with Avalonia 11
+                return GetOwnerWindow((StyledElement)control.Parent);
             }
 
             throw new ArgumentException("Element has no owner window");

@@ -18,7 +18,7 @@
 		<Authors>Andy Thomas</Authors>
 		<Copyright>© Andy Thomas 2022-23</Copyright>
 		<Company>Kuiper Zone</Company>
-		<Description>Avant Garde is a cross-platform XAML previewer for the C# Avalonia Framework.</Description>
+		<Description>Avant Garde is a cross-platform XAML previewer for the Avalonia .NET Framework.</Description>
 		<Language>en-US</Language>
 		<PackageProjectUrl>https://github.com/kuiperzone/AvantGarde</PackageProjectUrl>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
@@ -36,15 +36,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.0.0-preview6" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview6" />
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.0-preview6" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview6" />
+		<PackageReference Include="Avalonia" Version="0.10.19" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.19" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview6" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.19" />
 
-		<PackageReference Include="Avalonia.Themes.Simple" Version="11.0.0-preview6" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview6" />
+
+		<!-- TBD for removal in Avalonia 11 -->
+    	<PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+
+		<!-- TBD Avalonia 11
+		<PackageReference Include="Avalonia.Themes.Simple" Version="11" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11" />
+		-->
 
 		<PackageReference Include="KuiperZone.Utility.Yaap" Version="2.0.0" />
 	</ItemGroup>

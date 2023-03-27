@@ -32,38 +32,30 @@ namespace AvantGarde.Views
     /// </summary>
     public partial class SettingsWindow : AvantWindow
     {
-        private readonly RadioButton _lightRadio;
-        private readonly RadioButton _darkRadio;
-        private readonly NumericUpDown _appFontUpDown;
-        private readonly NumericUpDown _monoFontUpDown;
-        private readonly TextBox _monoFontBox;
-        private readonly ComboBox _previewCombo;
-        private readonly CheckBox _welcomeCheck;
+        private bool _reset;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SettingsWindow()
         {
-            AvaloniaXamlLoader.Load(this);
-            _lightRadio = this.FindOrThrow<RadioButton>("LightRadio");
-            _darkRadio = this.FindOrThrow<RadioButton>("DarkRadio");
+            InitializeComponent();
 
-            _appFontUpDown = this.FindOrThrow<NumericUpDown>("AppFontUpDown");
-            _appFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
-            _appFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+            // For removal in Avalonia 11 TBD
+            AppFontUpDown.Minimum = GlobalModel.MinFontSize;
+            AppFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            MonoFontUpDown.Minimum = GlobalModel.MinFontSize;
+            MonoFontUpDown.Maximum = GlobalModel.MaxFontSize;
 
-            _monoFontUpDown = this.FindOrThrow<NumericUpDown>("MonoFontUpDown");
-            _monoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
-            _monoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+            /* TBD Avalonia 11
+            AppFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            AppFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+            MonoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+            MonoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+            */
 
-            _monoFontBox = this.FindOrThrow<TextBox>("MonoFontBox");
-            _previewCombo = this.FindOrThrow<ComboBox>("PreviewCombo");
-            _welcomeCheck = this.FindOrThrow<CheckBox>("WelcomeCheck");
-
-            _previewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
-            _previewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
-
+            PreviewCombo.Items = Enum.GetValues(typeof(PreviewWindowTheme));
+            PreviewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -80,47 +72,65 @@ namespace AvantGarde.Views
 
             if (Settings != null)
             {
+                Console.WriteLine("O2");
                 UpdateView(Settings);
             }
         }
 
         private void UpdateView(AppSettings settings)
         {
-            _lightRadio.IsChecked = !settings.IsDarkTheme;
-            _darkRadio.IsChecked = settings.IsDarkTheme;
-            _appFontUpDown.Value = (decimal)settings.AppFontSize;
-            _monoFontUpDown.Value = (decimal)settings.MonoFontSize;
-            _monoFontBox.Text = settings.MonoFontFamily;
-            _previewCombo.SelectedItem = settings.PreviewTheme;
-            _welcomeCheck.IsChecked = settings.ShowWelcome;
+            LightRadio.IsChecked = !settings.IsDarkTheme;
+            DarkRadio.IsChecked = settings.IsDarkTheme;
+            AppFontBox.Text = settings.AppFontFamily;
+
+            // TBD cast in Avalonia 11
+            AppFontUpDown.Value = settings.AppFontSize;
+            MonoFontUpDown.Value = settings.MonoFontSize;
+
+            // AppFontUpDown.Value = (decimal)settings.AppFontSize;
+            // MonoFontUpDown.Value = (decimal)settings.MonoFontSize;
+
+            MonoFontBox.Text = settings.MonoFontFamily;
+            PreviewCombo.SelectedItem = settings.PreviewTheme;
+            WelcomeCheck.IsChecked = settings.ShowWelcome;
         }
 
         private void ResetClickHandler(object? sender, RoutedEventArgs e)
         {
+            _reset = true;
             UpdateView(new AppSettings());
         }
 
         private void OkClickHandler(object? sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("OK Click");
-
             if (Settings != null)
             {
-                Settings.IsDarkTheme = _darkRadio.IsChecked == true;
-
-                if (_appFontUpDown.Value != null)
+                if (_reset)
                 {
-                    Settings.AppFontSize = (double)_appFontUpDown.Value;
+                    // Resets window position
+                    var temp = new AppSettings();
+                    Settings.Width = temp.Width;
+                    Settings.Height = temp.Height;
+                    Settings.IsMaximized = temp.IsMaximized;
                 }
 
-                if (_monoFontUpDown.Value != null)
+                Settings.IsDarkTheme = DarkRadio.IsChecked == true;
+
+                // TBD accept warnings - checks are needed in Avalonia 11
+                if (AppFontUpDown.Value != null)
                 {
-                    Settings.MonoFontSize = (double)_monoFontUpDown.Value;
+                    Settings.AppFontSize = (double)AppFontUpDown.Value;
                 }
 
-                Settings.MonoFontFamily = _monoFontBox.Text ?? Settings.MonoFontFamily;
-                Settings.PreviewTheme = (PreviewWindowTheme?)_previewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
-                Settings.ShowWelcome = _welcomeCheck.IsChecked == true;
+                if (MonoFontUpDown.Value != null)
+                {
+                    Settings.MonoFontSize = (double)MonoFontUpDown.Value;
+                }
+
+                Settings.AppFontFamily = AppFontBox.Text ?? Settings.AppFontFamily;
+                Settings.MonoFontFamily = MonoFontBox.Text ?? Settings.MonoFontFamily;
+                Settings.PreviewTheme = (PreviewWindowTheme?)PreviewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
+                Settings.ShowWelcome = WelcomeCheck.IsChecked == true;
                 Debug.WriteLine(Settings.PreviewTheme);
             }
 

@@ -76,9 +76,9 @@ namespace AvantGarde.Views
 
                     Refresh();
 
-                    if (_treeView.ItemsSource != null)
+                    if (_treeView.Items != null)
                     {
-                        foreach (var p in _treeView.ItemsSource)
+                        foreach (var p in _treeView.Items)
                         {
                             _selectedView = (TreeViewItem?)p;
                             _selectedItem = (PathItem?)_selectedView?.Tag;
@@ -103,21 +103,6 @@ namespace AvantGarde.Views
             {
                 var view = value?.Tag as TreeViewItem;
                 _treeView.SelectedItem = view;
-
-                /*
-                if (view != null)
-                {
-                    _selectedItem = value;
-                    _selectedView = view;
-                    _treeView.SelectedItem = view;
-                }
-                else
-                {
-                    _selectedItem = null;
-                    _selectedView = null;
-                    _treeView.SelectedItem = null;
-                }
-                */
             }
         }
 
@@ -161,7 +146,7 @@ namespace AvantGarde.Views
                 }
             }
 
-            _treeView.ItemsSource = items;
+            _treeView.Items = items;
             _selectedItem = (PathItem?)selected?.Tag;
             _treeView.SelectedItem = selected;
         }
@@ -172,7 +157,7 @@ namespace AvantGarde.Views
         public void CollapseAll()
         {
             var selected = (TreeViewItem?)_treeView.SelectedItem;
-            Collapse(_treeView.ItemsSource);
+            Collapse(_treeView.Items);
 
             if (selected?.Tag is NodeItem node && _treeView.SelectedItem != node.Project?.Tag)
             {
@@ -189,7 +174,7 @@ namespace AvantGarde.Views
                 foreach (var item in items)
                 {
                     var view = (TreeViewItem)item;
-                    Collapse(view.ItemsSource);
+                    Collapse(view.Items);
                     view.IsExpanded = false;
                 }
             }
@@ -260,7 +245,7 @@ namespace AvantGarde.Views
                 list.Add(CreateViewItem(item, ref selected));
             }
 
-            view.ItemsSource = list;
+            view.Items = list;
             return view;
         }
 
@@ -353,7 +338,7 @@ namespace AvantGarde.Views
                     list.Add(CreateViewItem(item, ref selected));
                 }
 
-                view.ItemsSource = list;
+                view.Items = list;
             }
 
             return view;
