@@ -43,8 +43,13 @@ namespace AvantGarde.Views
             FontWeight = FontWeight.SemiBold;
             Foreground = _holdForeground;
             Cursor = new Cursor(StandardCursorType.Hand);
-            PointerEntered += PointerEnteredHandler;
-            PointerExited += PointerExitedHandler;
+
+            // TBD
+            PointerEnter += PointerEnteredHandler;
+            PointerLeave += PointerExitedHandler;
+
+            // PointerEntered += PointerEnteredHandler;
+            // PointerExited += PointerExitedHandler;
         }
 
         /// <summary>

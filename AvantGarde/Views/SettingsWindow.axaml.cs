@@ -40,12 +40,21 @@ namespace AvantGarde.Views
         public SettingsWindow()
         {
             InitializeComponent();
+
+            // For removal in Avalonia 11 TBD
+            AppFontUpDown.Minimum = GlobalModel.MinFontSize;
+            AppFontUpDown.Maximum = GlobalModel.MaxFontSize;
+            MonoFontUpDown.Minimum = GlobalModel.MinFontSize;
+            MonoFontUpDown.Maximum = GlobalModel.MaxFontSize;
+
+            /* TBD Avalonia 11
             AppFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
             AppFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
             MonoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
             MonoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+            */
 
-            PreviewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
+            PreviewCombo.Items = Enum.GetValues(typeof(PreviewWindowTheme));
             PreviewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
 #if DEBUG
             this.AttachDevTools();
@@ -73,8 +82,14 @@ namespace AvantGarde.Views
             LightRadio.IsChecked = !settings.IsDarkTheme;
             DarkRadio.IsChecked = settings.IsDarkTheme;
             AppFontBox.Text = settings.AppFontFamily;
-            AppFontUpDown.Value = (decimal)settings.AppFontSize;
-            MonoFontUpDown.Value = (decimal)settings.MonoFontSize;
+
+            // TBD cast in Avalonia 11
+            AppFontUpDown.Value = settings.AppFontSize;
+            MonoFontUpDown.Value = settings.MonoFontSize;
+
+            // AppFontUpDown.Value = (decimal)settings.AppFontSize;
+            // MonoFontUpDown.Value = (decimal)settings.MonoFontSize;
+
             MonoFontBox.Text = settings.MonoFontFamily;
             PreviewCombo.SelectedItem = settings.PreviewTheme;
             WelcomeCheck.IsChecked = settings.ShowWelcome;
@@ -101,6 +116,7 @@ namespace AvantGarde.Views
 
                 Settings.IsDarkTheme = DarkRadio.IsChecked == true;
 
+                // TBD accept warnings - checks are needed in Avalonia 11
                 if (AppFontUpDown.Value != null)
                 {
                     Settings.AppFontSize = (double)AppFontUpDown.Value;

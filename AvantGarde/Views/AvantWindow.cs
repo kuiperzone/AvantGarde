@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia.Controls;
+using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
 namespace AvantGarde.Views
@@ -50,7 +51,8 @@ namespace AvantGarde.Views
         {
             base.OnOpened(e);
             ScaleSize();
-            // this.SetCenterFix();  // TBD
+
+            this.SetCenterFix();  // TBD not necessary in Avalonia 11
         }
 
         private void ScaleSize()

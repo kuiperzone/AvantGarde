@@ -18,6 +18,7 @@
 
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Themes.Fluent;
 using AvantGarde.Projects;
 using AvantGarde.ViewModels;
 
@@ -29,6 +30,10 @@ namespace AvantGarde.Settings
     public sealed class AppSettings : JsonSettings
     {
         private const int MaxRecent = 10;
+
+        // TBD Removal in 11
+        private static FluentTheme? _theme;
+        private bool _isDarkTheme;
 
         private Application? _app;
         private string _appFontFamily = GlobalModel.DefaultAppFamily;
@@ -50,12 +55,32 @@ namespace AvantGarde.Settings
         public AppSettings(Application app)
         {
             _app = app;
+            _theme = (FluentTheme)app.Styles[0];
         }
 
         /// <summary>
         /// Gets or sets the UI theme. Setting with instance constructed with Application
         /// will change the theme throughout.
         /// </summary>
+        public bool IsDarkTheme
+        {
+            get { return _isDarkTheme; }
+            set
+            {
+                if (_isDarkTheme != value)
+                {
+                    _isDarkTheme = value;
+                    if (_app != null && _theme != null)
+                    {
+                        _theme.Mode = value ? FluentThemeMode.Dark : FluentThemeMode.Light;
+                        GlobalModel.Global.Assets.IsDarkTheme = value;
+                        GlobalModel.Global.Colors.IsDarkTheme = value;
+                    }
+                }
+            }
+        }
+
+        /* TBD Avalonia 11
         public bool IsDarkTheme
         {
             get { return _app?.RequestedThemeVariant == Avalonia.Styling.ThemeVariant.Dark; }
@@ -70,6 +95,8 @@ namespace AvantGarde.Settings
                 }
             }
         }
+        */
+
 
         /// <summary>
         /// Gets or sets the application font size. Setting with instance constructed with Application

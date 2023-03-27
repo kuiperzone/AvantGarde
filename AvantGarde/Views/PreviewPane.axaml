@@ -8,7 +8,11 @@
     xmlns:vm="using:AvantGarde.ViewModels"
     x:DataType="vm:PreviewPaneViewModel"
 
+    x:CompileBindings="False"
+
     x:Class="AvantGarde.Views.PreviewPane">
+
+    <!-- TBD Possibly use CompileBindings=true in Avalonia 11 -->
 
     <Grid ColumnDefinitions="*" RowDefinitions="* Auto">
 
@@ -47,11 +51,13 @@
                 DragDelta="SplitterDragHandler"
             />
 
+            <!-- TBD Avalonia 11 needs line below instead
+            IsVisible="{Binding $parent.((vm:PreviewOptionsViewModel)DataContext).IsXamlViewable}" -->
+
             <views:XamlCodeControl Grid.Row="2"
                 Name="XamlCode"
 
-                IsVisible="{Binding $parent.((vm:PreviewOptionsViewModel)DataContext).IsXamlViewable}"
-
+                IsVisible="{Binding $parent.IsXamlViewable}"
             />
 
         </Grid>
