@@ -11,7 +11,7 @@ Avant Garde is completely IDE agnostic.
 
 Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer** for Windows. It isn't actively tested on MacOS,
 although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will
-need to clone and build from source. This, however, is straigh-forward as there are no special build requirements.
+need to clone and build from source. This, however, is straight-forward as there are no special build requirements.
 
 Avant Garde is licensed under GPLv3 or later.
 
