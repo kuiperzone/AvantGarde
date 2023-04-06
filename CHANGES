@@ -1,3 +1,9 @@
++ NEXT
+- Added solution directory tree traverse to find the Directory.Packages.props file when AvaloniaVersion is null. This is needed if the version is defined only globally, and not overridden in the csproj.
+- Added check for the presence of the PackageVersion tag. This is needed since the Directory.Packages.props could be the only place where the Version attribute is defined.
+- Added check for the presence of the VersionOverride attribute. This is needed since the version used by a project could still be different from the global one, at least in theory.
+- Increased height of SettingsWindow.
+
 + VERSION 1.1.0
 - Added new "application font" preference
 - Added new Linux deployment packages
