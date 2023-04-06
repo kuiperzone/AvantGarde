@@ -18,11 +18,8 @@
 
 using System.Diagnostics;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using AvantGarde.Settings;
-using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
 namespace AvantGarde.Views
