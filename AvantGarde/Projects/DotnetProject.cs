@@ -228,7 +228,7 @@ namespace AvantGarde.Projects
         {
             if (root != null)
             {
-                if (root.Name.LocalName == "PackageReference")
+                if (root.Name.LocalName == "PackageReference" || root.Name.LocalName == "PackageVersion")
                 {
                     foreach (var a0 in root.Attributes())
                     {
@@ -236,7 +236,7 @@ namespace AvantGarde.Projects
                         {
                             foreach (var a1 in root.Attributes())
                             {
-                                if (a1.Name.LocalName == "Version")
+                                if (a1.Name.LocalName == "Version" || a1.Name.LocalName == "VersionOverride")
                                 {
                                     return a1.Value;
                                 }
@@ -261,6 +261,23 @@ namespace AvantGarde.Projects
             return string.Empty;
         }
 
+        private XDocument? GetDirectoryPackages()
+        {
+            var root = Solution.GetFileInfo().Directory;
+            var current = GetFileInfo().Directory;
+            while (current != null && current != root)
+            {
+                var path = Path.Combine(current.FullName, "Directory.Packages.props");
+                var item = new PathItem(path, PathKind.Xml);
+                if (item.Exists)
+                {
+                    return XDocument.Parse(item.ReadAsText());
+                }
+                current = current.Parent;
+            }
+            return null;
+        }
+
         private ProjectError? ParseProject()
         {
             try
@@ -274,6 +291,15 @@ namespace AvantGarde.Projects
                 OutputType = GetElementValue(doc.Root, "OutputType");
                 TargetFramework = GetElementValue(doc.Root, "TargetFramework");
                 AvaloniaVersion = GetAvaloniaVersion(doc.Root);
+
+                if (string.IsNullOrWhiteSpace(AvaloniaVersion))
+                {
+                    doc = GetDirectoryPackages();
+                    if (doc != null)
+                    {
+                        AvaloniaVersion = GetAvaloniaVersion(doc.Root);
+                    }
+                }
 
                 if (OutputType.Length == 0)
                 {
