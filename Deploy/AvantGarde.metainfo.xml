@@ -43,6 +43,23 @@
     </screenshots>
 
     <releases>
+
+        <release version="1.2.0" date="2023-04-23">
+            <description>
+                <ul>
+                    <li>Added detection of application build output in the new '.artifacts' directory that will come into play with .NET8.</li>
+                    <li>Added solution directory tree traverse to find the Directory.Packages.props file when AvaloniaVersion is null. This is needed if the version is defined only globally, and not overridden in the csproj.</li>
+                    <li>Added check for the presence of the PackageVersion tag. This is needed since the Directory.Packages.props could be the only place where the Version attribute is defined.</li>
+                    <li>Added check for the presence of the VersionOverride attribute. This is needed since the version used by a project could still be different from the global one, at least in theory.</li>
+                    <li>Increased height of SettingsWindow.</li>
+                    <li>RPM and DEB packages now specify full .NET dependencies.</li>
+                    <li>Bugfix: XAML code text and debug output was hidden (fixes a bug introduced in 1.1.0).</li>
+                    <li>Bugfix: Error in persisting size of main window between launches.</li>
+                    <li>Bugfix: Crash when trying open recent but non-existing solution file.</li>
+                </ul>
+            </description>
+        </release>
+
         <release version="1.1.0" date="2023-03-27">
             <description>
                 <ul>

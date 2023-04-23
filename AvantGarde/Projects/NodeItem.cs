@@ -151,35 +151,69 @@ namespace AvantGarde.Projects
         }
 
         /// <summary>
-        /// Finds the first node with a matching name. If files is true, only files are found. If false, only directories.
+        /// Finds the first file node using either full or leaf name with default case sensitivity.
         /// </summary>
-        public NodeItem? FindFirst(string name, bool files, StringComparison comparison)
+        public NodeItem? FindFile(string name)
         {
-            return FindInternal(CleanPath(name), files, comparison);
+            return FindFile(name, int.MaxValue, PathItem.PlatformComparison);
         }
 
         /// <summary>
-        /// Overload with platform default case sensitivity.
+        /// Finds the first file node using either full or leaf name.
         /// </summary>
-        public NodeItem? FindFirst(string name, bool files)
+        public NodeItem? FindFile(string name, StringComparison comparison)
         {
-            return FindInternal(CleanPath(name), files, PathItem.PlatformComparison);
+            return FindFile(name, int.MaxValue, comparison);
         }
 
         /// <summary>
-        /// Finds a node with matching full name.
+        /// Finds the first file node using either full or leaf name. A depth value of 1 will find items only the top-level directory.
         /// </summary>
-        public NodeItem? FindExact(string fullName, StringComparison comparison)
+        public NodeItem? FindFile(string name, int depth, StringComparison comparison)
         {
-            return FindInternal(CleanPath(fullName), null, comparison);
+            return FindInternal(CleanPath(name), false, depth, comparison);
         }
 
         /// <summary>
-        /// Overload with platform default case sensitivity.
+        /// Finds the first directory node using either full or leaf name with default case sensitivity
         /// </summary>
-        public NodeItem? FindExact(string fullName)
+        public NodeItem? FindDirectory(string name)
         {
-            return FindInternal(CleanPath(fullName), null, PathItem.PlatformComparison);
+            return FindDirectory(name, int.MaxValue, PathItem.PlatformComparison);
+        }
+
+        /// <summary>
+        /// Finds the first directory node using either full or leaf name.
+        /// </summary>
+        public NodeItem? FindDirectory(string name, StringComparison comparison)
+        {
+            return FindDirectory(name, int.MaxValue, comparison);
+        }
+
+        /// <summary>
+        /// Finds the first directory node using either full or leaf name. A depth value of 1 will find items only the top-level directory.
+        /// </summary>
+        public NodeItem? FindDirectory(string name, int depth, StringComparison comparison)
+        {
+            return FindInternal(CleanPath(name), true, depth, comparison);
+        }
+
+        /// <summary>
+        /// Finds a node with matching full name. Unlike <see cref="FindFile"/> and <see cref="FindDirectory"/>,
+        /// this routine can find either a file or directory, but requires the full path name.
+        /// </summary>
+        public NodeItem? FindNode(string fullName, StringComparison comparison)
+        {
+            return FindInternal(CleanPath(fullName), null, int.MaxValue, comparison);
+        }
+
+        /// <summary>
+        /// Finds a node with matching full name with default case sensitivity. Unlike <see cref="FindFile"/> and
+        /// <see cref="FindDirectory"/>, this routine can find either a file or directory, but requires the full path name.
+        /// </summary>
+        public NodeItem? FindNode(string fullName)
+        {
+            return FindInternal(CleanPath(fullName), null, int.MaxValue, PathItem.PlatformComparison);
         }
 
         /// <summary>
@@ -347,23 +381,26 @@ namespace AvantGarde.Projects
             }
         }
 
-        private NodeItem? FindInternal(string name, bool? isFile, StringComparison comparison)
+        private NodeItem? FindInternal(string name, bool? isDirectory, int depth, StringComparison comparison)
         {
-            if (isFile == null && FullName.Equals(name, comparison))
+            if (isDirectory == null && FullName.Equals(name, comparison))
             {
+                // Full name match
                 return this;
             }
 
-            if (isFile != null && IsDirectory != isFile && Name.Equals(name, comparison))
+            if (isDirectory != null && IsDirectory == isDirectory &&
+                (Name.Equals(name, comparison) || FullName.Equals(name, comparison)))
             {
+                // Name only match
                 return this;
             }
 
-            if (_contents != null)
+            if (_contents != null && depth > 0)
             {
                 for (int n = _contents.Count - 1; n > -1; --n)
                 {
-                    var found = _contents[n].FindInternal(name, isFile, comparison);
+                    var found = _contents[n].FindInternal(name, isDirectory, depth - 1, comparison);
 
                     if (found != null)
                     {

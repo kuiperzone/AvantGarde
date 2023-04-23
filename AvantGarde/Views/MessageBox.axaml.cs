@@ -35,7 +35,7 @@ namespace AvantGarde.Views
         /// </summary>
         public MessageBox()
         {
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
             Title = App.Current?.Name ?? string.Empty;
         }
 
@@ -120,8 +120,6 @@ namespace AvantGarde.Views
 
         protected override void OnOpened(EventArgs e)
         {
-            base.OnOpened(e);
-
             if (Buttons.HasFlag(BoxButtons.Ok))
             {
                 AddButton("Ok", BoxButtons.Ok);
@@ -158,7 +156,8 @@ namespace AvantGarde.Views
             }
 
             this.SizeToContent = SizeToContent.WidthAndHeight;
-            this.SetCenterFix();
+            base.OnOpened(e);
+            this.CanResize = false;
         }
 
         private void AddButton(string caption, BoxButtons rslt)

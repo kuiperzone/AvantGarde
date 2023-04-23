@@ -45,6 +45,22 @@ namespace AvantGarde.Views
         protected T Model;
 
         /// <summary>
+        /// Returns nominal width (without font-size scaling).
+        /// </summary>
+        public double DescaledWidth
+        {
+            get { return Width / GlobalModel.Global.Scale; }
+        }
+
+        /// <summary>
+        /// Returns nominal height (without font-size scaling).
+        /// </summary>
+        public double DescaledHeight
+        {
+            get { return Height / GlobalModel.Global.Scale; }
+        }
+
+        /// <summary>
         /// Called by this class. Can be overridden, but call base.
         /// </summary>
         protected override void OnOpened(EventArgs e)

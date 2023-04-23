@@ -173,7 +173,7 @@ namespace AvantGarde.Loading
                 node.Properties.FilePatterns = DotnetHostName;
                 node.Refresh();
 
-                return node.FindFirst(DotnetHostName, true, StringComparison.OrdinalIgnoreCase) ??
+                return node.FindFile(DotnetHostName, StringComparison.OrdinalIgnoreCase) ??
                     throw new FileNotFoundException($"Unable to locate {DotnetHostName} for version {version}");
             }
 

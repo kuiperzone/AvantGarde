@@ -16,8 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.IO;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
@@ -193,24 +191,39 @@ namespace AvantGarde.Projects.Test
         }
 
         [Fact]
-        public void FindFirst_FindsName()
+        public void FindDirectory_FindsName()
         {
-            var temp = CreateNewScratch();
-            var sub = Directory.CreateDirectory(temp + "sub") + "/";
+            var temp = CreateNewScratch() + "sub";
+            var sub = Directory.CreateDirectory(temp) + "/";
             CreateFileContent(sub + "Text1.txt", "Hello World");
 
             var item = new NodeItem(Scratch, PathKind.Directory);
             item.Refresh();
 
-            Assert.Null(item.FindFirst("NotExist", true));
-            Assert.Null(item.FindFirst("Text1.txt", false));
+            Assert.Null(item.FindDirectory("NotExist"));
+            Assert.Null(item.FindDirectory("Text1.txt"));
 
-            Assert.Equal("Text1.txt", item.FindFirst("Text1.txt", true)?.Name);
-            Assert.Equal("Text1.txt", item.FindFirst("TEXT1.txt", true, StringComparison.OrdinalIgnoreCase)?.Name);
+            Assert.Equal(temp, item.FindDirectory(temp)?.FullName);
+            Assert.Equal(temp, item.FindDirectory(temp.ToUpperInvariant(), StringComparison.InvariantCultureIgnoreCase)?.FullName);
         }
 
         [Fact]
-        public void FindExact_FindsPath()
+        public void FindFile_FindsName()
+        {
+            var temp = CreateNewScratch() + "sub";
+            var sub = Directory.CreateDirectory(temp) + "/";
+            CreateFileContent(sub + "Text1.txt", "Hello World");
+
+            var item = new NodeItem(Scratch, PathKind.Directory);
+            item.Refresh();
+
+            Assert.Null(item.FindFile("NotExist"));
+            Assert.Equal("Text1.txt", item.FindFile("Text1.txt")?.Name);
+            Assert.Equal("Text1.txt", item.FindFile("TEXT1.txt", StringComparison.OrdinalIgnoreCase)?.Name);
+        }
+
+        [Fact]
+        public void FindNode_FindsPath()
         {
             var temp = CreateNewScratch();
             var sub = Directory.CreateDirectory(temp + "sub") + "/";
@@ -219,11 +232,11 @@ namespace AvantGarde.Projects.Test
             var item = new NodeItem(Scratch, PathKind.Directory);
             item.Refresh();
 
-            Assert.Null(item.FindExact("NotExist"));
-            Assert.Null(item.FindExact(""));
+            Assert.Null(item.FindNode("NotExist"));
+            Assert.Null(item.FindNode(""));
 
-            Assert.Equal("Text1.txt", item.FindExact(path)?.Name);
-            Assert.Equal("Text1.txt", item.FindExact(path.ToUpperInvariant(), StringComparison.OrdinalIgnoreCase)?.Name);
+            Assert.Equal("Text1.txt", item.FindNode(path)?.Name);
+            Assert.Equal("Text1.txt", item.FindNode(path.ToUpperInvariant(), StringComparison.OrdinalIgnoreCase)?.Name);
         }
 
     }

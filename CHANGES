@@ -1,8 +1,13 @@
-+ NEXT
++ VERSION 1.2.0
+- Added detection of application build output in the new '.artifacts' directory that will come into play with .NET8.
 - Added solution directory tree traverse to find the Directory.Packages.props file when AvaloniaVersion is null. This is needed if the version is defined only globally, and not overridden in the csproj.
 - Added check for the presence of the PackageVersion tag. This is needed since the Directory.Packages.props could be the only place where the Version attribute is defined.
 - Added check for the presence of the VersionOverride attribute. This is needed since the version used by a project could still be different from the global one, at least in theory.
 - Increased height of SettingsWindow.
+- RPM and DEB packages now specify full .NET dependencies.
+- Bugfix: XAML code text and debug output was hidden (fixes a bug introduced in 1.1.0).
+- Bugfix: Error in persisting size of main window between launches.
+- Bugfix: Crash when trying open recent but non-existing solution file.
 
 + VERSION 1.1.0
 - Added new "application font" preference

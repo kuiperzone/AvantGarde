@@ -50,7 +50,6 @@ namespace AvantGarde.ViewModels
 
         public PreviewOptionsViewModel()
         {
-
             _scaleItems.Add("25%");
             _scaleItems.Add("50%");
             _scaleItems.Add("67%");

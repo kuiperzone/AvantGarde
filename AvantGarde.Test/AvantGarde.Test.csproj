@@ -5,6 +5,7 @@
 		<IsPackable>false</IsPackable>
 		<Nullable>enable</Nullable>
 		<IsPublishable>false</IsPublishable>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />

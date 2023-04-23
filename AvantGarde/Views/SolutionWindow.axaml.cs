@@ -90,6 +90,7 @@ namespace AvantGarde.Views
         {
             if (Properties != null)
             {
+                // Accept warning - check needed for Avalonia 11
                 if (_depthUpDown.Value != null)
                 {
                     Properties.SearchDepth = (int)_depthUpDown.Value;

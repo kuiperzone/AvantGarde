@@ -19,7 +19,6 @@
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using AvantGarde.Loading;
 using AvantGarde.Projects;
@@ -34,11 +33,6 @@ namespace AvantGarde.Views
     /// </summary>
     public partial class PreviewPane : UserControl
     {
-        private readonly CodeTextBox _plainText;
-        private readonly PreviewControl _previewControl;
-        private readonly Grid _xamlGrid;
-        private readonly XamlCodeControl _xamlCode;
-
         private readonly DispatcherTimer _timer;
         private readonly PreviewPaneViewModel _model = new();
         private int _caretIndex = int.MinValue;
@@ -47,20 +41,14 @@ namespace AvantGarde.Views
         {
             _model.Owner = this;
             DataContext = _model;
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
 
             _model.LoadFlagChecked += LoadFlagCheckedHandler;
             _model.ScaleChanged += ScaleChangedHandler;
 
-            _previewControl = this.FindOrThrow<PreviewControl>("PreviewControl");
-            _previewControl.PointerEventOccurred += PointerEventHandler;
-            _previewControl.GotoClick += GotoClickHander;
-
-            _plainText = this.FindOrThrow<CodeTextBox>("PlainTextBox");
-            _xamlGrid = this.FindOrThrow<Grid>("XamlGrid");
-            _xamlCode = this.FindOrThrow<XamlCodeControl>("XamlCode");
-
-            _xamlCode.IsVisible = false;
+            XamlCode.IsVisible = false;
+            PreviewControl.PointerEventOccurred += PointerEventHandler;
+            PreviewControl.GotoClick += GotoClickHander;
 
             _timer = new(TimeSpan.FromMilliseconds(100), DispatcherPriority.Normal, TimerHandler);
             _timer.Start();
@@ -93,8 +81,8 @@ namespace AvantGarde.Views
         /// </summary>
         public PreviewWindowTheme WindowTheme
         {
-            get { return _previewControl.WindowTheme; }
-            set { _previewControl.WindowTheme = value; }
+            get { return PreviewControl.WindowTheme; }
+            set { PreviewControl.WindowTheme = value; }
         }
 
         /// <summary>
@@ -169,8 +157,8 @@ namespace AvantGarde.Views
         /// </summary>
         public string? OutputText
         {
-            get { return _xamlCode.OutputText; }
-            set { _xamlCode.OutputText = value; }
+            get { return XamlCode.OutputText; }
+            set { XamlCode.OutputText = value; }
         }
 
         /// <summary>
@@ -235,7 +223,7 @@ namespace AvantGarde.Views
                 _model.HasContent = payload.Source != null || payload.Text != null;
                 _model.IsXamlViewable = payload.ItemKind == PathKind.Xaml;
                 _model.IsPlainTextViewable = payload.Text != null && payload.Source == null && !_model.IsXamlViewable;
-                _previewControl.Update(payload, ScaleFactor);
+                PreviewControl.Update(payload, ScaleFactor);
             }
             else
             {
@@ -243,15 +231,18 @@ namespace AvantGarde.Views
                 _model.HasContent = false;
                 _model.IsXamlViewable = false;
                 _model.IsPlainTextViewable = false;
-                _previewControl.Update(null, ScaleFactor);
+                PreviewControl.Update(null, ScaleFactor);
             }
 
             if (_model.IsPlainTextViewable)
             {
-                _plainText.Text = payload?.Text;
+                PlainTextBox.Text = payload?.Text;
             }
 
-            if (_xamlCode.Update(payload))
+            // We are setting this here because XAML binding not working for unknown reason
+            XamlCode.IsVisible = _model.IsXamlViewable;
+
+            if (XamlCode.Update(payload))
             {
                 ResetSplitter();
             }
@@ -261,7 +252,7 @@ namespace AvantGarde.Views
 
         private RowDefinition GetSplitRow()
         {
-            var row = _xamlGrid.RowDefinitions[2];
+            var row = XamlGrid.RowDefinitions[2];
 
             if (row != null)
             {
@@ -323,7 +314,7 @@ namespace AvantGarde.Views
             if (_model.IsXamlViewable)
             {
                 IsXamlViewOpen = true;
-                _xamlCode.SetCaretPos(error.LineNum, error.LinePos);
+                XamlCode.SetCaretPos(error.LineNum, error.LinePos);
             }
         }
 
@@ -331,25 +322,25 @@ namespace AvantGarde.Views
         {
             // Update caret position.
             // Not sure of a better way to do this other than a timer.
-            if (_plainText.IsVisible)
+            if (PlainTextBox.IsVisible)
             {
-                var idx = _plainText.CaretIndex;
+                var idx = PlainTextBox.CaretIndex;
 
                 if (_caretIndex != idx)
                 {
                     _caretIndex = idx;
-                    _model.CaretText = _plainText.GetCaretLabel();
+                    _model.CaretText = PlainTextBox.GetCaretLabel();
                 }
             }
             else
-            if (_xamlCode.IsVisible)
+            if (XamlCode.IsVisible)
             {
-                var idx = _xamlCode.GetCaretIndex();
+                var idx = XamlCode.GetCaretIndex();
 
                 if (_caretIndex != idx)
                 {
                     _caretIndex = idx;
-                    _model.CaretText = _xamlCode.GetCaretLabel();
+                    _model.CaretText = XamlCode.GetCaretLabel();
                 }
             }
             else

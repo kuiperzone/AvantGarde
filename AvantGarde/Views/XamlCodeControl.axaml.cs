@@ -77,6 +77,7 @@ namespace AvantGarde.Views
             HasXaml = payload?.ItemKind == PathKind.Xaml;
             _model.CodeText = payload?.Text;
             OutputText = payload?.Output;
+
             return HasXaml != temp;
         }
 

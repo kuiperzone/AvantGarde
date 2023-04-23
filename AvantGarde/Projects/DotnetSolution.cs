@@ -141,19 +141,7 @@ namespace AvantGarde.Projects
             {
                 foreach (var project in Projects.Values)
                 {
-                    if (project.Name.Equals(name, PathItem.PlatformComparison) || project.FullName.Equals(name, PathItem.PlatformComparison))
-                    {
-                        return project;
-                    }
-
-                    var item = project.Contents.FindExact(name);
-
-                    if (item != null)
-                    {
-                        return item;
-                    }
-
-                    item = project.Contents.FindFirst(name, true) ?? project.Contents.FindFirst(name, false);
+                    var item = project.Contents.FindFile(name) ?? project.Contents.FindDirectory(name);
 
                     if (item != null)
                     {

@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 namespace AvantGarde.Projects
@@ -35,6 +36,43 @@ namespace AvantGarde.Projects
         private bool _refreshed;
         private bool _customOverride;
 
+        static DotnetProject()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
+                {
+                    RuntimeId = "win-x64";
+                }
+                else
+                if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
+                {
+                    RuntimeId = "win-arm64";
+                }
+            }
+            else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
+                {
+                    RuntimeId = "linux-x64";
+                }
+                else
+                if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
+                {
+                    RuntimeId = "linux-arm64";
+                }
+            }
+            else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
+                {
+                    RuntimeId = "osx-x64";
+                }
+            }
+        }
+
         /// Constructor with "csproj" file path and <see cref="Solution"/>. If null, a default
         /// instance will be created. A call to <see cref="Refresh"/> is needed after construction.
         public DotnetProject(string path, DotnetSolution? solution = null)
@@ -48,8 +86,12 @@ namespace AvantGarde.Projects
             // Solution must present before Contents
             Contents = new NodeItem(ParentDirectory, PathKind.Directory, this);
             _hashCode = base.GetHashCode();
-
         }
+
+        /// <summary>
+        /// Gets the default expected runtime ID (i.e. "linux-x64"), if known.
+        /// </summary>
+        public static string? RuntimeId { get; }
 
         /// <summary>
         /// Gets the project name. Same as <see cref="PathItem.Name"/>, but lacks the extension.
@@ -357,44 +399,195 @@ namespace AvantGarde.Projects
 
         private PathItem? FindTargetAssembly(string? framework, BuildKind build)
         {
-            if (!string.IsNullOrEmpty(framework))
+            Debug.WriteLine($"{nameof(FindTargetAssembly)} {framework}, {build}");
+
+            if (string.IsNullOrEmpty(framework))
             {
-                var assemblyName = ProjectName + ".dll";
+                Debug.WriteLine("Failed - framework is null or empty");
+                return null;
+            }
 
-                var temp = new NodeItem(Contents.GetDirectoryInfo());
-                temp.Properties.FilePatterns = assemblyName;
+            PathItem? item0 = null;
 
-                temp.Refresh();
+            // Find within traditional project;
+            PathItem? item1 = FindAssemblyUnderRoot(Contents, ProjectName, framework, true, build);
+            Debug.WriteLine($"Traditional assembly found: {item1 != null}, {item1?.FullName}");
 
-                // Presence of "bin" preferred
-                NodeItem node = temp;
-                var dir = temp.FindFirst("bin", false, StringComparison.OrdinalIgnoreCase);
+            // Locate common artifacts file
+            var artifacts = FindArtifactsDirectory(Contents);
 
-                if (dir != null)
+            if (artifacts != null)
+            {
+                Debug.WriteLine("Find under artifacts directory");
+                item0 = FindAssemblyUnderRoot(artifacts, ProjectName, framework, false, build);
+                Debug.WriteLine($"Artifact assembly found: {item1 != null}, {item1?.FullName}");
+            }
+
+            if (item0 != null && item1 != null)
+            {
+                Debug.WriteLine("Compare timestamps");
+                return item0.LastUtc > item1.LastUtc ? item0 : item1;
+            }
+
+            return item1 != null ? item1 : item0;
+        }
+
+        private static PathItem? FindAssemblyUnderRoot(NodeItem root, string project, string framework, bool mandatoryFramework, BuildKind build)
+        {
+            // Locate assembly path somewhere within a build directory tree.
+            // We accommodate traditional structures under the project bin directory, and also the
+            // new single "artifacts" directory for .NET8. See below which describes both structures:
+            // https://github.com/dotnet/designs/blob/simplify-output-paths-2/accepted/2023/simplify-output-paths.md
+
+            // These are valid trees: (square brackets indicate optional)
+            // project/bin/Debug/[net7.0]/[linux-x64]/projectName.dll
+            // .artifacts/bin/debug/projectName.dll
+            // .artifacts/bin/[projectName]/debug_net8.0/projectName.dll
+
+            string assemblyName = project + ".dll";
+            Debug.WriteLine($"{nameof(FindAssemblyUnderRoot)} under {root}");
+            Debug.WriteLine($"{nameof(project)} {project}");
+            Debug.WriteLine($"{nameof(framework)} {framework}");
+            Debug.WriteLine($"{nameof(build)} {build}");
+            Debug.WriteLine($"{nameof(RuntimeId)} {RuntimeId}");
+
+            // Make a copy
+            var node = new NodeItem(root.GetDirectoryInfo());
+            node.Properties.FilePatterns = assemblyName;
+            node.Refresh();
+
+            // Presence of "bin" mandatory
+            Debug.WriteLine("Look for mandatory bin");
+            node = node.FindDirectory("bin", StringComparison.OrdinalIgnoreCase);
+            Debug.WriteLine($"Bin: {node?.FullName}");
+
+            if (node == null)
+            {
+                Debug.WriteLine("Failed - bin directory not found");
+                return null;
+            }
+
+            Debug.WriteLine($"Look for optional project {project}");
+            var temp = node.FindDirectory(project, StringComparison.OrdinalIgnoreCase);
+            Debug.WriteLine($"Project: {temp?.FullName}");
+
+            if (temp != null)
+            {
+                Debug.WriteLine("Project found OK");
+                node = temp;
+            }
+
+            // Combined debug_net8.0 (artifacts only)
+            var pivot = build + "_" + framework;
+            Debug.WriteLine($"Look for pivot configuration/framework {pivot}");
+            temp = node.FindDirectory(pivot, StringComparison.OrdinalIgnoreCase);
+            Debug.WriteLine($"Pivot: {temp?.FullName}");
+
+            if (temp == null)
+            {
+                Debug.WriteLine($"Look for mandatory configuration {build}");
+                temp = node.FindDirectory(build.ToString(), StringComparison.OrdinalIgnoreCase);
+                Debug.WriteLine($"Configuration: {temp?.FullName}");
+
+                if (temp == null)
                 {
-                    node = dir;
-                    Debug.WriteLine("Bin directory found");
+                    Debug.WriteLine($"Failed - could not find configuration {build}");
+                    return null;
                 }
 
-                // We need debug/net5.0 etc
-                dir = node.FindFirst(build.ToString(), false, StringComparison.OrdinalIgnoreCase);
+                // OK
+                node = temp;
 
-                if (dir != null)
+                Debug.WriteLine($"Look for optional framework {framework}");
+                temp = node.FindDirectory(framework, StringComparison.OrdinalIgnoreCase);
+                Debug.WriteLine($"Framework: {temp?.FullName}");
+
+                if (temp == null && mandatoryFramework)
                 {
-                    Debug.WriteLine("Build Debug/Release directory found");
-                    dir = dir.FindFirst(framework, false, StringComparison.OrdinalIgnoreCase);
+                    Debug.WriteLine($"Failed - could not find configuration {framework}");
+                    return null;
+                }
 
-                    if (dir != null)
-                    {
-                        Debug.WriteLine("Framework directory found");
-                        return dir.FindFirst(assemblyName, true, StringComparison.OrdinalIgnoreCase);
-                    }
+                if (temp != null)
+                {
+                    Debug.WriteLine("Framework found OK");
+                    node = temp;
+                }
+            }
+            else
+            {
+                Debug.WriteLine($"Combined {pivot} found OK");
+                node = temp;
+            }
 
+            if (RuntimeId != null)
+            {
+                // linux-x64 or win-x64 etc.
+                Debug.WriteLine($"Look for optional runtime {RuntimeId}");
+                temp = node.FindDirectory(RuntimeId, StringComparison.OrdinalIgnoreCase);
+
+                if (temp != null)
+                {
+                    Debug.WriteLine("RuntimeId found OK");
+                    node = temp;
                 }
             }
 
-            return null;
+            Debug.WriteLine("Finally look for manadory assembly file");
+            return node.FindFile(assemblyName, StringComparison.OrdinalIgnoreCase);
         }
 
-   }
+        private static NodeItem? FindArtifactsDirectory(PathItem dir, int max = 5)
+        {
+            int count = 0;
+            Debug.WriteLine($"{nameof(FindArtifactsDirectory)} upwards from {dir}");
+
+            EnumerationOptions opts = new();
+            opts.IgnoreInaccessible = true;
+            opts.RecurseSubdirectories = false;
+            opts.ReturnSpecialDirectories = true;
+            opts.AttributesToSkip = FileAttributes.System;
+            opts.MatchType = MatchType.Simple;
+            opts.MatchCasing = MatchCasing.PlatformDefault;
+
+            while (true)
+            {
+                Debug.WriteLine($"Iterate {dir}");
+                var artifacts = Path.Combine(dir.FullName, ".artifacts");
+
+                if (Directory.Exists(artifacts))
+                {
+                    Debug.WriteLine($"Found {artifacts}");
+                    return new NodeItem(artifacts, PathKind.Directory);
+                }
+
+                if (++count < max && dir.Exists && dir.ParentDirectory.Length != 0)
+                {
+                    // Terminate upward traversal on encountering either Directory.Build.props or *.sln file.
+                    var props = Path.Combine(dir.FullName, "Directory.Build.props");
+
+                    if (File.Exists(props))
+                    {
+                        Debug.WriteLine("Found Directory.Build.props - terminate here");
+                        return null;
+                    }
+
+                    var sol = dir.GetDirectoryInfo().EnumerateFiles("*.sln", opts);
+
+                    if (sol.Count() != 0)
+                    {
+                        Debug.WriteLine("Found *.sln file - terminate here");
+                        return null;
+                    }
+
+                    dir = new NodeItem(dir.ParentDirectory, PathKind.Directory);
+                    continue;
+                }
+
+                Debug.WriteLine("Failed return null");
+                return null;
+            }
+       }
+
+    }
 }

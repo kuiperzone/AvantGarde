@@ -436,14 +436,14 @@ namespace AvantGarde.Views
                 case nameof(Window.Width):
                     if (WindowState != WindowState.Maximized && App.Settings.Width != Width)
                     {
-                        App.Settings.Width = Width;
+                        App.Settings.Width = DescaledWidth;
                         _writeSettingsFlag = true;
                     }
                     break;
                 case nameof(Window.Height):
                     if (WindowState != WindowState.Maximized && App.Settings.Height != Height)
                     {
-                        App.Settings.Height = Height;
+                        App.Settings.Height = DescaledHeight;
                         _writeSettingsFlag = true;
                     }
                     break;
@@ -544,9 +544,10 @@ namespace AvantGarde.Views
                 if (_writeSettingsFlag)
                 {
                     Debug.WriteLine("Write settings");
-                    Debug.WriteLine("WRITE WIDTH: " + App.Settings.Width);
                     _writeSettingsFlag = false;
+#if !DEBUG
                     App.Settings.Write();
+#endif
                 }
             }
             catch (Exception x)

@@ -6,7 +6,6 @@
         x:Class="AvantGarde.Views.MessageBox"
         MaxWidth="800"
         MaxHeight="800"
-        CanResize="False"
         Title="Title"
 
         WindowStartupLocation="CenterOwner">

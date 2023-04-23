@@ -16,12 +16,8 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
-using System.Threading;
 using Xunit.Abstractions;
 
 namespace AvantGarde.Test.Internal
@@ -285,7 +281,7 @@ namespace AvantGarde.Test.Internal
             {
                 try
                 {
-                    Directory.Delete(_scratch, true);
+                   Directory.Delete(_scratch, true);
                 }
                 catch
                 {
