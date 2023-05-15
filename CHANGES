@@ -1,4 +1,10 @@
-+ VERSION 1.2.0
++ VERSION 1.3.0-A11Preview;2023-05-15
+- THIS IS A PREVIEW RELEASE ONLY for Avalonia 11.0.0-preview8
+- Changes necessary for Avalonia 11.0.0-preview8
+- Update of pupnet.conf and deploy files to PupNet 1.5.0
+
+
++ VERSION 1.2.0;2023-04-23
 - Added detection of application build output in the new '.artifacts' directory that will come into play with .NET8.
 - Added solution directory tree traverse to find the Directory.Packages.props file when AvaloniaVersion is null. This is needed if the version is defined only globally, and not overridden in the csproj.
 - Added check for the presence of the PackageVersion tag. This is needed since the Directory.Packages.props could be the only place where the Version attribute is defined.
@@ -9,25 +15,29 @@
 - Bugfix: Error in persisting size of main window between launches.
 - Bugfix: Crash when trying open recent but non-existing solution file.
 
-+ VERSION 1.1.0
+
++ VERSION 1.1.0;2023-03-27
 - Added new "application font" preference
 - Added new Linux deployment packages
 - Built with Avalonia 0.10.19
 - Internal changes to make ready for Avalonia 11
 
-+ VERSION 1.0.2
+
++ VERSION 1.0.2;2023-02-02
 - Built with Avalonia 0.10.18 and .NET7
 - Built with PublishReadyToRun (start should be a little quicker)
 - ArgumentParser now supplied as Yaap package (internal change)
 
-+ VERSION 1.0.1
+
++ VERSION 1.0.1;2022-07-03
 - Built with latest Avalonia version 0.10.15
 - Fixed a bug in command line argument parser.
 - Fixed several harmless null-reference warnings during build.
 - Updates to readme file.
 - Source code now contains unit tests.
 
-+ VERSION 1.0.0
+
++ VERSION 1.0.0;2022-03-02
 - Now accepts command arguments to facilitate launch from IDE. See project page for details.
 - Main window now remembers size and whether maximized.
 - Added installer on Windows.
@@ -35,5 +45,6 @@
 - Updated webpage link.
 - Bug fix - Not showing relative assembly paths on Windows.
 
-+ VERSION 0.1.0-alpha
+
++ VERSION 0.1.0-alpha;2022-02-10
 - Initial version

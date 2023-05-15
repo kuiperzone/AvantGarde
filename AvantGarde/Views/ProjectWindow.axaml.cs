@@ -21,6 +21,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Projects;
 using AvantGarde.Utility;
@@ -180,13 +181,13 @@ namespace AvantGarde.Views
                     }
 
                     _appCombo.IsEnabled = true;
-                    _appCombo.Items = temp;
+                    _appCombo.ItemsSource = temp;
                     _appCombo.SelectedItem = Project.GetApp()?.ProjectName;
                 }
                 else
                 {
                     _appCombo.IsEnabled = false;
-                    _appCombo.Items = new string[] { "N/A" };
+                    _appCombo.ItemsSource = new string[] { "N/A" };
                     _appCombo.SelectedIndex = 0;
                 }
 
@@ -208,30 +209,6 @@ namespace AvantGarde.Views
             UpdateWarnings();
         }
 
-        // TBD for removal in Avalonia 11
-        private async void BrowseButtonClickHandler(object? sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var dialog = new OpenFileDialog();
-                dialog.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
-                dialog.Filters?.Add(new FileDialogFilter() { Name = "Assembly (*.dll)", Extensions = { "dll" } });
-                dialog.Directory = Project?.Solution?.ParentDirectory;
-
-                var path = await dialog.ShowAsync(this);
-                if (path?.Length > 0)
-                {
-                    Debug.WriteLine("BrowseButtonClickHandler: " + path[0]);
-                    UpdateAssemblyPathControls(path[0]);
-                }
-            }
-            catch (Exception x)
-            {
-                await MessageBox.ShowDialog(this, x);
-            }
-        }
-
-        /* TBD for Avalonia 11
         private async void BrowseButtonClickHandler(object? sender, RoutedEventArgs e)
         {
             try
@@ -257,7 +234,6 @@ namespace AvantGarde.Views
                 await MessageBox.ShowDialog(this, x);
             }
         }
-        */
 
         private void AssemblyCheckClickHandler(object? sender, RoutedEventArgs e)
         {

@@ -67,8 +67,6 @@ namespace AvantGarde.Views
         {
             base.OnOpened(e);
             ScaleSize();
-
-            this.SetCenterFix();  // TBD not necessary in Avalonia 11
         }
 
         private void ScaleSize()

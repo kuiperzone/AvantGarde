@@ -4,10 +4,8 @@
 
         xmlns:vm="using:AvantGarde.ViewModels"
         x:DataType="vm:AvantViewModel"
+        RequestedThemeVariant="Default"
         x:Class="AvantGarde.App">
-
-        <!-- TBD requires this above in Avalonia 11 -->
-        <!-- RequestedThemeVariant="Default" -->
 
     <Application.Styles>
         <FluentTheme />

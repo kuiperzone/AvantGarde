@@ -180,7 +180,7 @@
                 Margin="4 0 4 0"
                 MinWidth="{Binding Global.MinStdButtonWidth}"
                 VerticalAlignment="Center"
-                Items="{Binding ScaleItems}"
+                ItemsSource="{Binding ScaleItems}"
                 SelectedIndex="{Binding ScaleSelectedIndex, Mode=TwoWay}"
             />
 

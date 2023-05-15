@@ -22,6 +22,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Loading;
 using AvantGarde.Markup;
@@ -85,29 +86,6 @@ namespace AvantGarde.Views
 #endif
         }
 
-        // TBD for removal with avalonia 11
-        public async void OpenSolutionDialog()
-        {
-            var dialog = new OpenFileDialog();
-            dialog.Title = "Open Solution or Project";
-            dialog.Filters?.Add(new FileDialogFilter() { Name = "Solutions (*.sln; *.csproj)", Extensions = { "sln", "csproj" } });
-
-            try
-            {
-                StartDialog();
-                var paths = await dialog.ShowAsync(this);
-                if (paths?.Length > 0)
-                {
-                    OpenSolution(paths[0]);
-                }
-            }
-            finally
-            {
-                EndDialog();
-            }
-        }
-
-        /* TBD Avalonia 11
         public async void OpenSolutionDialog()
         {
             var opts = new FilePickerOpenOptions();
@@ -125,7 +103,6 @@ namespace AvantGarde.Views
                 OpenSolution(paths[0].Path.AbsolutePath);
             }
         }
-        */
 
         public void OpenSolution(string path, bool openExplorer = true)
         {
@@ -163,34 +140,6 @@ namespace AvantGarde.Views
             }
         }
 
-        // TBD for removal with Avalonia 11
-        public async void ShowExportSchemaDialog()
-        {
-            try
-            {
-                var dialog = new SaveFileDialog();
-                dialog.Title = "Export Schema";
-                dialog.Filters?.Add(new FileDialogFilter() { Name = "XSD (*.xsd)", Extensions = { "xsd" } });
-                dialog.InitialFileName = "AvaloniaSchema-" + MarkupDictionary.Version + ".xsd";
-
-                StartDialog();
-                var path = await dialog.ShowAsync(this);
-                if (!string.IsNullOrEmpty(path))
-                {
-                    SchemaGenerator.SaveDocument(path, Model.IsFormattedXsdChecked, Model.IsAnnotationXsdChecked);
-                }
-            }
-            catch (Exception e)
-            {
-                ShowError(e);
-            }
-            finally
-            {
-                EndDialog();
-            }
-        }
-
-        /* TBD For Avalonia 11
         public async void ShowExportSchemaDialog()
         {
             try
@@ -221,7 +170,6 @@ namespace AvantGarde.Views
                 EndDialog();
             }
         }
-        */
 
         public async void ShowSolutionDefaultsDialog()
         {
@@ -570,7 +518,7 @@ namespace AvantGarde.Views
             }
         }
 
-        // TBD - for possible removal
+        // TBD - for possible future removal
         private void StartDialog()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -583,7 +531,7 @@ namespace AvantGarde.Views
             _refreshTimer.Stop();
         }
 
-        // TBD - for possible removal
+        // TBD - for possible future removal
         private void EndDialog()
         {
             Topmost = Model.IsTopmost;

@@ -42,7 +42,7 @@
                 </MenuItem>
 
                 <MenuItem Header="Open _Recent"
-                    Items="{Binding RecentFiles}"
+                    ItemsSource="{Binding RecentFiles}"
                 />
                 <MenuItem Header="Close Solution"
                     Command="{Binding CloseSolutionCommand}"

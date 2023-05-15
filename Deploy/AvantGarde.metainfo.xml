@@ -13,8 +13,7 @@
     <launchable type="desktop-id">${APP_ID}.desktop</launchable>
 
     <description>
-        <p>Avant Garde is a XAML previewer for the C# Avalonia Framework. Avant Garde is a standalone application,
-        rather than an IDE extension. This means you can use it in conjunction with any IDE.</p>
+        ${APPSTREAM_DESCRIPTION_XML}
     </description>
 
     <!-- Freedesktop Categories -->
@@ -25,13 +24,13 @@
     <keywords>
         <keyword translate="no">Avalonia</keyword>
         <keyword translate="no">XAML</keyword>
-        <keyword>preview</keyword>
         <keyword translate="no">IDE</keyword>
         <keyword translate="no">GUI</keyword>
         <keyword translate="no">CSharp</keyword>
         <keyword translate="no">dotnet</keyword>
-        <keyword>previewer</keyword>
         <keyword translate="no">AXAML</keyword>
+        <keyword>preview</keyword>
+        <keyword>previewer</keyword>
         <keyword>development</keyword>
         <keyword>programming</keyword>
     </keywords>
@@ -43,72 +42,7 @@
     </screenshots>
 
     <releases>
-
-        <release version="1.2.0" date="2023-04-23">
-            <description>
-                <ul>
-                    <li>Added detection of application build output in the new '.artifacts' directory that will come into play with .NET8.</li>
-                    <li>Added solution directory tree traverse to find the Directory.Packages.props file when AvaloniaVersion is null. This is needed if the version is defined only globally, and not overridden in the csproj.</li>
-                    <li>Added check for the presence of the PackageVersion tag. This is needed since the Directory.Packages.props could be the only place where the Version attribute is defined.</li>
-                    <li>Added check for the presence of the VersionOverride attribute. This is needed since the version used by a project could still be different from the global one, at least in theory.</li>
-                    <li>Increased height of SettingsWindow.</li>
-                    <li>RPM and DEB packages now specify full .NET dependencies.</li>
-                    <li>Bugfix: XAML code text and debug output was hidden (fixes a bug introduced in 1.1.0).</li>
-                    <li>Bugfix: Error in persisting size of main window between launches.</li>
-                    <li>Bugfix: Crash when trying open recent but non-existing solution file.</li>
-                </ul>
-            </description>
-        </release>
-
-        <release version="1.1.0" date="2023-03-27">
-            <description>
-                <ul>
-                    <li>Built with Avalonia 0.10.19</li>
-                    <li>Added new "application font" setting</li>
-                    <li>Added new Linux deployment packages</li>
-                    <li>Internal changes to make ready for Avalonia 11</li>
-                </ul>
-            </description>
-        </release>
-
-        <release version="1.0.2" date="2023-02-02">
-            <description>
-                <ul>
-                    <li>Built with Avalonia 0.10.18 and .NET7</li>
-                    <li>Built with PublishReadyToRun (start should be a little quicker)</li>
-                    <li>ArgumentParser now supplied as Yaap package (internal change)</li>
-                </ul>
-            </description>
-        </release>
-
-        <release version="1.0.1" date="2022-07-03">
-            <description>
-                <ul>
-                    <li>Built with Avalonia 0.10.15</li>
-                    <li>Fixed a bug in command line argument parser</li>
-                    <li>Fixed several harmless null-reference warnings during build</li>
-                    <li>Updates to readme file</li>
-                    <li>Source code now contains unit tests</li>
-                </ul>
-            </description>
-        </release>
-
-        <release version="1.0.0" date="2022-03-02">
-            <description>
-                <ul>
-                    <li>Now accepts command arguments to facilitate launch from IDE. See project page for details</li>
-                    <li>Main window now remembers size and whether maximized</li>
-                    <li>Updated license details</li>
-                    <li>Added installer on Windows</li>
-                    <li>Updated webpage link</li>
-                    <li>Bug fix - Not showing relative assembly paths on Windows</li>
-                </ul>
-            </description>
-        </release>
-
-        <release version="0.1.0" date="2022-02-10">
-            <description><p>First release (alpha).</p></description>
-        </release>
+        ${APPSTREAM_CHANGELOG_XML}
     </releases>
 
 </component>

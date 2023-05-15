@@ -44,12 +44,8 @@ namespace AvantGarde.Views
             Foreground = _holdForeground;
             Cursor = new Cursor(StandardCursorType.Hand);
 
-            // TBD
-            PointerEnter += PointerEnteredHandler;
-            PointerLeave += PointerExitedHandler;
-
-            // PointerEntered += PointerEnteredHandler;
-            // PointerExited += PointerExitedHandler;
+            PointerEntered += PointerEnteredHandler;
+            PointerExited += PointerExitedHandler;
         }
 
         /// <summary>

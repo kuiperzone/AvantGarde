@@ -146,7 +146,7 @@ namespace AvantGarde.Views
                 }
             }
 
-            _treeView.Items = items;
+            _treeView.ItemsSource = items;
             _selectedItem = (PathItem?)selected?.Tag;
             _treeView.SelectedItem = selected;
         }
@@ -245,7 +245,7 @@ namespace AvantGarde.Views
                 list.Add(CreateViewItem(item, ref selected));
             }
 
-            view.Items = list;
+            view.ItemsSource = list;
             return view;
         }
 
@@ -338,7 +338,7 @@ namespace AvantGarde.Views
                     list.Add(CreateViewItem(item, ref selected));
                 }
 
-                view.Items = list;
+                view.ItemsSource = list;
             }
 
             return view;

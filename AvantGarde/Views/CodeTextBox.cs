@@ -23,6 +23,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
+using AvantGarde.Utility;
 
 namespace AvantGarde.Views
 {
@@ -112,7 +113,7 @@ namespace AvantGarde.Views
         }
 
         /// <summary>
-        /// Sets the carot position based on column and line. It returns CaretIndex.
+        /// Sets the caret position based on column and line. It returns CaretIndex.
         /// </summary>
         public int SetCaretPos(int line, int col)
         {
@@ -162,11 +163,15 @@ namespace AvantGarde.Views
         {
             if (e.KeyModifiers == KeyModifiers.Control)
             {
-                var clippy = Application.Current?.Clipboard;
+                var clippy = this.GetOwnerWindow().Clipboard;
+                //var clippy = Application.Current?.Clipboard;
 
-                if (e.Key == Key.C && clippy != null && !string.IsNullOrEmpty(SelectedText))
+                if (e.Key == Key.C)
                 {
-                    await clippy.SetTextAsync(SelectedText);
+                    if (clippy != null && !string.IsNullOrEmpty(SelectedText))
+                    {
+                        await clippy.SetTextAsync(SelectedText);
+                    }
                 }
                 else
                 if (e.Key == Key.A)
