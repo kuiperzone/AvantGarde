@@ -8,7 +8,9 @@ Avant Garde is completely IDE agnostic.
 **[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
 
-**[PREVIEW FOR AVALONIA 11](https://github.com/kuiperzone/AvantGarde/releases/tag/v1.3.0)
+See also:
+
+[PREVIEW FOR AVALONIA 11](https://github.com/kuiperzone/AvantGarde/releases/tag/v1.3.0)
 
 *If you like this project, don't forget to like and share.*
 
