@@ -7,6 +7,9 @@ Avant Garde is completely IDE agnostic.
 
 **[DOWNLOAD](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
+
+**[PREVIEW FOR AVALONIA 11](https://github.com/kuiperzone/AvantGarde/releases/tag/v1.3.0)
+
 *If you like this project, don't forget to like and share.*
 
 Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer** for Windows. It isn't actively tested on MacOS,
