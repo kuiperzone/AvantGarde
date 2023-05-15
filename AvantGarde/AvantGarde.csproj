@@ -36,21 +36,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.19" />
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.19" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
+		<PackageReference Include="Avalonia" Version="11.0.0-preview8" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview8" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.0-preview8" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview8" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.19" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview8" />
 
-
-		<!-- TBD for removal in Avalonia 11 -->
-    	<PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
-
-		<!-- TBD Avalonia 11
-		<PackageReference Include="Avalonia.Themes.Simple" Version="11" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="11" />
-		-->
 
 		<PackageReference Include="KuiperZone.Utility.Yaap" Version="2.0.0" />
 	</ItemGroup>
