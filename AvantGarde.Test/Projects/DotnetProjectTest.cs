@@ -151,9 +151,9 @@ namespace AvantGarde.Projects.Test
 
             // Create assembly under artifacts
             // debug_net8.0/projectName.dll
-            // .artifacts/bin/debug/projectName.dll
-            // .artifacts/bin/[projectName]/debug_net8.0/projectName.dll
-            var artDir = Path.Combine(solDir, ".artifacts", "bin", "debug");
+            // artifacts/bin/debug/projectName.dll
+            // artifacts/bin/[projectName]/debug_net8.0/projectName.dll
+            var artDir = Path.Combine(solDir, "artifacts", "bin", "debug");
             Directory.CreateDirectory(artDir);
             path = CreateFileContent(Path.Combine(artDir, "Name.Test.dll"), "Dummy");
 
@@ -163,7 +163,7 @@ namespace AvantGarde.Projects.Test
 
             // New location
             Directory.Delete(artDir, true);
-            artDir = Path.Combine(solDir, ".artifacts", "bin", "debug_net6.0");
+            artDir = Path.Combine(solDir, "artifacts", "bin", "debug_net6.0");
 
             Directory.CreateDirectory(artDir);
             path = CreateFileContent(Path.Combine(artDir, "Name.Test.dll"), "Dummy");
@@ -173,7 +173,7 @@ namespace AvantGarde.Projects.Test
 
             // New location
             Directory.Delete(artDir, true);
-            artDir = Path.Combine(solDir, ".artifacts", "bin", "Name.Test", "debug_net6.0");
+            artDir = Path.Combine(solDir, "artifacts", "bin", "Name.Test", "debug_net6.0");
             Directory.CreateDirectory(artDir);
             path = CreateFileContent(Path.Combine(artDir, "Name.Test.dll"), "Dummy");
 
@@ -182,7 +182,7 @@ namespace AvantGarde.Projects.Test
 
             // New location
             Directory.Delete(artDir, true);
-            artDir = Path.Combine(solDir, ".artifacts/bin/Name.Test/debug/net6.0");
+            artDir = Path.Combine(solDir, "artifacts/bin/Name.Test/debug/net6.0");
             Directory.CreateDirectory(artDir);
             path = CreateFileContent(Path.Combine(artDir, "Name.Test.dll"), "Dummy");
 
