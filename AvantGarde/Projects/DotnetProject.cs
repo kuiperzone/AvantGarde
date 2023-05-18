@@ -441,8 +441,8 @@ namespace AvantGarde.Projects
 
             // These are valid trees: (square brackets indicate optional)
             // project/bin/Debug/[net7.0]/[linux-x64]/projectName.dll
-            // .artifacts/bin/debug/projectName.dll
-            // .artifacts/bin/[projectName]/debug_net8.0/projectName.dll
+            // artifacts/bin/debug/projectName.dll
+            // artifacts/bin/[projectName]/debug_net8.0/projectName.dll
 
             string assemblyName = project + ".dll";
             Debug.WriteLine($"{nameof(FindAssemblyUnderRoot)} under {root}");
@@ -553,7 +553,7 @@ namespace AvantGarde.Projects
             while (true)
             {
                 Debug.WriteLine($"Iterate {dir}");
-                var artifacts = Path.Combine(dir.FullName, ".artifacts");
+                var artifacts = Path.Combine(dir.FullName, "artifacts");
 
                 if (Directory.Exists(artifacts))
                 {
