@@ -1,3 +1,7 @@
++ VERSION 1.2.1;2023-05-18
+- Update to reflect changes concerning artifact directory in .NET8 Preview 4.
+
+
 + VERSION 1.3.0-A11Preview;2023-05-15
 - THIS IS A PREVIEW RELEASE ONLY for Avalonia 11.0.0-preview8
 - Changes necessary for Avalonia 11.0.0-preview8
