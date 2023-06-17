@@ -20,7 +20,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 
 namespace AvantGarde.Views
@@ -28,7 +27,7 @@ namespace AvantGarde.Views
     /// <summary>
     /// Custom GridSplitter.
     /// </summary>
-    public class CustomSplitter : GridSplitter, IStyleable
+    public class CustomSplitter : GridSplitter
     {
         private readonly DispatcherTimer _timer;
         private IBrush? _originalBackground;
@@ -47,14 +46,6 @@ namespace AvantGarde.Views
         /// </summary>
         public static readonly StyledProperty<IBrush?> HighlightProperty =
             AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(Highlight), Brushes.Gray);
-
-        /// <summary>
-        /// Needed.
-        /// </summary>
-        Type IStyleable.StyleKey
-        {
-            get { return typeof(GridSplitter); }
-        }
 
         /// <summary>
         /// Gets or sets the highlight brush.
