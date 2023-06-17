@@ -30,7 +30,7 @@ namespace AvantGarde.Views
     /// <summary>
     /// A custom TextBox. By default, it has monospace font.
     /// </summary>
-    public class CodeTextBox : TextBox, IStyleable
+    public class CodeTextBox : TextBox
     {
         public CodeTextBox()
         {
@@ -41,11 +41,6 @@ namespace AvantGarde.Views
 
             GotFocus += GotFocusHandler;
             LostFocus += LostFocusHandler;
-        }
-
-        Type IStyleable.StyleKey
-        {
-            get { return typeof(TextBox); }
         }
 
         /// <summary>

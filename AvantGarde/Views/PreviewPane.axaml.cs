@@ -285,8 +285,9 @@ namespace AvantGarde.Views
 
         private void ScrollPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Unfocus TextBox
-            FocusManager.Instance?.Focus(null);
+            // Unfocus TextBox TBD
+            // FocusManager.Instance?.Focus(null);
+
         }
 
         private void PointerEventHandler(PointerEventMessage e)

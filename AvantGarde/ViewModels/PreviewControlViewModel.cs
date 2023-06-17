@@ -51,19 +51,14 @@ namespace AvantGarde.ViewModels
 
         static PreviewControlViewModel()
         {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            var prefix = "avares://" + Assembly.GetAssembly(typeof(PreviewControlViewModel))?.GetName().Name + "/Assets/";
+            _windowDecorWob = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorWob.png")));
+            _windowDecorBow = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorBow.png")));
+            _windowDecorNoResizeWob = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorNoResizeWob.png")));
+            _windowDecorNoResizeBow = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorNoResizeBow.png")));
 
-            if (assets != null)
-            {
-                var prefix = "avares://" + Assembly.GetAssembly(typeof(PreviewControlViewModel))?.GetName().Name + "/Assets/";
-                _windowDecorWob = new Bitmap(assets.Open(new Uri(prefix + "WindowDecorWob.png")));
-                _windowDecorBow = new Bitmap(assets.Open(new Uri(prefix + "WindowDecorBow.png")));
-                _windowDecorNoResizeWob = new Bitmap(assets.Open(new Uri(prefix + "WindowDecorNoResizeWob.png")));
-                _windowDecorNoResizeBow = new Bitmap(assets.Open(new Uri(prefix + "WindowDecorNoResizeBow.png")));
-
-                _decorWidth = _windowDecorWob.Size.Width;
-                _decorNoResizeWidth = _windowDecorNoResizeWob.Size.Width;
-            }
+            _decorWidth = _windowDecorWob.Size.Width;
+            _decorNoResizeWidth = _windowDecorNoResizeWob.Size.Width;
         }
 
         /// <summary>

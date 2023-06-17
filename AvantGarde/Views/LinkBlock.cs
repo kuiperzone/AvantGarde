@@ -20,14 +20,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace AvantGarde.Views
 {
     /// <summary>
     /// Custom TextBlock with hover link.
     /// </summary>
-    public class LinkBlock : TextBlock, IStyleable
+    public class LinkBlock : TextBlock
     {
         private IBrush? _holdForeground;
         private TextDecorationCollection? _holdDecor;
@@ -53,14 +52,6 @@ namespace AvantGarde.Views
         /// </summary>
         public static readonly StyledProperty<IBrush?> HoverForegroundProperty =
             AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(HoverForeground), Brushes.Purple);
-
-        /// <summary>
-        /// Needed.
-        /// </summary>
-        Type IStyleable.StyleKey
-        {
-            get { return typeof(TextBlock); }
-        }
 
         /// <summary>
         /// Gets or sets the hover foreground brush.

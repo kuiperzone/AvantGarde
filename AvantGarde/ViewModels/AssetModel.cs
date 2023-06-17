@@ -17,7 +17,6 @@
 // -----------------------------------------------------------------------------
 
 using System.Reflection;
-using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -32,80 +31,73 @@ namespace AvantGarde.ViewModels
     /// </summary>
     public class AssetModel : ReactiveObject
     {
-        private readonly static IAssetLoader? _loader;
         private readonly static string? _prefix;
 
         private bool _isDarkTheme;
 
         static AssetModel()
         {
-            _loader = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            _prefix = "avares://" + Assembly.GetAssembly(typeof(AssetModel))?.GetName().Name + "/Assets/";
 
-            if (_loader != null)
-            {
-                _prefix = "avares://" + Assembly.GetAssembly(typeof(AssetModel))?.GetName().Name + "/Assets/";
+            MainIcon = new Bitmap(AssetLoader.Open(new Uri(_prefix + "AvantGarde128.png")));
+            AboutImage = new Bitmap(AssetLoader.Open(new Uri(_prefix + "AvantGarde1024.png")));
+            ThemeFont = LoadFont("JosefinSans-VariableFont_wght", "Josefin Sans");
 
-                MainIcon = new Bitmap(_loader.Open(new Uri(_prefix + "AvantGarde128.png")));
-                AboutImage = new Bitmap(_loader.Open(new Uri(_prefix + "AvantGarde1024.png")));
-                ThemeFont = LoadFont("JosefinSans-VariableFont_wght", "Josefin Sans");
+            var tree = _prefix + "Tree/";
+            BinTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Bin64.png")));
+            CSharpTree = new Bitmap(AssetLoader.Open(new Uri(tree + "CSharp64.png")));
+            DocTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Doc64.png")));
+            DotnetTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Dotnet64.png")));
+            FolderTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Folder64.png")));
+            GreyFolderTree = new Bitmap(AssetLoader.Open(new Uri(tree + "GreyFolder64.png")));
+            ImageTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Image64.png")));
+            ProjectTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Project64.png")));
+            ProjectGreyTree = new Bitmap(AssetLoader.Open(new Uri(tree + "ProjectGrey64.png")));
+            UnknownTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Unknown64.png")));
+            WarnTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Warn64.png")));
+            XmlTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Xml64.png")));
+            XamlTree = new Bitmap(AssetLoader.Open(new Uri(tree + "Xaml64.png")));
 
-                var tree = _prefix + "Tree/";
-                BinTree = new Bitmap(_loader.Open(new Uri(tree + "Bin64.png")));
-                CSharpTree = new Bitmap(_loader.Open(new Uri(tree + "CSharp64.png")));
-                DocTree = new Bitmap(_loader.Open(new Uri(tree + "Doc64.png")));
-                DotnetTree = new Bitmap(_loader.Open(new Uri(tree + "Dotnet64.png")));
-                FolderTree = new Bitmap(_loader.Open(new Uri(tree + "Folder64.png")));
-                GreyFolderTree = new Bitmap(_loader.Open(new Uri(tree + "GreyFolder64.png")));
-                ImageTree = new Bitmap(_loader.Open(new Uri(tree + "Image64.png")));
-                ProjectTree = new Bitmap(_loader.Open(new Uri(tree + "Project64.png")));
-                ProjectGreyTree = new Bitmap(_loader.Open(new Uri(tree + "ProjectGrey64.png")));
-                UnknownTree = new Bitmap(_loader.Open(new Uri(tree + "Unknown64.png")));
-                WarnTree = new Bitmap(_loader.Open(new Uri(tree + "Warn64.png")));
-                XmlTree = new Bitmap(_loader.Open(new Uri(tree + "Xml64.png")));
-                XamlTree = new Bitmap(_loader.Open(new Uri(tree + "Xaml64.png")));
-
-                // Theme sensitive
-                var icon = _prefix + "Icons/";
-                CollapseDark = new Bitmap(_loader.Open(new Uri(icon + "CollapseD64.png")));
-                CollapseGray = new Bitmap(_loader.Open(new Uri(icon + "CollapseG64.png")));
-                CollapseLight = new Bitmap(_loader.Open(new Uri(icon + "CollapseL64.png")));
-                CopyDark = new Bitmap(_loader.Open(new Uri(icon + "CopyD64.png")));
-                CopyLight = new Bitmap(_loader.Open(new Uri(icon + "CopyL64.png")));
-                DownDark = new Bitmap(_loader.Open(new Uri(icon + "DownD64.png")));
-                DownLight = new Bitmap(_loader.Open(new Uri(icon + "DownL64.png")));
-                Gear1Dark = new Bitmap(_loader.Open(new Uri(icon + "Gear1D64.png")));
-                Gear1Gray = new Bitmap(_loader.Open(new Uri(icon + "Gear1G64.png")));
-                Gear1Light = new Bitmap(_loader.Open(new Uri(icon + "Gear1L64.png")));
-                Gear2Dark = new Bitmap(_loader.Open(new Uri(icon + "Gear2D64.png")));
-                Gear2Light = new Bitmap(_loader.Open(new Uri(icon + "Gear2L64.png")));
-                InfoDark = new Bitmap(_loader.Open(new Uri(icon + "InfoD64.png")));
-                InfoLight = new Bitmap(_loader.Open(new Uri(icon + "InfoL64.png")));
-                LeftDark = new Bitmap(_loader.Open(new Uri(icon + "LeftD64.png")));
-                LeftLight = new Bitmap(_loader.Open(new Uri(icon + "LeftL64.png")));
-                MinusDark = new Bitmap(_loader.Open(new Uri(icon + "MinusD64.png")));
-                MinusLight = new Bitmap(_loader.Open(new Uri(icon + "MinusL64.png")));
-                OpenDark = new Bitmap(_loader.Open(new Uri(icon + "OpenD64.png")));
-                OpenLight = new Bitmap(_loader.Open(new Uri(icon + "OpenL64.png")));
-                PlusDark = new Bitmap(_loader.Open(new Uri(icon + "PlusD64.png")));
-                PlusLight = new Bitmap(_loader.Open(new Uri(icon + "PlusL64.png")));
-                PreviewOptsDark = new Bitmap(_loader.Open(new Uri(icon + "PreviewOptsD64.png")));
-                PreviewOptsLight = new Bitmap(_loader.Open(new Uri(icon + "PreviewOptsL64.png")));
-                PreviewOptsHighDark = new Bitmap(_loader.Open(new Uri(icon + "PreviewOptsHighD64.png")));
-                PreviewOptsHighLight = new Bitmap(_loader.Open(new Uri(icon + "PreviewOptsHighL64.png")));
-                ReloadDark = new Bitmap(_loader.Open(new Uri(icon + "ReloadD64.png")));
-                ReloadLight = new Bitmap(_loader.Open(new Uri(icon + "ReloadL64.png")));
-                RightDark = new Bitmap(_loader.Open(new Uri(icon + "RightD64.png")));
-                RightLight = new Bitmap(_loader.Open(new Uri(icon + "RightL64.png")));
-                ScaleX1Dark = new Bitmap(_loader.Open(new Uri(icon + "ScaleX1D64.png")));
-                ScaleX1Light = new Bitmap(_loader.Open(new Uri(icon + "ScaleX1L64.png")));
-                SmallPinDark = new Bitmap(_loader.Open(new Uri(icon + "PinD48.png")));
-                SmallPinLight = new Bitmap(_loader.Open(new Uri(icon + "PinL48.png")));
-                UpDark = new Bitmap(_loader.Open(new Uri(icon + "UpD64.png")));
-                UpLight = new Bitmap(_loader.Open(new Uri(icon + "UpL64.png")));
-                WarnDark = new Bitmap(_loader.Open(new Uri(icon + "WarnD64.png")));
-                WarnLight = new Bitmap(_loader.Open(new Uri(icon + "WarnL64.png")));
-            }
-
+            // Theme sensitive
+            var icon = _prefix + "Icons/";
+            CollapseDark = new Bitmap(AssetLoader.Open(new Uri(icon + "CollapseD64.png")));
+            CollapseGray = new Bitmap(AssetLoader.Open(new Uri(icon + "CollapseG64.png")));
+            CollapseLight = new Bitmap(AssetLoader.Open(new Uri(icon + "CollapseL64.png")));
+            CopyDark = new Bitmap(AssetLoader.Open(new Uri(icon + "CopyD64.png")));
+            CopyLight = new Bitmap(AssetLoader.Open(new Uri(icon + "CopyL64.png")));
+            DownDark = new Bitmap(AssetLoader.Open(new Uri(icon + "DownD64.png")));
+            DownLight = new Bitmap(AssetLoader.Open(new Uri(icon + "DownL64.png")));
+            Gear1Dark = new Bitmap(AssetLoader.Open(new Uri(icon + "Gear1D64.png")));
+            Gear1Gray = new Bitmap(AssetLoader.Open(new Uri(icon + "Gear1G64.png")));
+            Gear1Light = new Bitmap(AssetLoader.Open(new Uri(icon + "Gear1L64.png")));
+            Gear2Dark = new Bitmap(AssetLoader.Open(new Uri(icon + "Gear2D64.png")));
+            Gear2Light = new Bitmap(AssetLoader.Open(new Uri(icon + "Gear2L64.png")));
+            InfoDark = new Bitmap(AssetLoader.Open(new Uri(icon + "InfoD64.png")));
+            InfoLight = new Bitmap(AssetLoader.Open(new Uri(icon + "InfoL64.png")));
+            LeftDark = new Bitmap(AssetLoader.Open(new Uri(icon + "LeftD64.png")));
+            LeftLight = new Bitmap(AssetLoader.Open(new Uri(icon + "LeftL64.png")));
+            MinusDark = new Bitmap(AssetLoader.Open(new Uri(icon + "MinusD64.png")));
+            MinusLight = new Bitmap(AssetLoader.Open(new Uri(icon + "MinusL64.png")));
+            OpenDark = new Bitmap(AssetLoader.Open(new Uri(icon + "OpenD64.png")));
+            OpenLight = new Bitmap(AssetLoader.Open(new Uri(icon + "OpenL64.png")));
+            PlusDark = new Bitmap(AssetLoader.Open(new Uri(icon + "PlusD64.png")));
+            PlusLight = new Bitmap(AssetLoader.Open(new Uri(icon + "PlusL64.png")));
+            PreviewOptsDark = new Bitmap(AssetLoader.Open(new Uri(icon + "PreviewOptsD64.png")));
+            PreviewOptsLight = new Bitmap(AssetLoader.Open(new Uri(icon + "PreviewOptsL64.png")));
+            PreviewOptsHighDark = new Bitmap(AssetLoader.Open(new Uri(icon + "PreviewOptsHighD64.png")));
+            PreviewOptsHighLight = new Bitmap(AssetLoader.Open(new Uri(icon + "PreviewOptsHighL64.png")));
+            ReloadDark = new Bitmap(AssetLoader.Open(new Uri(icon + "ReloadD64.png")));
+            ReloadLight = new Bitmap(AssetLoader.Open(new Uri(icon + "ReloadL64.png")));
+            RightDark = new Bitmap(AssetLoader.Open(new Uri(icon + "RightD64.png")));
+            RightLight = new Bitmap(AssetLoader.Open(new Uri(icon + "RightL64.png")));
+            ScaleX1Dark = new Bitmap(AssetLoader.Open(new Uri(icon + "ScaleX1D64.png")));
+            ScaleX1Light = new Bitmap(AssetLoader.Open(new Uri(icon + "ScaleX1L64.png")));
+            SmallPinDark = new Bitmap(AssetLoader.Open(new Uri(icon + "PinD48.png")));
+            SmallPinLight = new Bitmap(AssetLoader.Open(new Uri(icon + "PinL48.png")));
+            UpDark = new Bitmap(AssetLoader.Open(new Uri(icon + "UpD64.png")));
+            UpLight = new Bitmap(AssetLoader.Open(new Uri(icon + "UpL64.png")));
+            WarnDark = new Bitmap(AssetLoader.Open(new Uri(icon + "WarnD64.png")));
+            WarnLight = new Bitmap(AssetLoader.Open(new Uri(icon + "WarnL64.png")));
         }
 
         public static IImage? MainIcon { get; }

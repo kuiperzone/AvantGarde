@@ -18,7 +18,6 @@
 
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Themes.Fluent;
 using AvantGarde.Projects;
 using AvantGarde.ViewModels;
 
@@ -32,6 +31,7 @@ namespace AvantGarde.Settings
         private const int MaxRecent = 10;
 
         private Application? _app;
+        private bool _isDarkTheme;
         private string _appFontFamily = GlobalModel.DefaultAppFamily;
         private double _appFontSize = GlobalModel.DefaultFontSize;
         private string _monoFontFamily = GlobalModel.DefaultMonoFamily;
@@ -59,16 +59,19 @@ namespace AvantGarde.Settings
         /// </summary>
         public bool IsDarkTheme
         {
-            get { return _app?.RequestedThemeVariant == Avalonia.Styling.ThemeVariant.Dark; }
+            get { return _isDarkTheme; }
 
             set
             {
+                _isDarkTheme = value;
+
                 if (_app != null)
                 {
                     _app.RequestedThemeVariant = value ? Avalonia.Styling.ThemeVariant.Dark : Avalonia.Styling.ThemeVariant.Light;
                     GlobalModel.Global.Assets.IsDarkTheme = value;
                     GlobalModel.Global.Colors.IsDarkTheme = value;
                 }
+
             }
         }
 

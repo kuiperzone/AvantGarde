@@ -278,7 +278,7 @@ namespace AvantGarde.Views
 
             try
             {
-                // StartDialog();
+                StartDialog();
 
                 if (await dialog.ShowDialog<bool>(this))
                 {
@@ -290,7 +290,7 @@ namespace AvantGarde.Views
             }
             finally
             {
-                // EndDialog();
+                EndDialog();
             }
         }
 
@@ -521,13 +521,9 @@ namespace AvantGarde.Views
         // TBD - for possible future removal
         private void StartDialog()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // Temporary fix
-                // https://github.com/AvaloniaUI/Avalonia/issues/7694
-                Topmost = false;
-            }
-
+            // Temporary fix
+            // https://github.com/AvaloniaUI/Avalonia/issues/7694
+            Topmost = false;
             _refreshTimer.Stop();
         }
 

@@ -109,6 +109,7 @@ namespace AvantGarde.Settings
                 try
                 {
                     var path = Path.Combine(ConfigDirectory, GetType().Name + ".json");
+
                     using var fs = File.OpenRead(path);
 
                     var opts = new JsonSerializerOptions
