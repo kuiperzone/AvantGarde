@@ -22,7 +22,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Styling;
 using AvantGarde.Utility;
 
 namespace AvantGarde.Views
@@ -35,7 +34,7 @@ namespace AvantGarde.Views
         public CodeTextBox()
         {
             FontFamily = "monospace";
-            CornerRadius = new Avalonia.CornerRadius(0);
+            CornerRadius = new CornerRadius(0);
             TextWrapping = Avalonia.Media.TextWrapping.NoWrap;
             AcceptsReturn = true;
 
