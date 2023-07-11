@@ -35,7 +35,7 @@ namespace AvantGarde.Views
         public CodeTextBox()
         {
             FontFamily = "monospace";
-            CornerRadius = new Avalonia.CornerRadius(0);
+            CornerRadius = new CornerRadius(0);
             TextWrapping = Avalonia.Media.TextWrapping.NoWrap;
             AcceptsReturn = true;
 
