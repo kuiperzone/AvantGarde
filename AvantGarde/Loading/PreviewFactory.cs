@@ -182,7 +182,15 @@ namespace AvantGarde.Loading
 
         private static ControlDimension GetDimension(XElement e, string v, string m, string x)
         {
-            return new ControlDimension((double?)e.Attribute(v), (double?)e.Attribute(m), (double?)e.Attribute(x));
+            try
+            {
+                return new ControlDimension((double?)e.Attribute(v), (double?)e.Attribute(m), (double?)e.Attribute(x));
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"Cannot get view dimension {v}: " + ex.Message);
+                return ControlDimension.Empty;
+            }
         }
 
         private static XAttribute? GetLocalAttribute(XElement e, string localName)
