@@ -43,7 +43,7 @@ namespace AvantGarde.Projects.Test
             Assert.NotEqual(default(DateTime), item.LastUtc);
             Assert.NotEqual(0, item.GetHashCode());
 
-            Assert.Equal(0, item.Contents.Count);
+            Assert.Empty(item.Contents);
             Assert.Equal(1, item.TotalFiles);
 
             // First refresh
@@ -96,7 +96,7 @@ namespace AvantGarde.Projects.Test
             Assert.NotEqual(default(DateTime), item.LastUtc);
             Assert.NotEqual(0, item.GetHashCode());
 
-            Assert.Equal(0, item.Contents.Count);
+            Assert.Empty(item.Contents);
             Assert.Equal(0, item.TotalFiles);
             Assert.NotEmpty(item.Properties.FilePatterns);
             Assert.NotEmpty(item.Properties.ExcludeDirectories);
@@ -108,7 +108,7 @@ namespace AvantGarde.Projects.Test
             Assert.True(item.Exists);
             Assert.NotEqual(default(DateTime), item.LastUtc);
             Assert.Equal(0, item.TotalFiles);
-            Assert.Equal(1, item.Contents.Count);
+            Assert.Single(item.Contents);
 
             // Create file in sub-directory
             var file = CreateFileContent(sub + "Text.txt", "Hello");
@@ -118,7 +118,7 @@ namespace AvantGarde.Projects.Test
             Assert.True(item.Exists);
             Assert.NotEqual(default(DateTime), item.LastUtc);
             Assert.Equal(1, item.TotalFiles);
-            Assert.Equal(1, item.Contents.Count);
+            Assert.Single(item.Contents);
 
             // Again no change
             code = item.GetHashCode();
@@ -126,7 +126,7 @@ namespace AvantGarde.Projects.Test
             Assert.Equal(code, item.GetHashCode());
             Assert.True(item.Exists);
             Assert.Equal(1, item.TotalFiles);
-            Assert.Equal(1, item.Contents.Count);
+            Assert.Single(item.Contents);
 
             // Two new files
             code = item.GetHashCode();
