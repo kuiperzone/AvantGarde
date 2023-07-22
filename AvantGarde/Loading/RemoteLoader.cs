@@ -158,10 +158,15 @@ namespace AvantGarde.Loading
             // ~/.nuget/packages/avalonia/<avalonia-version>/tools/netcoreapp2.0/designer/Avalonia.Designer.HostApp.dll
             if (!string.IsNullOrWhiteSpace(version))
             {
-                string src = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string? src = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
 
-                src = Path.Combine(src, ".nuget");
-                src = Path.Combine(src, "packages");
+                if (string.IsNullOrEmpty(src))
+                {
+                    src = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    src = Path.Combine(src, ".nuget");
+                    src = Path.Combine(src, "packages");
+                }
+
                 src = Path.Combine(src, "avalonia");
                 src = Path.Combine(src, version);
                 src = Path.Combine(src, "tools");
