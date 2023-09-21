@@ -46,6 +46,6 @@
 
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
 
-		<PackageReference Include="	KuiperZone.Utility.Yaap" Version="1.0.2" />
+		<PackageReference Include="KuiperZone.Utility.Yaap" Version="1.0.2" />
 	</ItemGroup>
 </Project>
