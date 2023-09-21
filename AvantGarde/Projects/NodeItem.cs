@@ -22,7 +22,7 @@ using System.Text;
 namespace AvantGarde.Projects
 {
     /// <summary>
-    /// Class which extends <see cref="PathItem"/> to provide a file heirarchy within a project.
+    /// Class which extends <see cref="PathItem"/> to provide a file hierarchy within a project.
     /// </summary>
     public class NodeItem : PathItem
     {

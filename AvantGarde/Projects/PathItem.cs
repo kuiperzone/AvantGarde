@@ -30,7 +30,7 @@ namespace AvantGarde.Projects
         private readonly FileSystemInfo _info;
         private DateTime _lastUtc;
         private int _hashCode;
-        private int _hashBase;
+        private readonly int _hashBase;
 
         static PathItem()
         {
