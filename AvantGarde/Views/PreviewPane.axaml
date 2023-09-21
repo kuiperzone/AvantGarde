@@ -39,11 +39,23 @@
 
             </ScrollViewer>
 
+            <!-- Not working in Avalonia 11 - use GridSplitter instead -->
+            <!--
             <views:CustomSplitter Grid.Row="1"
                 Height="6"
                 Background="{Binding Global.Colors.PreviewBackground}"
                 Highlight="{Binding Global.Colors.AvantBackground}"
                 IsVisible="{Binding IsXamlViewable}"
+                ResizeDirection="Rows"
+                ResizeBehavior="PreviousAndNext"
+                DragDelta="SplitterDragHandler"
+            />
+            -->
+
+            <GridSplitter Grid.Row="1"
+                Height="6"
+                Background="{Binding Global.Colors.AvantBackground}"
+                IsVisible="{Binding $parent.((vm:PreviewOptionsViewModel)DataContext).IsXamlViewable}"
                 ResizeDirection="Rows"
                 ResizeBehavior="PreviousAndNext"
                 DragDelta="SplitterDragHandler"

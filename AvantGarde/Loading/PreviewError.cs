@@ -16,44 +16,43 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-namespace AvantGarde.Loading
+namespace AvantGarde.Loading;
+
+/// <summary>
+/// A simple immutable class holding an error string and position details.
+/// </summary>
+public class PreviewError
 {
     /// <summary>
-    /// A simple immutable class holding an error string and position details.
+    /// Constructor.
     /// </summary>
-    public class PreviewError
+    public PreviewError(string message, int line = 0, int pos = 0)
     {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public PreviewError(string message, int line = 0, int pos = 0)
-        {
-            Message = message;
-            LineNum = line;
-            LinePos = pos;
-        }
+        Message = message;
+        LineNum = line;
+        LinePos = pos;
+    }
 
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        public readonly string Message;
+    /// <summary>
+    /// Gets the message.
+    /// </summary>
+    public readonly string Message;
 
-        /// <summary>
-        /// Gets the line number. A value of 0 or less is NA.
-        /// </summary>
-        public readonly int LineNum;
+    /// <summary>
+    /// Gets the line number. A value of 0 or less is NA.
+    /// </summary>
+    public readonly int LineNum;
 
-        /// <summary>
-        /// Gets the line position. A value of 0 or less is NA.
-        /// </summary>
-        public readonly int LinePos;
+    /// <summary>
+    /// Gets the line position. A value of 0 or less is NA.
+    /// </summary>
+    public readonly int LinePos;
 
-        /// <summary>
-        /// Returns <see cref="Message"/>.
-        /// </summary>
-        public override string ToString()
-        {
-            return Message;
-        }
+    /// <summary>
+    /// Returns <see cref="Message"/>.
+    /// </summary>
+    public override string ToString()
+    {
+        return Message;
     }
 }

@@ -22,111 +22,108 @@ using Avalonia.Interactivity;
 using AvantGarde.Settings;
 using AvantGarde.ViewModels;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// Shows settings.
+/// </summary>
+public partial class SettingsWindow : AvantWindow
 {
+    private bool _reset;
+
     /// <summary>
-    /// Shows settings.
+    /// Default constructor.
     /// </summary>
-    public partial class SettingsWindow : AvantWindow
+    public SettingsWindow()
     {
-        private bool _reset;
+        InitializeComponent();
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SettingsWindow()
-        {
-            InitializeComponent();
+        AppFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+        AppFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
+        MonoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
+        MonoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
 
-            AppFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
-            AppFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
-            MonoFontUpDown.Minimum = (decimal)GlobalModel.MinFontSize;
-            MonoFontUpDown.Maximum = (decimal)GlobalModel.MaxFontSize;
-
-            PreviewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
-            PreviewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
+        PreviewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
+        PreviewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
 #if DEBUG
-            this.AttachDevTools();
+        this.AttachDevTools();
 #endif
-        }
+    }
 
-        /// <summary>
-        /// Gets or sets the settings. The instance is modified on OK.
-        /// </summary>
-        public AppSettings? Settings { get; set; }
+    /// <summary>
+    /// Gets or sets the settings. The instance is modified on OK.
+    /// </summary>
+    public AppSettings? Settings { get; set; }
 
-        protected override void OnOpened(EventArgs e)
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+
+        if (Settings != null)
         {
-            base.OnOpened(e);
+            UpdateView(Settings);
+        }
+    }
 
-            if (Settings != null)
+    private void UpdateView(AppSettings settings)
+    {
+        LightRadio.IsChecked = !settings.IsDarkTheme;
+        DarkRadio.IsChecked = settings.IsDarkTheme;
+        AppFontBox.Text = settings.AppFontFamily;
+
+        AppFontUpDown.Value = (decimal)settings.AppFontSize;
+        MonoFontUpDown.Value = (decimal)settings.MonoFontSize;
+
+        MonoFontBox.Text = settings.MonoFontFamily;
+        PreviewCombo.SelectedItem = settings.PreviewTheme;
+        WelcomeCheck.IsChecked = settings.ShowWelcome;
+    }
+
+    private void ResetClickHandler(object? sender, RoutedEventArgs e)
+    {
+        _reset = true;
+        UpdateView(new AppSettings());
+    }
+
+    private void OkClickHandler(object? sender, RoutedEventArgs e)
+    {
+        if (Settings != null)
+        {
+            if (_reset)
             {
-                Console.WriteLine("O2");
-                UpdateView(Settings);
-            }
-        }
-
-        private void UpdateView(AppSettings settings)
-        {
-            LightRadio.IsChecked = !settings.IsDarkTheme;
-            DarkRadio.IsChecked = settings.IsDarkTheme;
-            AppFontBox.Text = settings.AppFontFamily;
-
-            AppFontUpDown.Value = (decimal)settings.AppFontSize;
-            MonoFontUpDown.Value = (decimal)settings.MonoFontSize;
-
-            MonoFontBox.Text = settings.MonoFontFamily;
-            PreviewCombo.SelectedItem = settings.PreviewTheme;
-            WelcomeCheck.IsChecked = settings.ShowWelcome;
-        }
-
-        private void ResetClickHandler(object? sender, RoutedEventArgs e)
-        {
-            _reset = true;
-            UpdateView(new AppSettings());
-        }
-
-        private void OkClickHandler(object? sender, RoutedEventArgs e)
-        {
-            if (Settings != null)
-            {
-                if (_reset)
-                {
-                    // Resets window position
-                    var temp = new AppSettings();
-                    Settings.Width = temp.Width;
-                    Settings.Height = temp.Height;
-                    Settings.IsMaximized = temp.IsMaximized;
-                }
-
-                Settings.IsDarkTheme = DarkRadio.IsChecked == true;
-
-                // TBD accept warnings - checks are needed in Avalonia 11
-                if (AppFontUpDown.Value != null)
-                {
-                    Settings.AppFontSize = (double)AppFontUpDown.Value;
-                }
-
-                if (MonoFontUpDown.Value != null)
-                {
-                    Settings.MonoFontSize = (double)MonoFontUpDown.Value;
-                }
-
-                Settings.AppFontFamily = AppFontBox.Text ?? Settings.AppFontFamily;
-                Settings.MonoFontFamily = MonoFontBox.Text ?? Settings.MonoFontFamily;
-                Settings.PreviewTheme = (PreviewWindowTheme?)PreviewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
-                Settings.ShowWelcome = WelcomeCheck.IsChecked == true;
-                Debug.WriteLine(Settings.PreviewTheme);
+                // Resets window position
+                var temp = new AppSettings();
+                Settings.Width = temp.Width;
+                Settings.Height = temp.Height;
+                Settings.IsMaximized = temp.IsMaximized;
             }
 
-            Close(true);
+            Settings.IsDarkTheme = DarkRadio.IsChecked == true;
+
+            // TBD accept warnings - checks are needed in Avalonia 11
+            if (AppFontUpDown.Value != null)
+            {
+                Settings.AppFontSize = (double)AppFontUpDown.Value;
+            }
+
+            if (MonoFontUpDown.Value != null)
+            {
+                Settings.MonoFontSize = (double)MonoFontUpDown.Value;
+            }
+
+            Settings.AppFontFamily = AppFontBox.Text ?? Settings.AppFontFamily;
+            Settings.MonoFontFamily = MonoFontBox.Text ?? Settings.MonoFontFamily;
+            Settings.PreviewTheme = (PreviewWindowTheme?)PreviewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
+            Settings.ShowWelcome = WelcomeCheck.IsChecked == true;
+            Debug.WriteLine(Settings.PreviewTheme);
         }
 
-        private void CancelClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Close(false);
-        }
+        Close(true);
+    }
 
+    private void CancelClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Close(false);
     }
 
 }

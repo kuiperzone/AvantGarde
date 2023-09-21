@@ -16,102 +16,100 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using Avalonia.Controls;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AvantGarde.Markup.Test
+namespace AvantGarde.Markup.Test;
+
+public class MarkupDictionaryTest : TestUtilBase
 {
-    public class MarkupDictionaryTest : TestUtilBase
+    public MarkupDictionaryTest(ITestOutputHelper helper)
+        : base(helper)
     {
-        public MarkupDictionaryTest(ITestOutputHelper helper)
-            : base(helper)
-        {
-        }
-
-        [Fact]
-        public void Types_NotEmpty()
-        {
-            Assert.NotEmpty(MarkupDictionary.Types);
-            WriteLine(string.Join(", ", MarkupDictionary.Types.Keys));
-        }
-
-        [Fact]
-        public void GetMarkupInfo_TextBlock()
-        {
-            var info = AssertControlInfo(typeof(TextBlock));
-            WriteLine(info.GetHelpDocument());
-            WriteLine();
-
-            WriteLine(info.Attributes["DoubleTapped"].GetHelpDocument());
-            WriteLine();
-
-            WriteLine(info.Attributes["Height"].GetHelpDocument());
-            WriteLine();
-
-            var a = info.Attributes["Text"];
-            Assert.NotEmpty(a.GetHelpDocument());
-            WriteLine(a.GetHelpDocument());
-            WriteLine();
-
-            a = info.Attributes["FontSize"];
-            Assert.NotEmpty(a.GetHelpDocument());
-            WriteLine(a.GetHelpDocument());
-            WriteLine();
-
-            a = info.Attributes["MinWidth"];
-            Assert.NotEmpty(a.GetHelpDocument());
-            WriteLine(a.GetHelpDocument());
-            WriteLine();
-
-            a = info.Attributes["Cursor"];
-            Assert.NotEmpty(a.GetHelpDocument());
-            WriteLine(a.GetHelpDocument());
-            WriteLine();
-
-            a = info.Attributes["VerticalAlignment"];
-            Assert.NotEmpty(a.GetHelpDocument());
-            WriteLine(a.GetHelpDocument());
-            WriteLine();
-        }
-
-        [Fact]
-        public void GetMarkupInfo_Grid()
-        {
-            var info = AssertControlInfo(typeof(Grid));
-            WriteLine(info.GetHelpDocument());
-            WriteLine();
-        }
-
-        [Fact]
-        public void GetMarkupInfo_Window()
-        {
-            var info = AssertControlInfo(typeof(Window));
-            WriteLine(info.GetHelpDocument());
-            WriteLine();
-        }
-
-        private MarkupInfo AssertControlInfo(Type type)
-        {
-            var name = type.Name;
-            var info = MarkupDictionary.GetMarkupInfo(name) ??
-                throw new ArgumentNullException(name);
-
-            Assert.Equal(name, info.Name);
-            Assert.Equal(type, info.ClassType);
-            Assert.True(info.Attributes.Count > 0);
-            Assert.NotEmpty(info.GetHelpDocument());
-
-            Assert.False(info.Attributes["Height"].IsEvent);
-            Assert.NotEmpty(info.Attributes["Height"].GetHelpDocument());
-
-            Assert.True(info.Attributes["DoubleTapped"].IsEvent);
-            Assert.NotEmpty(info.Attributes["DoubleTapped"].GetHelpDocument());
-
-            return info;
-        }
-
     }
+
+    [Fact]
+    public void Types_NotEmpty()
+    {
+        Assert.NotEmpty(MarkupDictionary.Types);
+        WriteLine(string.Join(", ", MarkupDictionary.Types.Keys));
+    }
+
+    [Fact]
+    public void GetMarkupInfo_TextBlock()
+    {
+        var info = AssertControlInfo(typeof(TextBlock));
+        WriteLine(info.GetHelpDocument());
+        WriteLine();
+
+        WriteLine(info.Attributes["DoubleTapped"].GetHelpDocument());
+        WriteLine();
+
+        WriteLine(info.Attributes["Height"].GetHelpDocument());
+        WriteLine();
+
+        var a = info.Attributes["Text"];
+        Assert.NotEmpty(a.GetHelpDocument());
+        WriteLine(a.GetHelpDocument());
+        WriteLine();
+
+        a = info.Attributes["FontSize"];
+        Assert.NotEmpty(a.GetHelpDocument());
+        WriteLine(a.GetHelpDocument());
+        WriteLine();
+
+        a = info.Attributes["MinWidth"];
+        Assert.NotEmpty(a.GetHelpDocument());
+        WriteLine(a.GetHelpDocument());
+        WriteLine();
+
+        a = info.Attributes["Cursor"];
+        Assert.NotEmpty(a.GetHelpDocument());
+        WriteLine(a.GetHelpDocument());
+        WriteLine();
+
+        a = info.Attributes["VerticalAlignment"];
+        Assert.NotEmpty(a.GetHelpDocument());
+        WriteLine(a.GetHelpDocument());
+        WriteLine();
+    }
+
+    [Fact]
+    public void GetMarkupInfo_Grid()
+    {
+        var info = AssertControlInfo(typeof(Grid));
+        WriteLine(info.GetHelpDocument());
+        WriteLine();
+    }
+
+    [Fact]
+    public void GetMarkupInfo_Window()
+    {
+        var info = AssertControlInfo(typeof(Window));
+        WriteLine(info.GetHelpDocument());
+        WriteLine();
+    }
+
+    private MarkupInfo AssertControlInfo(Type type)
+    {
+        var name = type.Name;
+        var info = MarkupDictionary.GetMarkupInfo(name) ??
+            throw new ArgumentNullException(name);
+
+        Assert.Equal(name, info.Name);
+        Assert.Equal(type, info.ClassType);
+        Assert.True(info.Attributes.Count > 0);
+        Assert.NotEmpty(info.GetHelpDocument());
+
+        Assert.False(info.Attributes["Height"].IsEvent);
+        Assert.NotEmpty(info.Attributes["Height"].GetHelpDocument());
+
+        Assert.True(info.Attributes["DoubleTapped"].IsEvent);
+        Assert.NotEmpty(info.Attributes["DoubleTapped"].GetHelpDocument());
+
+        return info;
+    }
+
 }

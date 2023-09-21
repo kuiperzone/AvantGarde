@@ -19,43 +19,42 @@
 using Avalonia;
 using Avalonia.Controls;
 
-namespace AvantGarde.Utility
+namespace AvantGarde.Utility;
+
+/// <summary>
+/// Provides extension methods.
+/// </summary>
+public static class ControlExtension
 {
     /// <summary>
-    /// Provides extension methods.
+    /// Finds control or throws.
     /// </summary>
-    public static class ControlExtension
+    /// <exception cref="ArgumentException">Control not found</exception>
+    public static T FindOrThrow<T>(this Control control, string name) where T : Control
     {
-        /// <summary>
-        /// Finds control or throws.
-        /// </summary>
-        /// <exception cref="ArgumentException">Control not found</exception>
-        public static T FindOrThrow<T>(this Control control, string name) where T : Control
+        // Not needed? TBD
+        return control.FindControl<T>(name) ??
+            throw new ArgumentException($"Child control {name} not found in parent {control.Name ?? "control"}");
+    }
+
+    /// <summary>
+    /// Gets the owner Window of the control.
+    /// </summary>
+    /// <exception cref="ArgumentException">Control has no owner window</exception>
+    public static Window GetOwnerWindow(this StyledElement control)
+    {
+        if (control is Window window)
         {
-            // Not needed? TBD
-            return control.FindControl<T>(name) ??
-                throw new ArgumentException($"Child control {name} not found in parent {control.Name ?? "control"}");
+            return window;
         }
 
-        /// <summary>
-        /// Gets the owner Window of the control.
-        /// </summary>
-        /// <exception cref="ArgumentException">Control has no owner window</exception>
-        public static Window GetOwnerWindow(this StyledElement control)
+        if (control.Parent != null)
         {
-            if (control is Window window)
-            {
-                return window;
-            }
-
-            if (control.Parent != null)
-            {
-                // TBD remove cast with Avalonia 11
-                // return GetOwnerWindow((StyledElement)control.Parent);
-                return GetOwnerWindow(control.Parent);
-            }
-
-            throw new ArgumentException("Element has no owner window");
+            // TBD remove cast with Avalonia 11
+            // return GetOwnerWindow((StyledElement)control.Parent);
+            return GetOwnerWindow(control.Parent);
         }
+
+        throw new ArgumentException("Element has no owner window");
     }
 }

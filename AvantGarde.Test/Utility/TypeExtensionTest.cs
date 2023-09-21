@@ -16,39 +16,37 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using Avalonia.Controls;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AvantGarde.Utility.Test
+namespace AvantGarde.Utility.Test;
+
+public class TypeExtensionTest : TestUtilBase
 {
-    public class TypeExtensionTest : TestUtilBase
+    public TypeExtensionTest(ITestOutputHelper helper)
+        : base(helper)
     {
-        public TypeExtensionTest(ITestOutputHelper helper)
-            : base(helper)
-        {
-        }
+    }
 
-        [Fact]
-        public void GetFriendlyType_TupleInt()
-        {
-            var temp = typeof(Tuple<int, string>);
-            var name = temp.GetFriendlyName();
+    [Fact]
+    public void GetFriendlyType_TupleInt()
+    {
+        var temp = typeof(Tuple<int, string>);
+        var name = temp.GetFriendlyName();
 
-            WriteLine(name);
-            Assert.Equal("Tuple<int, string>", name);
-        }
+        WriteLine(name);
+        Assert.Equal("Tuple<int, string>", name);
+    }
 
-        [Fact]
-        public void GetFriendlyType_GenericEvent()
-        {
-            var temp = typeof(TextBlock).GetEvent("PointerMoved");
-            var name = temp?.EventHandlerType.GetFriendlyName();
+    [Fact]
+    public void GetFriendlyType_GenericEvent()
+    {
+        var temp = typeof(TextBlock).GetEvent("PointerMoved");
+        var name = temp?.EventHandlerType.GetFriendlyName();
 
-            WriteLine(name);
-            Assert.Equal("EventHandler<PointerEventArgs>", name);
-        }
+        WriteLine(name);
+        Assert.Equal("EventHandler<PointerEventArgs>", name);
     }
 }

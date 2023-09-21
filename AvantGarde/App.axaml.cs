@@ -25,45 +25,44 @@ using AvantGarde.ViewModels;
 using AvantGarde.Views;
 using KuiperZone.Utility.Yaap;
 
-namespace AvantGarde
+namespace AvantGarde;
+
+public class App : Application
 {
-    public class App : Application
+    private static AppSettings? _settings;
+
+    public App()
     {
-        private static AppSettings? _settings;
-
-        public App()
-        {
 #if DEBUG
-            // Debug
-            Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
+        // Debug
+        Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
 #endif
-            DataContext = new AvantViewModel();
-        }
-
-        public static ArgumentParser? Arguments { get; set; }
-
-        public static AppSettings Settings
-        {
-            get { return _settings ?? throw new InvalidOperationException("Application must be initialized"); }
-        }
-
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-            _settings ??= new AppSettings(this);
-            _settings.Read();
-        }
-
-        public override void OnFrameworkInitializationCompleted()
-        {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                // Create with args
-                desktop.MainWindow = new MainWindow();
-            }
-
-            base.OnFrameworkInitializationCompleted();
-        }
-
+        DataContext = new AvantViewModel();
     }
+
+    public static ArgumentParser? Arguments { get; set; }
+
+    public static AppSettings Settings
+    {
+        get { return _settings ?? throw new InvalidOperationException("Application must be initialized"); }
+    }
+
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+        _settings ??= new AppSettings(this);
+        _settings.Read();
+    }
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            // Create with args
+            desktop.MainWindow = new MainWindow();
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+
 }

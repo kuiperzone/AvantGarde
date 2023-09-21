@@ -21,61 +21,60 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// Custom TextBlock with hover link.
+/// </summary>
+public class LinkBlock : TextBlock
 {
+    private IBrush? _holdForeground;
+    private TextDecorationCollection? _holdDecor;
+
     /// <summary>
-    /// Custom TextBlock with hover link.
+    /// Constructor.
     /// </summary>
-    public class LinkBlock : TextBlock
+    public LinkBlock()
     {
-        private IBrush? _holdForeground;
-        private TextDecorationCollection? _holdDecor;
+        _holdForeground = Brushes.Blue;
+        _holdDecor = TextDecorations;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public LinkBlock()
-        {
-            _holdForeground = Brushes.Blue;
-            _holdDecor = TextDecorations;
+        FontWeight = FontWeight.SemiBold;
+        Foreground = _holdForeground;
+        Cursor = new Cursor(StandardCursorType.Hand);
 
-            FontWeight = FontWeight.SemiBold;
-            Foreground = _holdForeground;
-            Cursor = new Cursor(StandardCursorType.Hand);
-
-            PointerEntered += PointerEnteredHandler;
-            PointerExited += PointerExitedHandler;
-        }
-
-        /// <summary>
-        /// Custom property.
-        /// </summary>
-        public static readonly StyledProperty<IBrush?> HoverForegroundProperty =
-            AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(HoverForeground), Brushes.Purple);
-
-        /// <summary>
-        /// Gets or sets the hover foreground brush.
-        /// </summary>
-        public IBrush? HoverForeground
-        {
-            get { return GetValue(HoverForegroundProperty); }
-            set { SetValue(HoverForegroundProperty, value); }
-        }
-
-        private void PointerEnteredHandler(object? _, PointerEventArgs e)
-        {
-            _holdForeground = Foreground;
-            _holdDecor = TextDecorations;
-
-            Foreground = HoverForeground;
-            TextDecorations = Avalonia.Media.TextDecorations.Underline;
-        }
-
-        private void PointerExitedHandler(object? _, PointerEventArgs e)
-        {
-            Foreground = _holdForeground;
-            TextDecorations = _holdDecor;
-        }
-
+        PointerEntered += PointerEnteredHandler;
+        PointerExited += PointerExitedHandler;
     }
+
+    /// <summary>
+    /// Custom property.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> HoverForegroundProperty =
+        AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(HoverForeground), Brushes.Purple);
+
+    /// <summary>
+    /// Gets or sets the hover foreground brush.
+    /// </summary>
+    public IBrush? HoverForeground
+    {
+        get { return GetValue(HoverForegroundProperty); }
+        set { SetValue(HoverForegroundProperty, value); }
+    }
+
+    private void PointerEnteredHandler(object? _, PointerEventArgs e)
+    {
+        _holdForeground = Foreground;
+        _holdDecor = TextDecorations;
+
+        Foreground = HoverForeground;
+        TextDecorations = Avalonia.Media.TextDecorations.Underline;
+    }
+
+    private void PointerExitedHandler(object? _, PointerEventArgs e)
+    {
+        Foreground = _holdForeground;
+        TextDecorations = _holdDecor;
+    }
+
 }
