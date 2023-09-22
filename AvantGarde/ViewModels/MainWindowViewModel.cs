@@ -183,10 +183,12 @@ public class MainWindowViewModel : PreviewOptionsViewModel
         Owner?.ToggleXamlView();
     }
 
+#pragma warning disable CA1822
     public void WebpageCommand()
     {
         ShellOpen.Start(GlobalModel.WebUrl);
     }
+#pragma warning restore CA1822
 
     public void AboutCommand()
     {

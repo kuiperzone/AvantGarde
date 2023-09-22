@@ -18,6 +18,7 @@
 
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Styling;
 using AvantGarde.Projects;
 using AvantGarde.ViewModels;
 
@@ -30,7 +31,7 @@ namespace AvantGarde.Settings
     {
         private const int MaxRecent = 10;
 
-        private Application? _app;
+        private readonly Application? _app;
         private bool _isDarkTheme;
         private string _appFontFamily = GlobalModel.DefaultAppFamily;
         private double _appFontSize = GlobalModel.DefaultFontSize;
@@ -51,6 +52,13 @@ namespace AvantGarde.Settings
         public AppSettings(Application app)
         {
             _app = app;
+
+            // We need this to initialize colors, otherwise we may end
+            // up with invisible controls if no config file is present.
+            var theme = _app.ActualThemeVariant;
+            _app.RequestedThemeVariant = theme;
+            GlobalModel.Global.Assets.IsDarkTheme = theme.Equals(ThemeVariant.Dark);
+            GlobalModel.Global.Colors.IsDarkTheme = theme.Equals(ThemeVariant.Dark);
         }
 
         /// <summary>
@@ -67,11 +75,10 @@ namespace AvantGarde.Settings
 
                 if (_app != null)
                 {
-                    _app.RequestedThemeVariant = value ? Avalonia.Styling.ThemeVariant.Dark : Avalonia.Styling.ThemeVariant.Light;
+                    _app.RequestedThemeVariant = value ? ThemeVariant.Dark : ThemeVariant.Light;
                     GlobalModel.Global.Assets.IsDarkTheme = value;
                     GlobalModel.Global.Colors.IsDarkTheme = value;
                 }
-
             }
         }
 

@@ -60,10 +60,7 @@ public class CustomSplitter : GridSplitter
     /// <summary>
     /// Important.
     /// </summary>
-    protected override Type StyleKeyOverride
-    {
-        get { return typeof(GridSplitter); }
-    }
+    protected override Type StyleKeyOverride { get; } = typeof(GridSplitter);
 
     private void PointerMovedHandler(object? sender, PointerEventArgs e)
     {

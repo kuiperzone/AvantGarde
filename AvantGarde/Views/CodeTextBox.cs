@@ -50,10 +50,7 @@ public class CodeTextBox : TextBox
     /// <summary>
     /// Important.
     /// </summary>
-    protected override Type StyleKeyOverride
-    {
-        get { return typeof(TextBox); }
-    }
+    protected override Type StyleKeyOverride { get; } = typeof(TextBox);
 
     /// <summary>
     /// Gets the caret position as (line, col). If the box is empty, the result is (1, 1).
@@ -89,7 +86,7 @@ public class CodeTextBox : TextBox
                     col += TabWidth;
                 }
                 else
-                if (c >= ' ' && !Char.IsControl(c))
+                if (c >= ' ' && !char.IsControl(c))
                 {
                     col += 1;
                 }

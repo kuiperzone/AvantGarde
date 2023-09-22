@@ -41,7 +41,6 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
     private readonly SolutionCache _cache = new();
     private readonly RemoteLoader _loader;
     private readonly DispatcherTimer _refreshTimer;
-
     private bool _writeSettingsFlag;
 
     public MainWindow()
@@ -493,9 +492,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
             {
                 Debug.WriteLine("Write settings");
                 _writeSettingsFlag = false;
-#if !DEBUG
                 App.Settings.Write();
-#endif
             }
         }
         catch (Exception x)

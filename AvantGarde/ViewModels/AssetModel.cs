@@ -204,10 +204,7 @@ public class AssetModel : ReactiveObject
         get { return IsDarkTheme ? CollapseDark : CollapseLight; }
     }
 
-    public IImage? CollapseGrayIcon
-    {
-        get { return CollapseGray; }
-    }
+    public IImage? CollapseGrayIcon { get; } = CollapseGray;
 
     public IImage? CopyIcon
     {
@@ -224,10 +221,7 @@ public class AssetModel : ReactiveObject
         get { return IsDarkTheme ? Gear1Dark : Gear1Light; }
     }
 
-    public IImage? Gear1GrayIcon
-    {
-        get { return Gear1Gray; }
-    }
+    public IImage? Gear1GrayIcon { get; } = Gear1Gray;
 
     public IImage? Gear2Icon
     {

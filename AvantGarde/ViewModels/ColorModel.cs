@@ -118,17 +118,10 @@ public class ColorModel : ReactiveObject
     /// <summary>
     /// Gets code text foreground.
     /// </summary>
-    public ISolidColorBrush CodeBoxForeground
-    {
-        get { return Brushes.Gray; }
-    }
+    public ISolidColorBrush CodeBoxForeground { get; } = Brushes.Gray;
 
     /// <summary>
     /// Gets code text selection foreground.
     /// </summary>
-    public ISolidColorBrush CodeBoxSelectionForeground
-    {
-        get { return Brushes.White; }
-    }
-
+    public ISolidColorBrush CodeBoxSelectionForeground { get; } = Brushes.White;
 }
