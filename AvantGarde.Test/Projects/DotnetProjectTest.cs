@@ -16,6 +16,8 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System;
+using System.IO;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
@@ -48,7 +50,7 @@ public class DotnetProjectTest : TestUtilBase
         Assert.Equal(PathKind.Solution, item.Kind);
         Assert.Equal(path, item.FullName);
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
 
         Assert.Empty(item.TargetFramework);
         Assert.Empty(item.AvaloniaVersion);

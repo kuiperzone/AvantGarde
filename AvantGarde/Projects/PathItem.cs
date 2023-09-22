@@ -254,7 +254,7 @@ public class PathItem
 
     /// <summary>
     /// Refreshes <see cref="Exists"/> and <see cref="LastUtc"/>. It returns true if changed.
-    /// It can be overidden.
+    /// It can be overridden.
     /// </summary>
     public virtual bool Refresh()
     {

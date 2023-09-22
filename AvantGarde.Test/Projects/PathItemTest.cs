@@ -16,6 +16,8 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using AvantGarde.Test.Internal;
@@ -42,7 +44,7 @@ public class PathItemTest : TestUtilBase
         Assert.Equal("Text.txt", item.Name);
         Assert.Equal(path, item.FullName);
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.True(item.Length > 0);
         Assert.NotEqual(0, item.GetHashCode());
 
@@ -74,7 +76,7 @@ public class PathItemTest : TestUtilBase
         Assert.True(item.Refresh());
         Assert.NotEqual(code, item.GetHashCode());
         Assert.False(item.Exists);
-        Assert.Equal(default(DateTime), item.LastUtc);
+        Assert.Equal(default, item.LastUtc);
         Assert.Equal(0, item.Length);
     }
 
@@ -90,7 +92,7 @@ public class PathItemTest : TestUtilBase
         Assert.False(item.Name.EndsWith('/'));
         Assert.Equal(path, item.FullName);
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.Equal(0, item.Length);
         Assert.NotEqual(0, item.GetHashCode());
 
@@ -107,7 +109,7 @@ public class PathItemTest : TestUtilBase
         Assert.True(item.Refresh());
         Assert.NotEqual(code, item.GetHashCode());
         Assert.False(item.Exists);
-        Assert.Equal(default(DateTime), item.LastUtc);
+        Assert.Equal(default, item.LastUtc);
         Assert.Equal(0, item.Length);
     }
 
@@ -125,14 +127,14 @@ public class PathItemTest : TestUtilBase
         Assert.Equal("Text.cs", copy.Name);
         Assert.Equal(path, copy.FullName);
         Assert.True(copy.Exists);
-        Assert.NotEqual(default(DateTime), copy.LastUtc);
+        Assert.NotEqual(default, copy.LastUtc);
         Assert.Equal(item.Length, copy.Length);
         Assert.Equal(item.GetHashCode(), copy.GetHashCode());
 
         // Change because have deleted
         Assert.True(copy.Refresh());
         Assert.False(copy.Exists);
-        Assert.Equal(default(DateTime), copy.LastUtc);
+        Assert.Equal(default, copy.LastUtc);
         Assert.Equal(0, copy.Length);
         Assert.NotEqual(item.GetHashCode(), copy.GetHashCode());
     }
@@ -148,13 +150,13 @@ public class PathItemTest : TestUtilBase
         Assert.False(copy.Name.EndsWith('/'));
         Assert.Equal(PathItem.CleanPath(Scratch), copy.FullName);
         Assert.True(copy.Exists);
-        Assert.NotEqual(default(DateTime), copy.LastUtc);
+        Assert.NotEqual(default, copy.LastUtc);
         Assert.Equal(0, copy.Length);
         Assert.Equal(item.GetHashCode(), copy.GetHashCode());
 
         Assert.False(copy.Refresh());
         Assert.True(copy.Exists);
-        Assert.NotEqual(default(DateTime), copy.LastUtc);
+        Assert.NotEqual(default, copy.LastUtc);
         Assert.Equal(0, copy.Length);
         Assert.Equal(item.GetHashCode(), copy.GetHashCode());
     }

@@ -184,7 +184,7 @@ public class LoadPayload
 
             if (path.Length > old.Length)
             {
-                return path.Substring(0, path.Length - old.Length) + ext;
+                return string.Concat(path.AsSpan(0, path.Length - old.Length), ext);
             }
         }
 

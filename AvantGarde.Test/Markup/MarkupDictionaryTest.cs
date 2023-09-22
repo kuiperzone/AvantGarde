@@ -16,6 +16,7 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System;
 using Avalonia.Controls;
 using AvantGarde.Test.Internal;
 using Xunit;
@@ -92,7 +93,7 @@ public class MarkupDictionaryTest : TestUtilBase
         WriteLine();
     }
 
-    private MarkupInfo AssertControlInfo(Type type)
+    private static MarkupInfo AssertControlInfo(Type type)
     {
         var name = type.Name;
         var info = MarkupDictionary.GetMarkupInfo(name) ??

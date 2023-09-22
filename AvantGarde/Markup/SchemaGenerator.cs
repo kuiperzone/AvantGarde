@@ -76,18 +76,6 @@ public static class SchemaGenerator
         return new[] { simple };
     }
 
-    private static XElement[] CreateAttributes(params string[] attributeNames)
-    {
-        var list = new List<XElement>();
-
-        foreach (var name in attributeNames)
-        {
-            list.Add(new XElement(_xs + "attribute", new XAttribute("name", name), new XAttribute("type", "text")));
-        }
-
-        return list.ToArray();
-    }
-
     private static XElement? CreateAnnotationElement(string? text)
     {
         if (!string.IsNullOrWhiteSpace(text))

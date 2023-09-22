@@ -22,7 +22,7 @@ using AvantGarde.ViewModels;
 namespace AvantGarde.Views;
 
 /// <summary>
-/// A MessageBox class. It can be shown by calling on the static ShowDialog() methods, or by constucting
+/// A MessageBox class. It can be shown by calling on the static ShowDialog() methods, or by constructing
 /// an instance and calling the non-static <see cref="Window.ShowDialog(Window)"/> which returns the value
 /// type <see cref="MessageBox.BoxResult"/>. The default window title is set from the application name.
 /// </summary>

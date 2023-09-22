@@ -62,10 +62,11 @@ public class AssetLocator
     /// <summary>
     /// Constructor. The node must have a project.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Project</exception>
+    /// <exception cref="ArgumentException">Project</exception>
     public AssetLocator(NodeItem xamlItem)
     {
-        ProjectName = xamlItem.Project?.ProjectName ?? throw new ArgumentNullException(nameof(NodeItem.Project));
+        ProjectName = xamlItem.Project?.ProjectName ??
+            throw new ArgumentException($"{nameof(NodeItem)}.{nameof(NodeItem.Project)} is null");
         ProjectDirectory = xamlItem.Project.ParentDirectory;
         XamlDirectory = xamlItem.ParentDirectory;
     }
@@ -76,7 +77,7 @@ public class AssetLocator
     public string ProjectName;
 
     /// <summary>
-    /// Gets the project directory. Does not check for existance.
+    /// Gets the project directory. Does not check for existence.
     /// </summary>
     public string ProjectDirectory;
 

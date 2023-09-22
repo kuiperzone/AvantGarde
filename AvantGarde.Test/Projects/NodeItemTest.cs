@@ -16,6 +16,8 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System;
+using System.IO;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
@@ -40,7 +42,7 @@ public class NodeItemTest : TestUtilBase
         Assert.Equal("Text.txt", item.Name);
         Assert.Equal(path, item.FullName);
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.NotEqual(0, item.GetHashCode());
 
         Assert.Empty(item.Contents);
@@ -51,7 +53,7 @@ public class NodeItemTest : TestUtilBase
         Assert.False(item.Refresh());
         Assert.Equal(code, item.GetHashCode());
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.Equal(1, item.TotalFiles);
 
         // Again no change
@@ -76,7 +78,7 @@ public class NodeItemTest : TestUtilBase
         Assert.NotEqual(code, item.GetHashCode());
         Assert.False(item.Exists);
         Assert.Equal(0, item.TotalFiles);
-        Assert.Equal(default(DateTime), item.LastUtc);
+        Assert.Equal(default, item.LastUtc);
     }
 
     [Fact]
@@ -93,7 +95,7 @@ public class NodeItemTest : TestUtilBase
         Assert.NotEmpty(item.Name);
         Assert.Equal(temp, item.FullName);
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.NotEqual(0, item.GetHashCode());
 
         Assert.Empty(item.Contents);
@@ -106,7 +108,7 @@ public class NodeItemTest : TestUtilBase
         Assert.True(item.Refresh());
         Assert.NotEqual(code, item.GetHashCode());
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.Equal(0, item.TotalFiles);
         Assert.Single(item.Contents);
 
@@ -116,7 +118,7 @@ public class NodeItemTest : TestUtilBase
         Assert.True(item.Refresh());
         Assert.NotEqual(code, item.GetHashCode());
         Assert.True(item.Exists);
-        Assert.NotEqual(default(DateTime), item.LastUtc);
+        Assert.NotEqual(default, item.LastUtc);
         Assert.Equal(1, item.TotalFiles);
         Assert.Single(item.Contents);
 

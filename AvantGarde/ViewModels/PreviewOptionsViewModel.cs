@@ -309,7 +309,7 @@ namespace AvantGarde.ViewModels
             if (idx < _scaleItems.Count)
             {
                 _scaleSelectedIndex = idx;
-                OnScaleChanged(true);
+                OnScaleChanged(invoke);
             }
         }
 

@@ -141,14 +141,6 @@ public sealed class MarkupInfo
         return sb.ToString();
     }
 
-    private static void AddAttribute(List<string> names, Dictionary<string, AttributeInfo> attribs, AttributeInfo info)
-    {
-        if (attribs.TryAdd(info.Name, info))
-        {
-            names.Add(info.Name);
-        }
-    }
-
     private static string GetBaseClasses(Type? type)
     {
         var sb = new StringBuilder(32);

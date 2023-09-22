@@ -16,8 +16,12 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Threading;
 using Xunit.Abstractions;
 
 namespace AvantGarde.Test.Internal;
@@ -28,11 +32,11 @@ namespace AvantGarde.Test.Internal;
 /// </summary>
 public class TestUtilBase : IDisposable
 {
-    private static readonly object s_syncObj = new object();
-    private static readonly Random s_rand = new Random(unchecked((int)DateTime.UtcNow.Ticks));
+    private static readonly object s_syncObj = new();
+    private static readonly Random s_rand = new(unchecked((int)DateTime.UtcNow.Ticks));
     private static readonly TextWriterTraceListener s_trace = new(System.Console.Out, nameof(TestUtilBase));
     private string? _scratch = null;
-    private ITestOutputHelper? _helper = null;
+    private readonly ITestOutputHelper? _helper = null;
     private bool _consoleTitle;
 
     /// <summary>
@@ -129,9 +133,9 @@ public class TestUtilBase : IDisposable
     /// content supplied. Returns the path of the file created. Equivalent to:
     /// CreateFileContent("", content)
     /// </summary>
-    public string CreateFileContent(string content, Encoding? enc = null)
+    public string CreateFileContent(string content)
     {
-        return CreateFileContent(string.Empty, content, enc);
+        return CreateFileContent(string.Empty, content);
     }
 
     /// <summary>
@@ -139,21 +143,18 @@ public class TestUtilBase : IDisposable
     /// content supplied. Returns the path of the file created. Equivalent to:
     /// CreateFileContent(null, lines)
     /// </summary>
-    public string CreateFileContent(IEnumerable<string> lines, Encoding? enc = null)
+    public string CreateFileContent(IEnumerable<string> lines)
     {
-        return CreateFileContent(string.Empty, lines, enc);
+        return CreateFileContent(string.Empty, lines);
     }
 
     /// <summary>
-    /// Creates a text file with the given text content using default UTF8 encoding, overwriting
-    /// any existing file. If the filename path is not rooted, the file will be created under
-    /// <see cref="Scratch"/> directory. If filename is null or empty, a random one is
-    /// generated. The full path is returned.
+    /// Creates a text file with the given text, overwriting any existing file. If the filename path
+    /// is not rooted, the file will be created under <see cref="Scratch"/> directory. If filename
+    /// is null or empty, a random one is generated. The full path is returned.
     /// </summary>
-    public string CreateFileContent(string filename, string content, Encoding? enc = null)
+    public string CreateFileContent(string filename, string content)
     {
-        enc ??= Encoding.UTF8;
-
         if (string.IsNullOrEmpty(filename))
         {
             filename = GetRandomName();
@@ -177,7 +178,7 @@ public class TestUtilBase : IDisposable
     /// will be terminated with the Environment.NewLine value. Otherwise equivalent to:
     /// CreateFileContent(path, content).
     /// </summary>
-    public string CreateFileContent(string filename, IEnumerable<string> lines, Encoding? enc = null)
+    public string CreateFileContent(string filename, IEnumerable<string> lines)
     {
         string content = string.Empty;
 
@@ -192,13 +193,13 @@ public class TestUtilBase : IDisposable
             }
         }
 
-        return CreateFileContent(filename, content, enc);
+        return CreateFileContent(filename, content);
     }
 
     /// <summary>
     /// Simple sleep.
     /// </summary>
-    public void Sleep(int ms)
+    public static void Sleep(int ms)
     {
         Thread.Sleep(ms);
     }

@@ -32,7 +32,7 @@ public sealed class ControlDimension
     /// <summary>
     /// Empty dimension.
     /// </summary>
-    public static readonly ControlDimension Empty = new ControlDimension(null, null, null);
+    public static readonly ControlDimension Empty = new(null, null, null);
 
     /// <summary>
     /// Constructor. Set <see cref="HasRange"/> to false.

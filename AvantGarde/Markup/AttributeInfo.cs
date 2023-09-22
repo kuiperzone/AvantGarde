@@ -88,7 +88,7 @@ public sealed class AttributeInfo
     /// <summary>
     /// Gets a help document string.
     /// </summary>
-    public string GetHelpDocument(bool escape = true)
+    public string GetHelpDocument()
     {
         if (_help != null)
         {
@@ -106,7 +106,7 @@ public sealed class AttributeInfo
             sb.Append(vname);
             sb.Append(' ');
             sb.Append(dname);
-            sb.Append(".");
+            sb.Append('.');
             sb.Append(Name);
             return sb.ToString();
         }
@@ -115,9 +115,9 @@ public sealed class AttributeInfo
         sb.AppendLine("Property:");
         sb.AppendLine();
         sb.Append(vname);
-        sb.Append(" ");
+        sb.Append(' ');
         sb.Append(dname);
-        sb.Append(".");
+        sb.Append('.');
         sb.Append(Name);
 
         if (ValueType.IsEnum)
@@ -147,7 +147,7 @@ public sealed class AttributeInfo
                 sb.Append(enums.GetValue(n));
             }
 
-            sb.Append("}");
+            sb.Append('}');
         }
 
         return sb.ToString();

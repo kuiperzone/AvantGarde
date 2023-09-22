@@ -93,7 +93,7 @@ public class GlobalModel : ReactiveObject
     /// <summary>
     /// Global singleton.
     /// </summary>
-    public static GlobalModel Global = new();
+    public static GlobalModel Global { get; } = new();
 
     /// <summary>
     /// Asset provider.

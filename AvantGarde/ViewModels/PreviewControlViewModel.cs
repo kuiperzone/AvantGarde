@@ -32,9 +32,6 @@ public class PreviewControlViewModel : AvantViewModel
     private readonly static IImage? _windowDecorNoResizeWob;
     private readonly static IImage? _windowDecorNoResizeBow;
 
-    private readonly static double _decorWidth;
-    private readonly static double _decorNoResizeWidth;
-
     private PreviewWindowTheme _theme = PreviewWindowTheme.DarkGray;
     private bool _isWindow;
     private double _windowTitleScale = 1;
@@ -55,9 +52,6 @@ public class PreviewControlViewModel : AvantViewModel
         _windowDecorBow = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorBow.png")));
         _windowDecorNoResizeWob = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorNoResizeWob.png")));
         _windowDecorNoResizeBow = new Bitmap(AssetLoader.Open(new Uri(prefix + "WindowDecorNoResizeBow.png")));
-
-        _decorWidth = _windowDecorWob.Size.Width;
-        _decorNoResizeWidth = _windowDecorNoResizeWob.Size.Width;
     }
 
     /// <summary>
@@ -124,7 +118,7 @@ public class PreviewControlViewModel : AvantViewModel
     }
 
     /// <summary>
-    /// Gets the window title scale. Affects topbar scale only.
+    /// Gets the window title scale. Affects top-bar scale only.
     /// </summary>
     public double WindowTitleScale
     {

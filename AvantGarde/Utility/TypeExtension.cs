@@ -87,7 +87,7 @@ public static class TypeExtension
                     }
                     else
                     {
-                        sb.Append("<");
+                        sb.Append('<');
                     }
 
                     var gp = type.GetGenericArguments();
@@ -108,7 +108,7 @@ public static class TypeExtension
                     }
                     else
                     {
-                        sb.Append(">");
+                        _ = sb.Append('>');
                     }
 
                     return sb.ToString();

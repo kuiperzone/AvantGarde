@@ -429,7 +429,7 @@ public sealed class DotnetProject : PathItem
             return item0.LastUtc > item1.LastUtc ? item0 : item1;
         }
 
-        return item1 != null ? item1 : item0;
+        return item1 ?? item0;
     }
 
     private static PathItem? FindAssemblyUnderRoot(NodeItem root, string project, string framework, bool mandatoryFramework, BuildKind build)

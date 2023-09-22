@@ -61,7 +61,7 @@ public enum PathKind
     Image,
 
     /// <summary>
-    /// Any other recognised extension that is a text document.
+    /// Any other recognized extension that is a text document.
     /// </summary>
     Document,
 
