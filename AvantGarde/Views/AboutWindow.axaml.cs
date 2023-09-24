@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -22,30 +22,28 @@ using Avalonia.Markup.Xaml;
 using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// About AvantGarde.
+/// </summary>
+public partial class AboutWindow : AvantWindow
 {
     /// <summary>
-    /// About AvantGarde.
+    /// Constructor.
     /// </summary>
-    public partial class AboutWindow : AvantWindow
+    public AboutWindow()
     {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public AboutWindow()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
-        private void WebPressedHandler(object? sender, PointerPressedEventArgs e)
-        {
-            ShellOpen.Start(GlobalModel.WebUrl);
-        }
-
-        private void OkClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+        AvaloniaXamlLoader.Load(this);
     }
 
+    private void WebPressedHandler(object? sender, PointerPressedEventArgs e)
+    {
+        ShellOpen.Start(GlobalModel.WebUrl);
+    }
+
+    private void OkClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

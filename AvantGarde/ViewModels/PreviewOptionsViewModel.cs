@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -309,7 +309,7 @@ namespace AvantGarde.ViewModels
             if (idx < _scaleItems.Count)
             {
                 _scaleSelectedIndex = idx;
-                OnScaleChanged(true);
+                OnScaleChanged(invoke);
             }
         }
 

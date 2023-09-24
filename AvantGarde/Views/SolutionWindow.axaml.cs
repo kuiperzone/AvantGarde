@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -23,93 +23,77 @@ using Avalonia.Markup.Xaml;
 using AvantGarde.Projects;
 using AvantGarde.Utility;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// Shows solution properties.
+/// </summary>
+public partial class SolutionWindow : AvantWindow
 {
     /// <summary>
-    /// Shows solution properties.
+    /// Default constructor.
     /// </summary>
-    public partial class SolutionWindow : AvantWindow
+    public SolutionWindow()
     {
-        private readonly NumericUpDown _depthUpDown;
-        private readonly CheckBox _showEmptyCheck;
-        private readonly RadioButton _debugRadio;
-        private readonly RadioButton _releaseRadio;
-        private readonly TextBox _filePatternBox;
-        private readonly TextBox _excludeDirectoriesBox;
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SolutionWindow()
-        {
-            AvaloniaXamlLoader.Load(this);
-
-            _depthUpDown = this.FindOrThrow<NumericUpDown>("DepthUpDown");
-            _showEmptyCheck = this.FindOrThrow<CheckBox>("ShowEmptyCheck");
-            _debugRadio = this.FindOrThrow<RadioButton>("DebugRadio");
-            _releaseRadio = this.FindOrThrow<RadioButton>("ReleaseRadio");
-            _filePatternBox = this.FindOrThrow<TextBox>("FilePatternBox");
-            _excludeDirectoriesBox = this.FindOrThrow<TextBox>("ExcludeDirectoriesBox");
+        InitializeComponent();
 
 #if DEBUG
-            this.AttachDevTools();
+        this.AttachDevTools();
 #endif
-        }
+    }
 
-        /// <summary>
-        /// Gets or sets the properties. The instance is modified on OK.
-        /// </summary>
-        public SolutionProperties? Properties { get; set; }
+    /// <summary>
+    /// Gets or sets the properties. The instance is modified on OK.
+    /// </summary>
+    public SolutionProperties? Properties { get; set; }
 
-        protected override void OnOpened(EventArgs e)
-        {
-            base.OnOpened(e);
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
 ;
-            if (Properties != null)
+        if (Properties != null)
+        {
+            UpdateView(Properties);
+        }
+    }
+
+    private void UpdateView(SolutionProperties properties)
+    {
+        DepthUpDown.Value = properties.SearchDepth;
+        ShowEmptyCheck.IsChecked = properties.ShowEmptyDirectories;
+        DebugRadio.IsChecked = properties.Build == BuildKind.Debug;
+        ReleaseRadio.IsChecked = properties.Build == BuildKind.Release;
+        FilePatternBox.Text = properties.FilePatterns;
+        ExcludeDirectoriesBox.Text = properties.ExcludeDirectories;
+    }
+
+    private void ResetClickHandler(object? sender, RoutedEventArgs e)
+    {
+        UpdateView(new SolutionProperties());
+    }
+
+    private void OkClickHandler(object? sender, RoutedEventArgs e)
+    {
+        if (Properties != null)
+        {
+            // Accept warning - check needed for Avalonia 11
+            if (DepthUpDown.Value != null)
             {
-                UpdateView(Properties);
-            }
-        }
-
-        private void UpdateView(SolutionProperties properties)
-        {
-            _depthUpDown.Value = properties.SearchDepth;
-            _showEmptyCheck.IsChecked = properties.ShowEmptyDirectories;
-            _debugRadio.IsChecked = properties.Build == BuildKind.Debug;
-            _releaseRadio.IsChecked = properties.Build == BuildKind.Release;
-            _filePatternBox.Text = properties.FilePatterns;
-            _excludeDirectoriesBox.Text = properties.ExcludeDirectories;
-        }
-
-        private void ResetClickHandler(object? sender, RoutedEventArgs e)
-        {
-            UpdateView(new SolutionProperties());
-        }
-
-        private void OkClickHandler(object? sender, RoutedEventArgs e)
-        {
-            if (Properties != null)
-            {
-                // Accept warning - check needed for Avalonia 11
-                if (_depthUpDown.Value != null)
-                {
-                    Properties.SearchDepth = (int)_depthUpDown.Value;
-                }
-
-                Properties.ShowEmptyDirectories = _showEmptyCheck.IsChecked == true;
-                Properties.Build = _debugRadio.IsChecked == true ? BuildKind.Debug : BuildKind.Release;
-                Properties.FilePatterns = _filePatternBox.Text ?? "";
-                Properties.ExcludeDirectories = _excludeDirectoriesBox.Text ?? "";
+                Properties.SearchDepth = (int)DepthUpDown.Value;
             }
 
-            Close(true);
+            Properties.ShowEmptyDirectories = ShowEmptyCheck.IsChecked == true;
+            Properties.Build = DebugRadio.IsChecked == true ? BuildKind.Debug : BuildKind.Release;
+            Properties.FilePatterns = FilePatternBox.Text ?? "";
+            Properties.ExcludeDirectories = ExcludeDirectoriesBox.Text ?? "";
         }
 
-        private void CancelClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Close(false);
-        }
+        Close(true);
+    }
 
+    private void CancelClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Close(false);
     }
 
 }

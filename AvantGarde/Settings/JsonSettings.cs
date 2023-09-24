@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -31,9 +31,13 @@ namespace AvantGarde.Settings
             try
             {
                 // Create config directory
-                var conf = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AvantGarde");
-                Directory.CreateDirectory(conf);
-                ConfigDirectory = conf;
+                var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AvantGarde");
+#if DEBUG
+                // Don't spoil installed settings
+                path = Path.Combine(path, "debug");
+#endif
+                Directory.CreateDirectory(path);
+                ConfigDirectory = path;
             }
             catch (Exception e)
             {
@@ -83,7 +87,7 @@ namespace AvantGarde.Settings
         /// <summary>
         /// Deletes app configuration directory. Does not throw. Possible use for uninstall?
         /// </summary>
-        public void Remove()
+        public static void Remove()
         {
             if (ConfigDirectory != null)
             {
@@ -109,6 +113,7 @@ namespace AvantGarde.Settings
                 try
                 {
                     var path = Path.Combine(ConfigDirectory, GetType().Name + ".json");
+
                     using var fs = File.OpenRead(path);
 
                     var opts = new JsonSerializerOptions

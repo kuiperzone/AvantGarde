@@ -42,7 +42,7 @@
                 </MenuItem>
 
                 <MenuItem Header="Open _Recent"
-                    Items="{Binding RecentFiles}"
+                    ItemsSource="{Binding RecentFiles}"
                 />
                 <MenuItem Header="Close Solution"
                     Command="{Binding CloseSolutionCommand}"
@@ -263,6 +263,7 @@
         <ToggleButton Grid.Column="1" Grid.Row="0"
             Margin="0 1 3 1"
             ToolTip.Tip="Stay on top"
+            IsVisible="{Binding IsPinVisible}"
             IsChecked="{Binding IsTopmost, Mode=TwoWay}">
             <Image Source="{Binding Global.Assets.SmallPinIcon}"/>
         </ToggleButton>
@@ -325,10 +326,21 @@
 
             </Grid>
 
+            <!-- Not working in Avalonia 11.0.4 - temporarily use GridSplitter instead -->
+            <!--
             <views:CustomSplitter Grid.Column="1" Grid.Row="0"
                 Width="6"
                 Background="{Binding Global.Colors.WindowBackground}"
                 Highlight="{Binding Global.Colors.AvantBackground}"
+                ResizeDirection="Columns"
+                ResizeBehavior="PreviousAndNext"
+                DragDelta="SplitterDragHandler"
+            />
+            -->
+
+            <GridSplitter Grid.Column="1" Grid.Row="0"
+                Width="6"
+                Background="{Binding Global.Colors.AvantBackground}"
                 ResizeDirection="Columns"
                 ResizeBehavior="PreviousAndNext"
                 DragDelta="SplitterDragHandler"

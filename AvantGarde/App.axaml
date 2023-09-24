@@ -4,10 +4,8 @@
 
         xmlns:vm="using:AvantGarde.ViewModels"
         x:DataType="vm:AvantViewModel"
+        RequestedThemeVariant="Default"
         x:Class="AvantGarde.App">
-
-        <!-- TBD requires this above in Avalonia 11 -->
-        <!-- RequestedThemeVariant="Default" -->
 
     <Application.Styles>
         <FluentTheme />
@@ -31,7 +29,7 @@
         </Style>
 
         <Style Selector="Button.std">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="MinWidth" Value="{Binding Global.MinStdButtonWidth}"/>
             <Setter Property="MinHeight" Value="{Binding Global.MinStdButtonHeight}"/>

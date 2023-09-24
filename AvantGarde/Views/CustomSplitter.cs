@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -20,67 +20,63 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// Custom GridSplitter. Note. This is no longer working in Avalonia 11.
+/// Leave code. Have raised bug report.
+/// </summary>
+public class CustomSplitter : GridSplitter
 {
+    private readonly DispatcherTimer _timer;
+    private IBrush? _originalBackground;
+
     /// <summary>
-    /// Custom GridSplitter.
+    /// Constructor.
     /// </summary>
-    public class CustomSplitter : GridSplitter, IStyleable
+    public CustomSplitter()
     {
-        private readonly DispatcherTimer _timer;
-        private IBrush? _originalBackground;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public CustomSplitter()
-        {
-            _timer = new(TimeSpan.FromMilliseconds(250), DispatcherPriority.Normal, TimerHandler);
-            PointerMoved += PointerMovedHandler;
-        }
-
-        /// <summary>
-        /// Custom property.
-        /// </summary>
-        public static readonly StyledProperty<IBrush?> HighlightProperty =
-            AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(Highlight), Brushes.Gray);
-
-        /// <summary>
-        /// Needed.
-        /// </summary>
-        Type IStyleable.StyleKey
-        {
-            get { return typeof(GridSplitter); }
-        }
-
-        /// <summary>
-        /// Gets or sets the highlight brush.
-        /// </summary>
-        public IBrush? Highlight
-        {
-            get { return GetValue(HighlightProperty); }
-            set { SetValue(HighlightProperty, value); }
-        }
-
-        private void PointerMovedHandler(object? sender, PointerEventArgs e)
-        {
-            _originalBackground ??= Background;
-            Background = Highlight;
-            _timer.Start();
-        }
-
-        private void TimerHandler(object? sender, EventArgs e)
-        {
-            if (!IsPointerOver)
-            {
-                Background = _originalBackground;
-                _originalBackground = null;
-                _timer.Stop();
-            }
-        }
-
+        _timer = new(TimeSpan.FromMilliseconds(250), DispatcherPriority.Normal, TimerHandler);
+        PointerMoved += PointerMovedHandler;
     }
+
+    /// <summary>
+    /// Custom property.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> HighlightProperty =
+        AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(Highlight), Brushes.Gray);
+
+    /// <summary>
+    /// Gets or sets the highlight brush.
+    /// </summary>
+    public IBrush? Highlight
+    {
+        get { return GetValue(HighlightProperty); }
+        set { SetValue(HighlightProperty, value); }
+    }
+
+    /// <summary>
+    /// Important.
+    /// </summary>
+    protected override Type StyleKeyOverride { get; } = typeof(GridSplitter);
+
+    private void PointerMovedHandler(object? sender, PointerEventArgs e)
+    {
+        _originalBackground ??= Background;
+        Background = Highlight;
+        _timer.Start();
+    }
+
+    private void TimerHandler(object? sender, EventArgs e)
+    {
+        if (!IsPointerOver)
+        {
+            Background = _originalBackground;
+            _originalBackground = null;
+            _timer.Stop();
+        }
+    }
+
 }

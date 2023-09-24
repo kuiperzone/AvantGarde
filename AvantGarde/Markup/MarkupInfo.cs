@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -18,176 +18,167 @@
 
 using System.Text;
 
-namespace AvantGarde.Markup
+namespace AvantGarde.Markup;
+
+/// <summary>
+/// Class which holds immutable design-time property and event information about a markup
+/// element type.
+/// </summary>
+public sealed class MarkupInfo
 {
+    private static readonly Type ObjType = typeof(object);
+
     /// <summary>
-    /// Class which holds immutable design-time property and event information about a markup
-    /// element type.
+    /// Constructor with optional attached property items.
     /// </summary>
-    public sealed class MarkupInfo
+    public MarkupInfo(Type classType, IEnumerable<AttributeInfo>? attached = null)
     {
-        private static readonly Type ObjType = typeof(object);
+        Name = classType.Name;
+        ClassType = classType;
 
-        /// <summary>
-        /// Constructor with optional attached property items.
-        /// </summary>
-        public MarkupInfo(Type classType, IEnumerable<AttributeInfo>? attached = null)
+        var attributes = new Dictionary<string, AttributeInfo>(56);
+        Attributes = attributes;
+
+        if (attached != null)
         {
-            Name = classType.Name;
-            ClassType = classType;
-
-            var attributes = new Dictionary<string, AttributeInfo>(56);
-            Attributes = attributes;
-
-            if (attached != null)
+            foreach (var item in attached)
             {
-                foreach (var item in attached)
-                {
-                    attributes.TryAdd(item.Name, item);
-                }
+                attributes.TryAdd(item.Name, item);
             }
+        }
 
-            foreach (var item in classType.GetProperties())
-            {
-                // Must have public setter
-                if (item.GetSetMethod(true)?.IsPublic == true)
-                {
-                    attributes.TryAdd(item.Name, new AttributeInfo(item));
-                }
-            }
-
-            foreach (var item in classType.GetEvents())
+        foreach (var item in classType.GetProperties())
+        {
+            // Must have public setter
+            if (item.GetSetMethod(true)?.IsPublic == true)
             {
                 attributes.TryAdd(item.Name, new AttributeInfo(item));
             }
         }
 
-        /// <summary>
-        /// Gets the control (short) name.
-        /// </summary>
-        public readonly string Name;
-
-        /// <summary>
-        /// Gets the control class type.
-        /// </summary>
-        public readonly Type ClassType;
-
-        /// <summary>
-        /// Gets a dictionary of property and event information.
-        /// </summary>
-        public readonly IReadOnlyDictionary<string, AttributeInfo> Attributes;
-
-        /// <summary>
-        /// Gets control information text.
-        /// </summary>
-        public string GetHelpDocument()
+        foreach (var item in classType.GetEvents())
         {
-            var sb = new StringBuilder(256);
-
-            sb.Append("Class: ");
-            sb.AppendLine(ClassType.Name);
-            sb.AppendLine();
-
-            sb.Append("Namespace: ");
-            sb.AppendLine(ClassType.Namespace);
-            sb.AppendLine();
-
-            sb.Append("Base: ");
-            sb.AppendLine(GetBaseClasses(ClassType));
-            sb.AppendLine();
-
-            var list = GetSelected(false);
-
-            if (list.Count != 0)
-            {
-                bool first = true;
-                sb.Append("Properties: ");
-
-                foreach(var item in list)
-                {
-                    // Omit attached
-                    if (!item.Contains('.'))
-                    {
-                        if (!first)
-                        {
-                            sb.Append(", ");
-                        }
-
-                        first = false;
-                        sb.Append(item);
-                    }
-                }
-
-                sb.AppendLine();
-            }
-            else
-            {
-                sb.AppendLine("Properties: {none}");
-            }
-
-            sb.AppendLine();
-            list = GetSelected(true);
-
-            if (list.Count != 0)
-            {
-                sb.Append("Events: ");
-                sb.Append(string.Join(", ", list));
-            }
-            else
-            {
-                sb.Append("Events: {none}");
-            }
-
-            return sb.ToString();
+            attributes.TryAdd(item.Name, new AttributeInfo(item));
         }
+    }
 
-        private static void AddAttribute(List<string> names, Dictionary<string, AttributeInfo> attribs, AttributeInfo info)
+    /// <summary>
+    /// Gets the control (short) name.
+    /// </summary>
+    public readonly string Name;
+
+    /// <summary>
+    /// Gets the control class type.
+    /// </summary>
+    public readonly Type ClassType;
+
+    /// <summary>
+    /// Gets a dictionary of property and event information.
+    /// </summary>
+    public readonly IReadOnlyDictionary<string, AttributeInfo> Attributes;
+
+    /// <summary>
+    /// Gets control information text.
+    /// </summary>
+    public string GetHelpDocument()
+    {
+        var sb = new StringBuilder(256);
+
+        sb.Append("Class: ");
+        sb.AppendLine(ClassType.Name);
+        sb.AppendLine();
+
+        sb.Append("Namespace: ");
+        sb.AppendLine(ClassType.Namespace);
+        sb.AppendLine();
+
+        sb.Append("Base: ");
+        sb.AppendLine(GetBaseClasses(ClassType));
+        sb.AppendLine();
+
+        var list = GetSelected(false);
+
+        if (list.Count != 0)
         {
-            if (attribs.TryAdd(info.Name, info))
+            bool first = true;
+            sb.Append("Properties: ");
+
+            foreach(var item in list)
             {
-                names.Add(info.Name);
-            }
-        }
-
-        private static string GetBaseClasses(Type? type)
-        {
-            var sb = new StringBuilder(32);
-
-            while (true)
-            {
-                type = type?.BaseType;
-
-                if (type != null && type != ObjType)
+                // Omit attached
+                if (!item.Contains('.'))
                 {
-                    if (sb.Length != 0)
+                    if (!first)
                     {
                         sb.Append(", ");
                     }
 
-                    sb.Append(type.Name);
-                    continue;
+                    first = false;
+                    sb.Append(item);
                 }
-
-                return sb.ToString();
             }
-        }
 
-        private List<string> GetSelected(bool events)
+            sb.AppendLine();
+        }
+        else
         {
-            var rslt = new List<string>(Attributes.Count);
-
-            foreach (var item in Attributes.Values)
-            {
-                if (item.IsEvent == events)
-                {
-                    rslt.Add(item.Name);
-                }
-            }
-
-            rslt.Sort();
-            return rslt;
+            sb.AppendLine("Properties: {none}");
         }
 
+        sb.AppendLine();
+        list = GetSelected(true);
+
+        if (list.Count != 0)
+        {
+            sb.Append("Events: ");
+            sb.Append(string.Join(", ", list));
+        }
+        else
+        {
+            sb.Append("Events: {none}");
+        }
+
+        return sb.ToString();
     }
+
+    private static string GetBaseClasses(Type? type)
+    {
+        var sb = new StringBuilder(32);
+
+        while (true)
+        {
+            type = type?.BaseType;
+
+            if (type != null && type != ObjType)
+            {
+                if (sb.Length != 0)
+                {
+                    sb.Append(", ");
+                }
+
+                sb.Append(type.Name);
+                continue;
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    private List<string> GetSelected(bool events)
+    {
+        var rslt = new List<string>(Attributes.Count);
+
+        foreach (var item in Attributes.Values)
+        {
+            if (item.IsEvent == events)
+            {
+                rslt.Add(item.Name);
+            }
+        }
+
+        rslt.Sort();
+        return rslt;
+    }
+
 }
 

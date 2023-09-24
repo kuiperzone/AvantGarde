@@ -24,34 +24,28 @@
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 
 	</PropertyGroup>
+
+	<Target Name="CleanBinObj" AfterTargets="Clean">
+		<RemoveDir Directories="$(ProjectDir)$(BaseOutputPath)" />
+		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+	</Target>
+
 	<ItemGroup>
-		<None Remove=".gitignore" />
 		<AvaloniaResource Include="Assets\**" />
-		<None Include="$(ProjectDir)\..\LICENSE" Link="LICENSE">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="$(ProjectDir)\..\CHANGES" Link="CHANGES">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
+		<Content Include="$(ProjectDir)\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="Always"/>
+		<Content Include="$(ProjectDir)\..\CHANGES" Link="CHANGES" CopyToOutputDirectory="Always"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.21" />
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.21" />
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.21" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.21" />
+		<PackageReference Include="Avalonia" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.4" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.21" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
 
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
 
-		<!-- TBD for removal in Avalonia 11 -->
-    	<PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
-
-		<!-- TBD Avalonia 11
-		<PackageReference Include="Avalonia.Themes.Simple" Version="11" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11" />
-		-->
-
-		<PackageReference Include="KuiperZone.Utility.Yaap" Version="2.0.0" />
+		<PackageReference Include="KuiperZone.Utility.Yaap" Version="1.0.2" />
 	</ItemGroup>
 </Project>

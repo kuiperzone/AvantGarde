@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -21,44 +21,43 @@ using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AvantGarde.Markup.Test
+namespace AvantGarde.Markup.Test;
+
+public class SchemaGeneratorTest : TestUtilBase
 {
-    public class SchemaGeneratorTest : TestUtilBase
+    public SchemaGeneratorTest(ITestOutputHelper helper)
+        : base(helper)
     {
-        public SchemaGeneratorTest(ITestOutputHelper helper)
-            : base(helper)
-        {
-        }
-
-        [Fact]
-        public void GetSchema()
-        {
-            var schema = SchemaGenerator.GetSchema(false, false);
-            var schemaF = SchemaGenerator.GetSchema(true, false);
-            var schemaA = SchemaGenerator.GetSchema(false, true);
-            var schemaFA = SchemaGenerator.GetSchema(true, true);
-
-            Assert.NotEqual(schema, schemaF);
-            Assert.NotEqual(schema, schemaA);
-            Assert.NotEqual(schema, schemaFA);
-            Assert.NotEqual(schemaA, schemaF);
-        }
-
-        [Fact]
-        public void SaveDocument()
-        {
-            SchemaGenerator.SaveDocument("Avalonia.xsd", false);
-            SchemaGenerator.SaveDocument("Avalonia.Formatted.xsd", true);
-        }
-
-        [Fact]
-        public void ScratchText()
-        {
-            var temp = new Control();
-            WriteLine(temp.Width);
-            WriteLine(temp.MinWidth);
-            WriteLine(temp.MaxWidth);
-        }
-
     }
+
+    [Fact]
+    public void GetSchema()
+    {
+        var schema = SchemaGenerator.GetSchema(false, false);
+        var schemaF = SchemaGenerator.GetSchema(true, false);
+        var schemaA = SchemaGenerator.GetSchema(false, true);
+        var schemaFA = SchemaGenerator.GetSchema(true, true);
+
+        Assert.NotEqual(schema, schemaF);
+        Assert.NotEqual(schema, schemaA);
+        Assert.NotEqual(schema, schemaFA);
+        Assert.NotEqual(schemaA, schemaF);
+    }
+
+    [Fact]
+    public void SaveDocument()
+    {
+        SchemaGenerator.SaveDocument("Avalonia.xsd", false);
+        SchemaGenerator.SaveDocument("Avalonia.Formatted.xsd", true);
+    }
+
+    [Fact]
+    public void ScratchText()
+    {
+        var temp = new Control();
+        WriteLine(temp.Width);
+        WriteLine(temp.MinWidth);
+        WriteLine(temp.MaxWidth);
+    }
+
 }

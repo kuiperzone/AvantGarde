@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -21,263 +21,209 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Projects;
 using AvantGarde.Utility;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// Shows project properties.
+/// </summary>
+public partial class ProjectWindow : AvantWindow
 {
+    private readonly DispatcherTimer _timer;
+    private DotnetProject? _clone;
+
     /// <summary>
-    /// Shows project properties.
+    /// Default constructor.
     /// </summary>
-    public partial class ProjectWindow : AvantWindow
+    public ProjectWindow()
     {
-        private readonly TextBlock _outputBlock;
-        private readonly TextBlock _targetBlock;
-        private readonly TextBlock _avaloniaBlock;
+        InitializeComponent();
 
-        private readonly ComboBox _appCombo;
-
-        private readonly TextBox _assemblyOverrideBox;
-        private readonly Button _browseButton;
-        private readonly CheckBox _assemblyOverrideCheck;
-
-        private readonly TextBlock _warnBlock1;
-        private readonly TextBlock _warnBlock2;
-        private readonly Image _warnImage;
-
-        private readonly DispatcherTimer _timer;
-        private DotnetProject? _clone;
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ProjectWindow()
-        {
-            AvaloniaXamlLoader.Load(this);
-
-            _outputBlock = this.FindOrThrow<TextBlock>("OutputBlock");
-            _targetBlock = this.FindOrThrow<TextBlock>("TargetBlock");
-            _avaloniaBlock = this.FindOrThrow<TextBlock>("AvaloniaBlock");
-
-            _appCombo = this.FindOrThrow<ComboBox>("AppCombo");
-
-            _assemblyOverrideBox = this.FindOrThrow<TextBox>("AssemblyOverrideBox");
-            _browseButton = this.FindOrThrow<Button>("BrowseButton");
-            _assemblyOverrideCheck = this.FindOrThrow<CheckBox>("AssemblyOverrideCheck");
-
-            _warnBlock1 = this.FindOrThrow<TextBlock>("WarnBlock1");
-            _warnBlock2 = this.FindOrThrow<TextBlock>("WarnBlock2");
-            _warnImage = this.FindOrThrow<Image>("WarnImage");
-
-            _timer = new(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, UpdateTimerHandler);
-            Closed += WindowClosedHandler;
+        _timer = new(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, UpdateTimerHandler);
+        Closed += WindowClosedHandler;
 
 #if DEBUG
-            this.AttachDevTools();
+        this.AttachDevTools();
 #endif
+    }
+
+    /// <summary>
+    /// Gets or sets the project. The instance is modified on OK.
+    /// </summary>
+    public DotnetProject? Project { get; set; }
+
+    private void UpdateAssemblyPathControls(string? newPath = null)
+    {
+        Debug.WriteLine("Update assembly box");
+
+        if (AssemblyOverrideCheck.IsChecked == true)
+        {
+            Debug.WriteLine("Override is true");
+            BrowseButton.IsEnabled = true;
+            AssemblyOverrideBox.IsEnabled = true;
+
+            if (newPath != null)
+            {
+                AssemblyOverrideBox.Text = newPath;
+            }
+        }
+        else
+        {
+            Debug.WriteLine("Override is false");
+            BrowseButton.IsEnabled = false;
+            AssemblyOverrideBox.IsEnabled = false;
+            AssemblyOverrideBox.Text = Project?.MakeLocalName(Project?.AssemblyPath?.FullName);
         }
 
-        /// <summary>
-        /// Gets or sets the project. The instance is modified on OK.
-        /// </summary>
-        public DotnetProject? Project { get; set; }
+        UpdateWarnings();
+    }
 
-        private void UpdateAssemblyPathControls(string? newPath = null)
+    private void UpdateWarnings()
+    {
+        UpdateProject(_clone);
+
+        if (_clone?.Refresh() == true)
         {
-            Debug.WriteLine("Update assembly box");
+            var e = _clone.Error;
+            WarnImage.IsVisible = !string.IsNullOrEmpty(e?.Message);
 
-            if (_assemblyOverrideCheck.IsChecked == true)
+            WarnBlock1.IsVisible = WarnImage.IsVisible;
+            WarnBlock1.Text = e?.Message;
+
+            WarnBlock2.IsVisible = !string.IsNullOrEmpty(e?.Details);
+            WarnBlock2.Text = e?.Details;
+        }
+    }
+
+    private void UpdateProject(DotnetProject? project)
+    {
+        if (project != null)
+        {
+            // Do not refresh here
+            if (AppCombo.IsEnabled)
             {
-                Debug.WriteLine("Override is true");
-                _browseButton.IsEnabled = true;
-                _assemblyOverrideBox.IsEnabled = true;
+                project.Properties.AppProjectName = AppCombo.SelectedItem as string;
+            }
 
-                if (newPath != null)
-                {
-                    _assemblyOverrideBox.Text = newPath;
-                }
+            var path = AssemblyOverrideBox.Text;
+
+            if (AssemblyOverrideCheck.IsChecked == true)
+            {
+                project.Properties.AssemblyOverride = project.MakeLocalName(path);
             }
             else
             {
-                Debug.WriteLine("Override is false");
-                _browseButton.IsEnabled = false;
-                _assemblyOverrideBox.IsEnabled = false;
-                _assemblyOverrideBox.Text = Project?.MakeLocalName(Project?.AssemblyPath?.FullName);
-            }
-
-            UpdateWarnings();
-        }
-
-        private void UpdateWarnings()
-        {
-            UpdateProject(_clone);
-
-            if (_clone?.Refresh() == true)
-            {
-                var e = _clone.Error;
-                _warnImage.IsVisible = !string.IsNullOrEmpty(e?.Message);
-
-                _warnBlock1.IsVisible = _warnImage.IsVisible;
-                _warnBlock1.Text = e?.Message;
-
-                _warnBlock2.IsVisible = !string.IsNullOrEmpty(e?.Details);
-                _warnBlock2.Text = e?.Details;
+                project.Properties.AssemblyOverride = null;
             }
         }
+    }
 
-        private void UpdateProject(DotnetProject? project)
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+
+        if (Project != null)
         {
-            if (project != null)
+            Title = "Project - " + Project.ProjectName;
+
+            // Keep internal clone we can make changes to
+            _clone = new DotnetProject(Project.FullName, Project.Solution);
+
+            OutputBlock.Text = Project.OutputType + " (" + Project.Solution?.Properties.Build + ")";
+            TargetBlock.Text = Project.TargetFramework;
+            AvaloniaBlock.Text = Project.AvaloniaVersion;
+
+            if (!Project.IsApp)
             {
-                // Do not refresh here
-                if (_appCombo.IsEnabled)
+                var temp = new List<string>();
+
+                if (Project.Solution != null)
                 {
-                    project.Properties.AppProjectName = _appCombo.SelectedItem as string;
-                }
-
-                var path = _assemblyOverrideBox.Text;
-
-                if (_assemblyOverrideCheck.IsChecked == true)
-                {
-                    project.Properties.AssemblyOverride = project.MakeLocalName(path);
-                }
-                else
-                {
-                    project.Properties.AssemblyOverride = null;
-                }
-            }
-        }
-
-        protected override void OnOpened(EventArgs e)
-        {
-            base.OnOpened(e);
-
-            if (Project != null)
-            {
-                Title = "Project - " + Project.ProjectName;
-
-                // Keep internal clone we can make changes to
-                _clone = new DotnetProject(Project.FullName, Project.Solution);
-
-                _outputBlock.Text = Project.OutputType + " (" + Project.Solution?.Properties.Build + ")";
-                _targetBlock.Text = Project.TargetFramework;
-                _avaloniaBlock.Text = Project.AvaloniaVersion;
-
-                if (!Project.IsApp)
-                {
-                    var temp = new List<string>();
-
-                    if (Project.Solution != null)
+                    foreach (var item in Project.Solution.Projects.Values)
                     {
-                        foreach (var item in Project.Solution.Projects.Values)
+                        if (item.IsApp)
                         {
-                            if (item.IsApp)
-                            {
-                                temp.Add(item.ProjectName);
-                            }
+                            temp.Add(item.ProjectName);
                         }
                     }
-
-                    _appCombo.IsEnabled = true;
-                    _appCombo.Items = temp;
-                    _appCombo.SelectedItem = Project.GetApp()?.ProjectName;
-                }
-                else
-                {
-                    _appCombo.IsEnabled = false;
-                    _appCombo.Items = new string[] { "N/A" };
-                    _appCombo.SelectedIndex = 0;
                 }
 
-                _assemblyOverrideCheck.IsChecked = Project.Properties.AssemblyOverride != null;
-                UpdateAssemblyPathControls(Project.Properties.AssemblyOverride);
-
-                _timer.Start();
+                AppCombo.IsEnabled = true;
+                AppCombo.ItemsSource = temp;
+                AppCombo.SelectedItem = Project.GetApp()?.ProjectName;
             }
-        }
-
-        private void WindowClosedHandler(object? sender, EventArgs e)
-        {
-            _timer.Stop();
-            _clone = null;
-        }
-
-        private void UpdateTimerHandler(object? sender, EventArgs e)
-        {
-            UpdateWarnings();
-        }
-
-        // TBD for removal in Avalonia 11
-        private async void BrowseButtonClickHandler(object? sender, RoutedEventArgs e)
-        {
-            try
+            else
             {
-                var dialog = new OpenFileDialog();
-                dialog.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
-                dialog.Filters?.Add(new FileDialogFilter() { Name = "Assembly (*.dll)", Extensions = { "dll" } });
-                dialog.Directory = Project?.Solution?.ParentDirectory;
-
-                var path = await dialog.ShowAsync(this);
-                if (path?.Length > 0)
-                {
-                    Debug.WriteLine("BrowseButtonClickHandler: " + path[0]);
-                    UpdateAssemblyPathControls(path[0]);
-                }
+                AppCombo.IsEnabled = false;
+                AppCombo.ItemsSource = new string[] { "N/A" };
+                AppCombo.SelectedIndex = 0;
             }
-            catch (Exception x)
+
+            AssemblyOverrideCheck.IsChecked = Project.Properties.AssemblyOverride != null;
+            UpdateAssemblyPathControls(Project.Properties.AssemblyOverride);
+
+            _timer.Start();
+        }
+    }
+
+    private void WindowClosedHandler(object? sender, EventArgs e)
+    {
+        _timer.Stop();
+        _clone = null;
+    }
+
+    private void UpdateTimerHandler(object? sender, EventArgs e)
+    {
+        UpdateWarnings();
+    }
+
+    private async void BrowseButtonClickHandler(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var opts = new FilePickerOpenOptions();
+            opts.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
+            opts.AllowMultiple = false;
+
+            var type = new FilePickerFileType("Assembly (*.dll)");
+            type.Patterns = new string[] { "*.dll" };
+            opts.FileTypeFilter = new FilePickerFileType[] { type };
+
+            var paths = await StorageProvider.OpenFilePickerAsync(opts);
+
+            if (paths?.Count > 0)
             {
-                await MessageBox.ShowDialog(this, x);
+                Debug.WriteLine("BrowseButtonClickHandler: " + paths[0].Path.AbsolutePath);
+                UpdateAssemblyPathControls(paths[0].Path.AbsolutePath);
             }
         }
-
-        /* TBD for Avalonia 11
-        private async void BrowseButtonClickHandler(object? sender, RoutedEventArgs e)
+        catch (Exception x)
         {
-            try
-            {
-                var opts = new FilePickerOpenOptions();
-                opts.Title = $"Project Assembly ({Project?.Solution?.Properties.Build})";
-                opts.AllowMultiple = false;
-
-                var type = new FilePickerFileType("Assembly (*.dll)");
-                type.Patterns = new string[] { "*.dll" };
-                opts.FileTypeFilter = new FilePickerFileType[] { type };
-
-                var paths = await StorageProvider.OpenFilePickerAsync(opts);
-
-                if (paths?.Count > 0)
-                {
-                    Debug.WriteLine("BrowseButtonClickHandler: " + paths[0].Path.AbsolutePath);
-                    UpdateAssemblyPathControls(paths[0].Path.AbsolutePath);
-                }
-            }
-            catch (Exception x)
-            {
-                await MessageBox.ShowDialog(this, x);
-            }
+            await MessageBox.ShowDialog(this, x);
         }
-        */
+    }
 
-        private void AssemblyCheckClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("AssemblyCheckHandler Checked: " + (_assemblyOverrideCheck.IsChecked == true));
-            UpdateAssemblyPathControls();
-        }
+    private void AssemblyCheckClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Debug.WriteLine("AssemblyCheckHandler Checked: " + (AssemblyOverrideCheck.IsChecked == true));
+        UpdateAssemblyPathControls();
+    }
 
-        private void OkClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("OK Click");
-            UpdateProject(Project);
-            Close(true);
-        }
+    private void OkClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Debug.WriteLine("OK Click");
+        UpdateProject(Project);
+        Close(true);
+    }
 
-        private void CancelClickHandler(object? sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("Cancel Click");
-            Close(false);
-        }
-
+    private void CancelClickHandler(object? sender, RoutedEventArgs e)
+    {
+        Debug.WriteLine("Cancel Click");
+        Close(false);
     }
 
 }

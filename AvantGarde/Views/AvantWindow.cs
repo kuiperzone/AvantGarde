@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -17,105 +17,100 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia.Controls;
-using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
-namespace AvantGarde.Views
+namespace AvantGarde.Views;
+
+/// <summary>
+/// A base class for application windows.
+/// </summary>
+public class AvantWindow<T> : Window
+    where T : AvantViewModel
 {
     /// <summary>
-    /// A base class for application windows.
+    /// Constructor assigns model to DataContext.
     /// </summary>
-    public class AvantWindow<T> : Window
-        where T : AvantViewModel
+    public AvantWindow(T model)
     {
-        /// <summary>
-        /// Constructor assigns model to DataContext.
-        /// </summary>
-        public AvantWindow(T model)
-        {
-            Model = model;
-            DataContext = Model;
-            FontFamily = GlobalModel.Global.AppFontFamily;
-            FontSize = GlobalModel.Global.AppFontSize;
-        }
-
-        /// <summary>
-        /// Gets the view model.
-        /// </summary>
-        protected T Model;
-
-        /// <summary>
-        /// Returns nominal width (without font-size scaling).
-        /// </summary>
-        public double DescaledWidth
-        {
-            get { return Width / GlobalModel.Global.Scale; }
-        }
-
-        /// <summary>
-        /// Returns nominal height (without font-size scaling).
-        /// </summary>
-        public double DescaledHeight
-        {
-            get { return Height / GlobalModel.Global.Scale; }
-        }
-
-        /// <summary>
-        /// Called by this class. Can be overridden, but call base.
-        /// </summary>
-        protected override void OnOpened(EventArgs e)
-        {
-            base.OnOpened(e);
-            ScaleSize();
-
-            this.SetCenterFix();  // TBD not necessary in Avalonia 11
-        }
-
-        private void ScaleSize()
-        {
-            double f = GlobalModel.Global.Scale;
-            var w = Width * f;
-            var h = Height * f;
-            var mw = MinWidth * f;
-            var xw = MaxWidth * f;
-            var mh = MinHeight * f;
-            var xh = MaxHeight * f;
-
-            MinWidth = mw;
-            MaxWidth = xw;
-            MinHeight = mh;
-            MaxHeight = xh;
-
-            Width = w;
-            Height = h;
-
-            if (!CanResize)
-            {
-                if (double.IsFinite(w))
-                {
-                    MinWidth = w;
-                    MaxWidth = w;
-                }
-
-                if (double.IsFinite(h))
-                {
-                    MinHeight = h;
-                    MaxHeight = h;
-                }
-            }
-        }
-
+        Model = model;
+        DataContext = Model;
+        FontFamily = GlobalModel.Global.AppFontFamily;
+        FontSize = GlobalModel.Global.AppFontSize;
     }
 
     /// <summary>
-    /// A non-generic variant with default constructor.
+    /// Gets the view model.
     /// </summary>
-    public class AvantWindow : AvantWindow<AvantViewModel>
+    protected T Model;
+
+    /// <summary>
+    /// Returns nominal width (without font-size scaling).
+    /// </summary>
+    public double DescaledWidth
     {
-        public AvantWindow()
-            : base( new AvantViewModel())
+        get { return Width / GlobalModel.Global.Scale; }
+    }
+
+    /// <summary>
+    /// Returns nominal height (without font-size scaling).
+    /// </summary>
+    public double DescaledHeight
+    {
+        get { return Height / GlobalModel.Global.Scale; }
+    }
+
+    /// <summary>
+    /// Called by this class. Can be overridden, but call base.
+    /// </summary>
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+        ScaleSize();
+    }
+
+    private void ScaleSize()
+    {
+        double f = GlobalModel.Global.Scale;
+        var w = Width * f;
+        var h = Height * f;
+        var mw = MinWidth * f;
+        var xw = MaxWidth * f;
+        var mh = MinHeight * f;
+        var xh = MaxHeight * f;
+
+        MinWidth = mw;
+        MaxWidth = xw;
+        MinHeight = mh;
+        MaxHeight = xh;
+
+        Width = w;
+        Height = h;
+
+        if (!CanResize)
         {
+            if (double.IsFinite(w))
+            {
+                MinWidth = w;
+                MaxWidth = w;
+            }
+
+            if (double.IsFinite(h))
+            {
+                MinHeight = h;
+                MaxHeight = h;
+            }
         }
     }
 
+}
+
+/// <summary>
+/// A non-generic variant with default constructor.
+/// </summary>
+public class AvantWindow : AvantWindow<AvantViewModel>
+{
+    public AvantWindow()
+        : base( new AvantViewModel())
+    {
+    }
 }

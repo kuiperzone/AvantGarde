@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,21 +16,20 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-namespace AvantGarde.Projects
+namespace AvantGarde.Projects;
+
+/// <summary>
+/// Project build kind.
+/// </summary>
+public enum BuildKind
 {
     /// <summary>
-    /// Project build kind.
+    /// Debug assembly. Don't change the name of this.
     /// </summary>
-    public enum BuildKind
-    {
-        /// <summary>
-        /// Debug assembly. Don't change the name of this.
-        /// </summary>
-        Debug,
+    Debug,
 
-        /// <summary>
-        /// Release assembly. Don't change the name of this.
-        /// </summary>
-        Release,
-    }
+    /// <summary>
+    /// Release assembly. Don't change the name of this.
+    /// </summary>
+    Release,
 }

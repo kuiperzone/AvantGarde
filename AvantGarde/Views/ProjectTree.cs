@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Collections;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -27,14 +28,13 @@ using AvantGarde.ViewModels;
 namespace AvantGarde.Views
 {
     /// <summary>
-    /// Underlying project tree view without surrounding controls. The is no XAML for this.
+    /// Underlying project tree view without surrounding controls. There is no XAML for this.
     /// </summary>
     public class ProjectTree : UserControl
     {
         private readonly TreeView _treeView;
         private DotnetSolution? _solution;
-        private PathItem? _selectedItem;
-        private TreeViewItem? _selectedView;
+        private PathItem? _selected;
 
         /// <summary>
         /// Constructor.
@@ -71,23 +71,13 @@ namespace AvantGarde.Views
                 {
                     value?.Refresh();
                     _solution = value;
-                    _selectedView = null;
-                    _selectedItem = null;
-
                     Refresh();
 
-                    if (_treeView.Items != null)
+                    if (_solution == null)
                     {
-                        foreach (var p in _treeView.Items)
-                        {
-                            _selectedView = (TreeViewItem?)p;
-                            _selectedItem = (PathItem?)_selectedView?.Tag;
-                            _treeView.SelectedItem = p;
-                            break;
-                        }
+                        _selected = null;
+                        SelectionChanged?.Invoke();
                     }
-
-                    SelectionChanged?.Invoke();
                 }
             }
         }
@@ -97,12 +87,25 @@ namespace AvantGarde.Views
         /// </summary>
         public PathItem? SelectedItem
         {
-            get { return _selectedItem; }
+            get
+            {
+                var view = _treeView.SelectedItem as TreeViewItem;
+                return (PathItem?)view?.Tag;
+            }
 
             set
             {
-                var view = value?.Tag as TreeViewItem;
-                _treeView.SelectedItem = view;
+                var old = _treeView.SelectedItem as TreeViewItem;
+                var sel = value?.Tag as TreeViewItem;
+                Debug.WriteLine($"Set SelectedItem new: {sel?.ToString() ?? "null"}, {value?.ToString() ?? "null"}");
+                Debug.WriteLine($"Set SelectedItem old: {old?.ToString() ?? "null"}, {old?.Tag?.ToString() ?? "null"}");
+                Debug.WriteLine($"Contains: {_treeView.Items.Contains(sel)}");
+
+                if (_treeView.SelectedItem != sel && (sel == null || _treeView.Items.Contains(sel)))
+                {
+                    Debug.WriteLine("Set confirmed");
+                    _treeView.SelectedItem = value?.Tag;
+                }
             }
         }
 
@@ -113,12 +116,14 @@ namespace AvantGarde.Views
         {
             get
             {
-                if (SelectedItem is NodeItem node)
+                var item = SelectedItem;
+
+                if (item is NodeItem node)
                 {
                     return node.Project;
                 }
 
-                if (SelectedItem is DotnetProject project)
+                if (item is DotnetProject project)
                 {
                     return project;
                 }
@@ -133,12 +138,14 @@ namespace AvantGarde.Views
         /// </summary>
         public void Refresh()
         {
+            Debug.WriteLine($"{nameof(ProjectTree)}.{nameof(Refresh)}");
             TreeViewItem? selected = null;
             List<TreeViewItem>? items = null;
 
             if (_solution != null)
             {
                 items = new();
+                Debug.WriteLine("Has solution");
 
                 foreach (var project in _solution.Projects.Values)
                 {
@@ -146,9 +153,11 @@ namespace AvantGarde.Views
                 }
             }
 
-            _treeView.Items = items;
-            _selectedItem = (PathItem?)selected?.Tag;
-            _treeView.SelectedItem = selected;
+            Debug.WriteLine($"ref selected: {selected?.Tag?.ToString() ?? "null"}");
+
+            _treeView.ItemsSource = items;
+            SelectedItem = (PathItem?)selected?.Tag;
+            Debug.WriteLine($"Selected Now: {SelectedItem?.ToString() ?? "null"}");
         }
 
         /// <summary>
@@ -162,7 +171,6 @@ namespace AvantGarde.Views
             if (selected?.Tag is NodeItem node && _treeView.SelectedItem != node.Project?.Tag)
             {
                 // Leave top level selected
-                _selectedItem = node;
                 _treeView.SelectedItem = node.Project?.Tag;
             }
         }
@@ -216,6 +224,67 @@ namespace AvantGarde.Views
             }
         }
 
+        private static Image CreateImage(IImage? src, double size)
+        {
+            var img = new Image();
+
+            // Scale to font
+            img.Width = size;
+            img.Height = size;
+            img.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+            img.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            img.Stretch = Stretch.Uniform;
+            img.Source = src;
+
+            return img;
+        }
+
+        private static TextBlock CreateTextBlock(string text)
+        {
+            var tb = new TextBlock();
+            tb.FontSize = GlobalModel.Global.AppFontSize;
+            tb.TextAlignment = TextAlignment.Left;
+            tb.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+            tb.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            tb.TextTrimming = TextTrimming.CharacterEllipsis;
+            tb.Text = text;
+            return tb;
+        }
+
+        private static Button CreateButton(Image? content)
+        {
+            var bt = new Button();
+            bt.MaxWidth = GlobalModel.Global.IconSize;
+            bt.MaxHeight = GlobalModel.Global.IconSize;
+            bt.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+            bt.HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+            bt.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            bt.VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            bt.Background = new SolidColorBrush(Colors.Transparent);
+            bt.Content = content;
+            return bt;
+        }
+
+        private static object CreateNodeHeader(NodeItem item)
+        {
+            var g0 = new Grid();
+            g0.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+            g0.ColumnDefinitions = new ColumnDefinitions("Auto *");
+            g0.RowDefinitions = new RowDefinitions("Auto");
+
+            // Icon on left
+            var img = CreateImage(GetFileIcon(item), GlobalModel.Global.TreeIconSize);
+            img.Margin = new Thickness(0, 0, 3, 0);
+            Grid.SetColumn(img, 0);
+            g0.Children.Add(img);
+
+            var tb = CreateTextBlock(item.Name);
+            Grid.SetColumn(tb, 1);
+            g0.Children.Add(tb);
+
+            return g0;
+        }
+
         private TreeViewItem CreateViewItem(DotnetProject project, ref TreeViewItem? selected)
         {
             var view = new TreeViewItem();
@@ -245,7 +314,44 @@ namespace AvantGarde.Views
                 list.Add(CreateViewItem(item, ref selected));
             }
 
-            view.Items = list;
+            view.ItemsSource = list;
+            return view;
+        }
+
+        private TreeViewItem CreateViewItem(NodeItem node, ref TreeViewItem? selected)
+        {
+            var view = new TreeViewItem();
+            view.Header = CreateNodeHeader(node);
+
+            // Use tag value to maintain state
+            if (node.Tag is TreeViewItem last)
+            {
+                view.IsExpanded = last.IsExpanded;
+                view.IsSelected = last.IsSelected;
+
+                if (view.IsSelected)
+                {
+                    selected = view;
+                }
+            }
+
+            // Hold data as tags
+            node.Tag = view;
+            view.Tag = node;
+
+            if (node.Contents.Count != 0)
+            {
+                // Populate
+                var list = new List<TreeViewItem>();
+
+                foreach (var item in node.Contents)
+                {
+                    list.Add(CreateViewItem(item, ref selected));
+                }
+
+                view.ItemsSource = list;
+            }
+
             return view;
         }
 
@@ -307,104 +413,6 @@ namespace AvantGarde.Views
             return g0;
         }
 
-        private TreeViewItem CreateViewItem(NodeItem node, ref TreeViewItem? selected)
-        {
-            var view = new TreeViewItem();
-            view.Header = CreateNodeHeader(node);
-
-            // Use tag value to maintain state
-            if (node.Tag is TreeViewItem last)
-            {
-                view.IsExpanded = last.IsExpanded;
-                view.IsSelected = last.IsSelected;
-
-                if (view.IsSelected)
-                {
-                    selected = view;
-                }
-            }
-
-            // Hold data as tags
-            node.Tag = view;
-            view.Tag = node;
-
-            if (node.Contents.Count != 0)
-            {
-                // Populate
-                var list = new List<TreeViewItem>();
-
-                foreach (var item in node.Contents)
-                {
-                    list.Add(CreateViewItem(item, ref selected));
-                }
-
-                view.Items = list;
-            }
-
-            return view;
-        }
-
-        private object CreateNodeHeader(NodeItem item)
-        {
-            var g0 = new Grid();
-            g0.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
-            g0.ColumnDefinitions = new ColumnDefinitions("Auto *");
-            g0.RowDefinitions = new RowDefinitions("Auto");
-
-            // Icon on left
-            var img = CreateImage(GetFileIcon(item), GlobalModel.Global.TreeIconSize);
-            img.Margin = new Thickness(0, 0, 3, 0);
-            Grid.SetColumn(img, 0);
-            g0.Children.Add(img);
-
-            var tb = CreateTextBlock(item.Name);
-            Grid.SetColumn(tb, 1);
-            g0.Children.Add(tb);
-
-            return g0;
-        }
-
-        private Image CreateImage(IImage? src, double size)
-        {
-            var img = new Image();
-
-            // Scale to font
-            img.Width = size;
-            img.Height = size;
-            img.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
-            img.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            img.Stretch = Stretch.Uniform;
-            img.Source = src;
-
-            return img;
-        }
-
-        private TextBlock CreateTextBlock(string text)
-        {
-            var tb = new TextBlock();
-            tb.FontSize = GlobalModel.Global.AppFontSize;
-            tb.TextAlignment = TextAlignment.Left;
-            tb.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
-            tb.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            tb.TextTrimming = TextTrimming.CharacterEllipsis;
-            tb.Text = text;
-            return tb;
-        }
-
-        private Button CreateButton(Image? content)
-        {
-            var bt = new Button();
-            bt.MaxWidth = GlobalModel.Global.IconSize;
-            bt.MaxHeight = GlobalModel.Global.IconSize;
-            bt.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
-            bt.HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Center;
-            bt.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            bt.VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            bt.Background = new SolidColorBrush(Colors.Transparent);
-            bt.Content = content;
-            return bt;
-        }
-
         private void ProjectSettingsClickHandler(object? sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is DotnetProject project)
@@ -413,34 +421,42 @@ namespace AvantGarde.Views
             }
         }
 
-        private void SelectionChangedHandler(object? sender, SelectionChangedEventArgs e)
+        private void SelectionChangedHandler(object? _, SelectionChangedEventArgs e)
         {
-            PathItem? item = null;
-            TreeViewItem? view = null;
+            Debug.WriteLine("TREE SELECT CHANGE");
+            Debug.WriteLine($"Counts {e.AddedItems.Count}, {e.RemovedItems.Count}");
 
             if (e.AddedItems.Count > 0)
             {
-                view = (TreeViewItem?)e.AddedItems[0];
-                item = (PathItem?)view?.Tag;
-            }
+                var view = e.AddedItems[0] as TreeViewItem;
+                var item = (PathItem?)view?.Tag;
+                Debug.WriteLine($"Added: {item?.ToString() ?? "null"}");
+                Debug.WriteLine($"Current selected: {_selected?.ToString() ?? "null"}");
 
-            if (_selectedItem != item)
-            {
-                _selectedItem = item;
-                _selectedView = view;
-                SelectionChanged?.Invoke();
-            }
-            else
-            if (view != null && _selectedView == view && view.ItemCount != 0)
-            {
-                // This is a bit of hack. No new item actually selected here,
-                // but we are responding to click on already selected item and
-                // providing convenient toggle of folders. This seems more responsive
-                // than using PointerDown event. Must not be used in conjuction
-                // with new selection, otherwise we get alternativing behaviour.
-                view.IsExpanded = !view.IsExpanded;
-            }
+                if (item?.FullName != _selected?.FullName)
+                {
+                    // Change is not easy to figure out, as setting TreeView.SelectedItem to itself
+                    // seems to call change handler twice, once with AddedItems, and once
+                    // with removed (when there has been no actual change). We hold a reference
+                    // to detect path change.
+                    _selected = item;
 
+                    Debug.WriteLine($"Invoke {nameof(SelectionChanged)}");
+                    SelectionChanged?.Invoke();
+                }
+                else
+                if (view != null && view.ItemCount != 0 && _selected?.Tag == view)
+                {
+                    // This is a bit of hack. No new item actually selected here,
+                    // but we are responding to click on already selected item and
+                    // providing convenient toggle of folders. This seems more responsive
+                    // than using PointerDown event. Must not be used in conjunction
+                    // with new selection, otherwise we get alternating behaviour.
+                    view.IsExpanded = !view.IsExpanded;
+                }
+
+            }
         }
+
     }
 }

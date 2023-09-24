@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,9 +16,10 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Themes.Fluent;
+using Avalonia.Styling;
 using AvantGarde.Projects;
 using AvantGarde.ViewModels;
 
@@ -31,11 +32,8 @@ namespace AvantGarde.Settings
     {
         private const int MaxRecent = 10;
 
-        // TBD Removal in 11
-        private static FluentTheme? _theme;
+        private readonly Application? _app;
         private bool _isDarkTheme;
-
-        private Application? _app;
         private string _appFontFamily = GlobalModel.DefaultAppFamily;
         private double _appFontSize = GlobalModel.DefaultFontSize;
         private string _monoFontFamily = GlobalModel.DefaultMonoFamily;
@@ -55,7 +53,13 @@ namespace AvantGarde.Settings
         public AppSettings(Application app)
         {
             _app = app;
-            _theme = (FluentTheme)app.Styles[0];
+
+            // We need this to initialize colors, otherwise we may end
+            // up with invisible controls if no config file is present.
+            var theme = _app.ActualThemeVariant;
+            _app.RequestedThemeVariant = theme;
+            GlobalModel.Global.Assets.IsDarkTheme = theme.Equals(ThemeVariant.Dark);
+            GlobalModel.Global.Colors.IsDarkTheme = theme.Equals(ThemeVariant.Dark);
         }
 
         /// <summary>
@@ -65,38 +69,19 @@ namespace AvantGarde.Settings
         public bool IsDarkTheme
         {
             get { return _isDarkTheme; }
-            set
-            {
-                if (_isDarkTheme != value)
-                {
-                    _isDarkTheme = value;
-                    if (_app != null && _theme != null)
-                    {
-                        _theme.Mode = value ? FluentThemeMode.Dark : FluentThemeMode.Light;
-                        GlobalModel.Global.Assets.IsDarkTheme = value;
-                        GlobalModel.Global.Colors.IsDarkTheme = value;
-                    }
-                }
-            }
-        }
-
-        /* TBD Avalonia 11
-        public bool IsDarkTheme
-        {
-            get { return _app?.RequestedThemeVariant == Avalonia.Styling.ThemeVariant.Dark; }
 
             set
             {
+                _isDarkTheme = value;
+
                 if (_app != null)
                 {
-                    _app.RequestedThemeVariant = value ? Avalonia.Styling.ThemeVariant.Dark : Avalonia.Styling.ThemeVariant.Light;
+                    _app.RequestedThemeVariant = value ? ThemeVariant.Dark : ThemeVariant.Light;
                     GlobalModel.Global.Assets.IsDarkTheme = value;
                     GlobalModel.Global.Colors.IsDarkTheme = value;
                 }
             }
         }
-        */
-
 
         /// <summary>
         /// Gets or sets the application font size. Setting with instance constructed with Application
@@ -114,14 +99,16 @@ namespace AvantGarde.Settings
                 {
                     _appFontSize = value;
 
-                    // ContentControlThemeFontFamily
-                    // We can only set this once. This only works on Fluent.
-                    // Until Window.FontSize can be used as way to change app FontSize,
-                    // the application must be restarted to take effect.
+                    // This only works on Fluent.
                     // SEE: https://github.com/AvaloniaUI/Avalonia/discussions/7539
-                    if (_app != null && _app.Resources.TryAdd("ControlContentThemeFontSize", _appFontSize))
+                    if (_app != null)
                     {
-                        GlobalModel.Global.AppFontSize = _appFontSize;
+                        _app.Resources.Remove("ControlContentThemeFontSize");
+
+                        if (_app.Resources.TryAdd("ControlContentThemeFontSize", _appFontSize))
+                        {
+                            GlobalModel.Global.AppFontSize = _appFontSize;
+                        }
                     }
                 }
             }
@@ -209,6 +196,16 @@ namespace AvantGarde.Settings
         public PreviewWindowTheme PreviewTheme { get; set; }
 
         /// <summary>
+        /// Gets or sets welcome message.
+        /// </summary>
+        public bool ShowWelcome { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets show pin. Default is false on Linux, true on others.
+        /// </summary>
+        public bool ShowPin { get; set; } = !RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+        /// <summary>
         /// Gets or sets whether window is maximized.
         /// </summary>
         public bool IsMaximized { get; set; }
@@ -222,11 +219,6 @@ namespace AvantGarde.Settings
         /// Gets or sets the window height.
         /// </summary>
         public double Height { get; set; } = 600;
-
-        /// <summary>
-        /// Gets or sets welcome message.
-        /// </summary>
-        public bool ShowWelcome { get; set; } = true;
 
         /// <summary>
         /// Gets or sets default values.
@@ -312,6 +304,7 @@ namespace AvantGarde.Settings
             Width = other.Width;
             Height = other.Height;
             ShowWelcome = other.ShowWelcome;
+            ShowPin = other.ShowPin;
             SolutionDefaults = other.SolutionDefaults;
             RecentFiles = other.RecentFiles;
         }

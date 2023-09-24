@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,44 +16,43 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-namespace AvantGarde.Projects
+namespace AvantGarde.Projects;
+
+/// <summary>
+/// A simple immutable class holding an error string and further details.
+/// </summary>
+public class ProjectError
 {
     /// <summary>
-    /// A simple immutable class holding an error string and further details.
+    /// Constructor.
     /// </summary>
-    public class ProjectError
+    public ProjectError(DotnetProject project, string message, string? details = null)
     {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ProjectError(DotnetProject project, string message, string? details = null)
-        {
-            ProjectName = project.ProjectName;
-            Message = message;
-            Details = details;
-        }
+        ProjectName = project.ProjectName;
+        Message = message;
+        Details = details;
+    }
 
-        /// <summary>
-        /// Gets the project name.
-        /// </summary>
-        public readonly string ProjectName;
+    /// <summary>
+    /// Gets the project name.
+    /// </summary>
+    public readonly string ProjectName;
 
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        public readonly string Message;
+    /// <summary>
+    /// Gets the message.
+    /// </summary>
+    public readonly string Message;
 
-        /// <summary>
-        /// Gets the details string.
-        /// </summary>
-        public readonly string? Details;
+    /// <summary>
+    /// Gets the details string.
+    /// </summary>
+    public readonly string? Details;
 
-        /// <summary>
-        /// Returns <see cref="Message"/>.
-        /// </summary>
-        public override string ToString()
-        {
-            return ProjectName + " - " + Message;
-        }
+    /// <summary>
+    /// Returns <see cref="Message"/>.
+    /// </summary>
+    public override string ToString()
+    {
+        return ProjectName + " - " + Message;
     }
 }

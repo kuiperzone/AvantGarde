@@ -122,6 +122,13 @@
                     ToolTip.Tip="Show open button in explorer when no solution"
                 />
 
+                <CheckBox Grid.Column="2" Grid.Row="7"
+                    Name="PinCheck"
+                    VerticalAlignment="Center"
+                    Content="Show Pin"
+                    ToolTip.Tip="Show stay-on-top pin button"
+                />
+
             </Grid>
 
             <Grid Grid.Row="1"

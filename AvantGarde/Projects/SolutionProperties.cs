@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022
+// COPYRIGHT : Andy Thomas (C) 2022-23
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,45 +16,44 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-namespace AvantGarde.Projects
+namespace AvantGarde.Projects;
+
+/// <summary>
+/// Class which extends <see cref="NodeProperties"/> for use with <see cref="DotnetSolution"/>.
+/// This class is intended to be JSON friendly.
+/// </summary>
+public sealed class SolutionProperties : NodeProperties
 {
+    private const string DefaultFilePatterns = "*.axaml;*.xaml;*.paml;*.png;*.jpg;*.jpeg;*.bmp;*.ico;*.gif";
+
     /// <summary>
-    /// Class which extends <see cref="NodeProperties"/> for use with <see cref="DotnetSolution"/>.
-    /// This class is intended to be JSON friendly.
+    /// Default constructor.
     /// </summary>
-    public sealed class SolutionProperties : NodeProperties
+    public SolutionProperties()
     {
-        private const string DefaultFilePatterns = "*.axaml;*.xaml;*.paml;*.png;*.jpg;*.jpeg;*.bmp;*.ico;*.gif";
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SolutionProperties()
-        {
-            FilePatterns = DefaultFilePatterns;
-        }
-
-        /// <summary>
-        /// Gets or sets the build kind.
-        /// </summary>
-        public BuildKind Build { get; set; } = BuildKind.Debug;
-
-        /// <summary>
-        /// Assigns from other.
-        /// </summary>
-        public void AssignFrom(SolutionProperties other)
-        {
-            base.AssignFrom(other);
-            Build = other.Build;
-        }
-
-        /// <summary>
-        /// Override.
-        /// </summary>
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(base.GetHashCode(), Build);
-        }
-
+        FilePatterns = DefaultFilePatterns;
     }
+
+    /// <summary>
+    /// Gets or sets the build kind.
+    /// </summary>
+    public BuildKind Build { get; set; } = BuildKind.Debug;
+
+    /// <summary>
+    /// Assigns from other.
+    /// </summary>
+    public void AssignFrom(SolutionProperties other)
+    {
+        base.AssignFrom(other);
+        Build = other.Build;
+    }
+
+    /// <summary>
+    /// Override.
+    /// </summary>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(base.GetHashCode(), Build);
+    }
+
 }
