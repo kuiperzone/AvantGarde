@@ -36,7 +36,6 @@
             </ScrollViewer>
 
             <!-- Not working in Avalonia 11.0.4 - temporarily use GridSplitter instead -->
-            <!--
             <views:CustomSplitter Grid.Row="1"
                 Height="6"
                 Background="{Binding Global.Colors.PreviewBackground}"
@@ -46,8 +45,8 @@
                 ResizeBehavior="PreviousAndNext"
                 DragDelta="SplitterDragHandler"
             />
-            -->
 
+            <!--
             <GridSplitter Grid.Row="1"
                 Height="6"
                 Background="{Binding Global.Colors.AvantBackground}"
@@ -56,6 +55,7 @@
                 ResizeBehavior="PreviousAndNext"
                 DragDelta="SplitterDragHandler"
             />
+            -->
 
             <views:XamlCodeControl Grid.Row="2"
                 Name="XamlCode"

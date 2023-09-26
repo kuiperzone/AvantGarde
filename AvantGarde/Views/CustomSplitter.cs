@@ -25,8 +25,7 @@ using Avalonia.Threading;
 namespace AvantGarde.Views;
 
 /// <summary>
-/// Custom GridSplitter. Note. This is no longer working in Avalonia 11.
-/// Leave code. Have raised bug report.
+/// Custom GridSplitter.
 /// </summary>
 public class CustomSplitter : GridSplitter
 {
@@ -34,19 +33,19 @@ public class CustomSplitter : GridSplitter
     private IBrush? _originalBackground;
 
     /// <summary>
-    /// Constructor.
-    /// </summary>
-    public CustomSplitter()
-    {
-        _timer = new(TimeSpan.FromMilliseconds(250), DispatcherPriority.Normal, TimerHandler);
-        PointerMoved += PointerMovedHandler;
-    }
-
-    /// <summary>
     /// Custom property.
     /// </summary>
     public static readonly StyledProperty<IBrush?> HighlightProperty =
         AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(Highlight), Brushes.Gray);
+
+    public CustomSplitter()
+    {
+        _timer = new(TimeSpan.FromMilliseconds(250), DispatcherPriority.Normal, TimerHandler);
+
+        // Timer should not run after init (it does by default).
+        // So make sure it has stopped before leaving constructor.
+        _timer.Stop();
+    }
 
     /// <summary>
     /// Gets or sets the highlight brush.
@@ -60,13 +59,17 @@ public class CustomSplitter : GridSplitter
     /// <summary>
     /// Important.
     /// </summary>
-    protected override Type StyleKeyOverride { get; } = typeof(GridSplitter);
+    protected override Type StyleKeyOverride { get; }= typeof(GridSplitter);
 
-    private void PointerMovedHandler(object? sender, PointerEventArgs e)
+    // use override instead of adding handler.
+    protected override void OnPointerMoved(PointerEventArgs e)
     {
         _originalBackground ??= Background;
         Background = Highlight;
         _timer.Start();
+
+        // needed to make base class work
+        base.OnPointerMoved(e);
     }
 
     private void TimerHandler(object? sender, EventArgs e)
@@ -78,5 +81,4 @@ public class CustomSplitter : GridSplitter
             _timer.Stop();
         }
     }
-
 }
