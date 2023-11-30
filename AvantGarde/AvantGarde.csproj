@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
@@ -32,19 +32,19 @@
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
-		<Content Include="$(ProjectDir)\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="Always"/>
-		<Content Include="$(ProjectDir)\..\CHANGES" Link="CHANGES" CopyToOutputDirectory="Always"/>
+		<Content Include="$(ProjectDir)\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="Always" />
+		<Content Include="$(ProjectDir)\..\CHANGES" Link="CHANGES" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.0.4" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.4" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
+		<PackageReference Include="Avalonia" Version="11.0.5" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.5" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
 
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
 
 		<PackageReference Include="KuiperZone.Utility.Yaap" Version="1.0.2" />
 	</ItemGroup>
