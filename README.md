@@ -1,6 +1,7 @@
 <img src="Media/Github-banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
 # Avant Garde #
+
 **Avant Garde** is a cross-platform XAML previewer for the C# [Avalonia Framework](https://github.com/AvaloniaUI/Avalonia).
 It operates as a standalone application that works with your IDE, rather than an extension to an IDE. This means that
 Avant Garde is completely IDE agnostic.
@@ -15,9 +16,10 @@ Avant Garde is licensed under GPLv3 or later.
 preview WPF or MAUI applications. If you find it doesn't work with MAUI, please don't raise a bug.
 
 ## Linux & Windows ##
-Downloads include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.
+[Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)
+include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.
 
-## MacOS? ##
+### MacOS? ###
 Avant Garde is not actively supported or tested on MacOS, although there are reports of it
 [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will need to clone and build
 from source. This is straight-forward as there are no special build requirements. You may also need to set the
@@ -48,6 +50,7 @@ is also possible to launch it with its built-in **Project Explorer** hidden so a
 application window foot-print.
 
 * It supports a **dark theme**, so can match your desktop. See the application "Preferences".
+
 
 ## Using Avant Garde ##
 
@@ -90,6 +93,7 @@ For example, setting "Include File Pattern" to "*" will cause **all project file
 the Explorer. Remember, however, that views are read-only and Avant Garde is not intended to be used
 as a text editor or IDE.
 
+
 ### Project Settings ###
 Project settings pertain to each project within a solution.
 
@@ -110,7 +114,6 @@ which must be installed in your development environment.
 
 
 ### Preview Options ###
-
 There are a number of options associated with preview generation, as shown by the drop-down button
 below:
 
@@ -214,6 +217,7 @@ Here, AvantGarde will locate the first .csproj file it finds in the directory st
 supplied path level. The result will be similar to the first example above because the
 `MainWindow.axaml` preview will be shown on opening so that the "--select" option is not necessary
 here.
+
 
 ## Copyright & License ##
 
