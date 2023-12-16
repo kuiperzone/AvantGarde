@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -32,10 +33,17 @@ namespace AvantGarde.Views;
 
 public partial class MainWindow : AvantWindow<MainWindowViewModel>
 {
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMilliseconds(1000);
+    private static readonly TimeSpan BuildDelay = TimeSpan.FromMilliseconds(900);
+
     private readonly SolutionCache _cache = new();
     private readonly RemoteLoader _loader;
     private readonly DispatcherTimer _refreshTimer;
     private bool _writeSettingsFlag;
+
+    // Added to watch for build changes
+    private NodeItem? _buildWatcher;
+    private DateTime _suspendPreviewUntil = DateTime.MinValue;
 
     public MainWindow()
         : base(new MainWindowViewModel())
@@ -62,7 +70,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
         _loader = new();
         _loader.PreviewReady += PreviewReadyHandler;
         _loader.OutputReceived += OutputReceivedHandler;
-        _refreshTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Normal, RefreshTimerHandler);
+        _refreshTimer = new(RefreshInterval, DispatcherPriority.Normal, RefreshTimerHandler);
 
         Model.WelcomeWidth = ExplorerPane.MinWorkingWidth;
         Model.IsPinVisible = App.Settings.ShowPin;
@@ -111,6 +119,8 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
             }
 
             ExplorerPane.Solution = sol;
+            _buildWatcher = CreateBuildWatcher(ExplorerPane.SelectedProject);
+            PreviewPane.IsPreviewSuspended = false;
 
             Model.HasSolution = true;
             Model.HasProject = ExplorerPane.SelectedProject != null;
@@ -172,6 +182,9 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
     {
         Debug.WriteLine($"{nameof(MainWindow)}.{nameof(CloseSolution)}");
         ExplorerPane.Solution = null;
+
+        _buildWatcher = null;
+        _suspendPreviewUntil = DateTime.MinValue;
 
         Model.HasSolution = false;
         Model.HasProject = false;
@@ -240,16 +253,16 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
             Model.IsWelcomeVisible = GetIsWelcomeVisible(ExplorerPane.Solution != null);
             Model.IsPinVisible = App.Settings.ShowPin;
             PreviewPane.WindowTheme = App.Settings.PreviewTheme;
-
-            // Not needed?
-            // ExplorerPane.Refresh(true);
         }
     }
 
     public void RestartHost()
     {
         Debug.WriteLine($"{nameof(MainWindow)}.{nameof(RestartHost)}");
+
+        // Stop and restart
         _loader.Stop();
+        PreviewPane.IsPreviewSuspended = true;
         UpdateLoader(ExplorerPane.SelectedItem);
     }
 
@@ -322,6 +335,52 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
         base.OnClosed(e);
     }
 
+    [return: NotNullIfNotNull(nameof(project))]
+    private static string? GetWatchDirectory(DotnetProject? project)
+    {
+        if (project != null)
+        {
+            var projDir = project.Contents.FullName;
+
+            if (project.Properties.AssemblyOverride != null)
+            {
+                // Take into account custom assembly may be outside project directory
+                var asmDir = new PathItem(project.Properties.AssemblyOverride, PathKind.Assembly).FullName;
+
+                if (!asmDir.EndsWith(Path.DirectorySeparatorChar))
+                {
+                    asmDir += Path.DirectorySeparatorChar;
+                }
+
+                if (!asmDir.StartsWith(projDir, PathItem.PlatformComparison))
+                {
+                    return asmDir;
+                }
+            }
+
+            return projDir;
+        }
+
+        return null;
+    }
+
+    private static NodeItem? CreateBuildWatcher(DotnetProject? project)
+    {
+        if (project != null)
+        {
+            // We specifically want to watch for files which, when changed, indicate a
+            // build is in progress. This should exclude *.axaml and *.cs files.
+            var node = new NodeItem(GetWatchDirectory(project), PathKind.Directory);
+            node.Properties.SearchDepth = project.Contents.Properties.SearchDepth;
+            node.Properties.ExcludeDirectories = "";
+            node.Properties.FilePatterns = "*.cache;*.pdb;*.dll;*.exe";
+            node.Refresh();
+            return node;
+        }
+
+        return null;
+    }
+
     private void AboutPressedHandler(object? sender, PointerPressedEventArgs e)
     {
         ShowAboutDialog();
@@ -381,8 +440,16 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
     private void UpdateLoader(PathItem? item)
     {
-        Debug.WriteLine($"{nameof(MainWindow)}.{nameof(UpdateLoader)}");
-        _loader.Update(new LoadPayload(item, PreviewPane.LoadFlags));
+        if (DateTime.UtcNow > _suspendPreviewUntil)
+        {
+            Debug.WriteLine($"LOAD UPDATE: {item?.Name ?? "[null]"}");
+            _loader.Update(new LoadPayload(item, PreviewPane.LoadFlags));
+        }
+        else
+        {
+            Debug.WriteLine($"LOAD UPDATE DELAY");
+            _loader.Update(new LoadPayload(new ProjectError("Please wait...")));
+        }
     }
 
     private void SelectionChangedHandler()
@@ -390,6 +457,12 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
         Debug.WriteLine($"{nameof(MainWindow)}.{nameof(SelectionChangedHandler)}");
         var item = ExplorerPane.SelectedItem;
         Debug.WriteLine("NEW SELECTED: " + item?.Name ?? "{null}");
+
+        if (GetWatchDirectory(ExplorerPane.SelectedProject) != _buildWatcher?.FullName)
+        {
+            Debug.WriteLine("Create new watcher");
+            _buildWatcher = CreateBuildWatcher(ExplorerPane.SelectedProject);
+        }
 
         UpdateLoader(item);
 
@@ -434,10 +507,31 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
     {
         try
         {
-            if (ExplorerPane.Refresh())
+            bool refreshed = ExplorerPane.Refresh();
+            _buildWatcher ??= CreateBuildWatcher(ExplorerPane.SelectedProject);
+
+            if (_buildWatcher != null && _buildWatcher.Refresh())
+            {
+                Debug.WriteLine("BUILD CHANGE DETECTED");
+                Debug.WriteLine($"Halt preview host for: {_buildWatcher.FullName}");
+                PreviewPane.IsPreviewSuspended = true;
+                _suspendPreviewUntil = DateTime.UtcNow + BuildDelay;
+
+                // Stop the preview host
+                _loader.Stop();
+            }
+            else
+            if (PreviewPane.IsPreviewSuspended && DateTime.UtcNow > _suspendPreviewUntil)
+            {
+                Debug.WriteLine("RESTART AFTER BUILD");
+                PreviewPane.IsPreviewSuspended = false;
+                UpdateLoader(ExplorerPane.SelectedItem);
+            }
+            else
+            if (refreshed && !PreviewPane.IsPreviewSuspended)
             {
                 // Non-blocking
-                Debug.WriteLine("REFRESH TIMER");
+                Debug.WriteLine("EXPLORER REFRESH");
                 Debug.WriteLine($"Selected: {ExplorerPane.SelectedItem?.ToString() ?? "null"}");
                 UpdateLoader(ExplorerPane.SelectedItem);
             }

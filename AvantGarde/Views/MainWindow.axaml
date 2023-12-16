@@ -326,7 +326,6 @@
 
             </Grid>
 
-            <!-- Not working in Avalonia 11.0.4 - temporarily use GridSplitter instead -->
             <views:CustomSplitter Grid.Column="1" Grid.Row="0"
                 Width="6"
                 Background="{Binding Global.Colors.WindowBackground}"
@@ -335,16 +334,6 @@
                 ResizeBehavior="PreviousAndNext"
                 DragDelta="SplitterDragHandler"
             />
-
-            <!--
-            <GridSplitter Grid.Column="1" Grid.Row="0"
-                Width="6"
-                Background="{Binding Global.Colors.AvantBackground}"
-                ResizeDirection="Columns"
-                ResizeBehavior="PreviousAndNext"
-                DragDelta="SplitterDragHandler"
-            />
-            -->
 
             <views:PreviewPane
                 Grid.Column="2" Grid.Row="0"

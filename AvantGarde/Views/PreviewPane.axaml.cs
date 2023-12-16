@@ -95,6 +95,15 @@ public partial class PreviewPane : UserControl
     }
 
     /// <summary>
+    /// Gets or sets whether preview is suspended.
+    /// </summary>
+    public bool IsPreviewSuspended
+    {
+        get { return _model.IsPreviewSuspended; }
+        set { _model.IsPreviewSuspended = value; }
+    }
+
+    /// <summary>
     /// Gets scale factor.
     /// </summary>
     public double ScaleFactor
@@ -215,7 +224,7 @@ public partial class PreviewPane : UserControl
     /// </summary>
     public bool Update(PreviewPayload? payload)
     {
-        Debug.WriteLine($"{nameof(PreviewPane)}.{nameof(PreviewPane.Update)}");
+        Debug.WriteLine($"{nameof(PreviewPane)}.{nameof(Update)}");
 
         if (payload != null && !payload.IsProjectHeader)
         {

@@ -33,7 +33,7 @@ using AvantGarde.Projects;
 namespace AvantGarde.Loading;
 
 /// <summary>
-/// Loads a preview using the remote Avalonia remote preview host. The class is non-blocking, without updates
+/// Loads a preview using the remote Avalonia remote preview host. The class is non-blocking, with updates
 /// arriving by an event.
 /// </summary>
 public sealed class RemoteLoader : IDisposable

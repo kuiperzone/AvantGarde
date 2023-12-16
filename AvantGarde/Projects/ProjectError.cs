@@ -33,20 +33,27 @@ public class ProjectError
         Details = details;
     }
 
+    public ProjectError(string message, string? details = null)
+    {
+        ProjectName = "";
+        Message = message;
+        Details = details;
+    }
+
     /// <summary>
     /// Gets the project name.
     /// </summary>
-    public readonly string ProjectName;
+    public string ProjectName { get; }
 
     /// <summary>
     /// Gets the message.
     /// </summary>
-    public readonly string Message;
+    public string Message { get; }
 
     /// <summary>
     /// Gets the details string.
     /// </summary>
-    public readonly string? Details;
+    public string? Details { get; }
 
     /// <summary>
     /// Returns <see cref="Message"/>.

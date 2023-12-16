@@ -30,9 +30,10 @@ public class LoadPayload
     /// <summary>
     /// Constructs an empty instance.
     /// </summary>
-    public LoadPayload()
+    public LoadPayload(ProjectError? error = null)
     {
         Flags = LoadFlags.None;
+        Error = error;
     }
 
     /// <summary>
@@ -92,7 +93,7 @@ public class LoadPayload
     /// <summary>
     /// Gets parsing options.
     /// </summary>
-    public readonly LoadFlags Flags;
+    public LoadFlags Flags { get; }
 
     /// <summary>
     /// Gets whether the file does not exist or is empty.
@@ -182,7 +183,7 @@ public class LoadPayload
     {
         if (!string.IsNullOrEmpty(path))
         {
-            var old = System.IO.Path.GetExtension(path);
+            var old = Path.GetExtension(path);
 
             if (path.Length > old.Length)
             {

@@ -1,3 +1,13 @@
++ VERSION 1.4.0.0;2023-12-16
+- Built against Avalonia 11.0.6.
+- Now detects when dotnet build is occuring and temporarily suspends preview preventing file locking.
+- Add custom setting of Avalonia version for projects which do not directly include package.
+- Auto-hiding of grid splitter reintroduced.
+- Fixed bug with Register in LinkBlock.cs.
+- Other minor changes and bugfixes.
+
+
+
 + VERSION 1.3.0.2;2023-09-24
 - Fully ported to Avalonia 11.0.4.
 - Added "Show Pin" option to Preferences.

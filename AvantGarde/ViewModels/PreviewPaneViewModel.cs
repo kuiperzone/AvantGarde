@@ -24,18 +24,42 @@ namespace AvantGarde.ViewModels
     public class PreviewPaneViewModel : PreviewOptionsViewModel
     {
         private string? _caretText;
+        private bool _isPreviewSuspended;
 
         public PreviewPane? Owner { get; set; }
 
         public string? StatusText
         {
-            get { return IsDisableEventsChecked ? "Events Disabled" : null; }
+            get
+            {
+                if (IsPreviewSuspended)
+                {
+                    return "Preview Suspended";
+                }
+
+                return IsDisableEventsChecked ? "Events Disabled" : null;
+            }
         }
 
         public string? CaretText
         {
             get { return _caretText; }
             set { this.RaiseAndSetIfChanged(ref _caretText, value, nameof(CaretText)); }
+        }
+
+        public bool IsPreviewSuspended
+        {
+            get { return _isPreviewSuspended; }
+
+            set
+            {
+                if (_isPreviewSuspended != value)
+                {
+                    _isPreviewSuspended = value;
+                    this.RaisePropertyChanged(nameof(IsPreviewSuspended));
+                    OnFlagChanged(false);
+                }
+            }
         }
 
         public void CopyCommand()

@@ -16,6 +16,7 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -206,6 +207,7 @@ public class PathItem
     /// Otherwise, the result is cleaned name only. If name is null or empty, the result is null.
     /// I.e. "/ProjectDir/Views/View.axaml" to "Views/View.axaml".
     /// </summary>
+    [return: NotNullIfNotNull(nameof(name))]
     public string? MakeLocalName(string? name)
     {
         if (!string.IsNullOrWhiteSpace(name))
@@ -234,6 +236,7 @@ public class PathItem
     /// is rooted, the result is the cleaned name only. If name is null or empty, the result is null.
     /// I.e. "Views/View.axaml" to "/ProjectDir/Views\View.axaml".
     /// </summary>
+    [return: NotNullIfNotNull(nameof(name))]
     public string? MakeFullName(string? name)
     {
         if (!string.IsNullOrWhiteSpace(name))

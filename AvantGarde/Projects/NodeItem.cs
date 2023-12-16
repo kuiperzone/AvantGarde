@@ -179,7 +179,7 @@ public class NodeItem : PathItem
     /// </summary>
     public NodeItem? FindDirectory(string name)
     {
-        return FindDirectory(name, int.MaxValue, PathItem.PlatformComparison);
+        return FindDirectory(name, int.MaxValue, PlatformComparison);
     }
 
     /// <summary>

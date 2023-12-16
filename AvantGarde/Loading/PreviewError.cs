@@ -36,17 +36,17 @@ public class PreviewError
     /// <summary>
     /// Gets the message.
     /// </summary>
-    public readonly string Message;
+    public string Message { get; }
 
     /// <summary>
     /// Gets the line number. A value of 0 or less is NA.
     /// </summary>
-    public readonly int LineNum;
+    public int LineNum { get; }
 
     /// <summary>
     /// Gets the line position. A value of 0 or less is NA.
     /// </summary>
-    public readonly int LinePos;
+    public int LinePos { get; }
 
     /// <summary>
     /// Returns <see cref="Message"/>.

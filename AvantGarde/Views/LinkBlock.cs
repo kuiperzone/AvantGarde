@@ -51,7 +51,7 @@ public class LinkBlock : TextBlock
     /// Custom property.
     /// </summary>
     public static readonly StyledProperty<IBrush?> HoverForegroundProperty =
-        AvaloniaProperty.Register<CustomSplitter, IBrush?>(nameof(HoverForeground), Brushes.Purple);
+        AvaloniaProperty.Register<LinkBlock, IBrush?>(nameof(HoverForeground), Brushes.Purple);
 
     /// <summary>
     /// Gets or sets the hover foreground brush.
