@@ -3,7 +3,7 @@
 - Now detects when dotnet build is occuring and temporarily suspends preview preventing file locking.
 - Add custom setting of Avalonia version for projects which do not directly include package.
 - Auto-hiding of grid splitter reintroduced.
-- Now reads the `$DOTNET_HOST_PATH` variable find location of `dotnet`
+- Now reads the `$DOTNET_HOST_PATH` variable to find location of `dotnet`.
 - Fixed bug with Register in `LinkBlock.cs`.
 - Made csproj parsing of elements case-insensitive.
 - Other minor changes and bugfixes.
