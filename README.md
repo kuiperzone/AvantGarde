@@ -200,7 +200,8 @@ Below, opens a solution and selects/previews `MainWindow.axaml` immediately on o
     AvantGarde ~/MyProject/MyProject.sln --select=MainWindow.axaml
 
 
-Below, as with the first example, except that the project explorer will also be minimized to the side of the window.
+Below, as with the first example, except that the project explorer will also be minimized to the
+side of the window.
 
     AvantGarde ~/MyProject/MyProject.sln -min-explorer -s=MainWindow.axaml
 
