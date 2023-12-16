@@ -1,21 +1,22 @@
 [*.{cs,vb}]
 
-# FU Microsoft and your nagging! Leave me alone! None of these make life simpler,
+# FU Microsoft and your damn nagging! Begone! Leave me alone!
+
+# None of these new conventions (disabled below) make life simpler or better --
 # they only make things more complex and cryptic.
 
 # How is "[.. list]" better and simpler than "list.ToArray()"?
 
-# The latter is clear, short and clear on what it does. The former is some kind
-# of regular expression or weird LISP statement.
+# The latter is clear and short and everyone knows what it does. The former is some kind
+# of regular expression puzzle or a weird LISP-like statement.
 
-# In endlessly effectively deprecating perfectly good code and adding new and pointless syntax, MS
-# are polluting the C# language. I'm not saying all changes are bad, but the ones below are.
+# In endlessly deprecating perfectly good code and adding new and pointless syntax, MS
+# are polluting the C# language. I'm not saying all changes are bad, but +50% of are.
 
 # When you know how to write something simply, you just write it. When you have half a dozen
 # different but trivial ways to do the same damn thing, you have to consult to the web at every
-# step. The ceaseless process of updating perfectly good code to the latest crackpot convention
-# becomes an end in itself, and gives rise to technocracy rather than creativity because everyone
-# is forced to spend their days managing code, as below, rather than creating it.
+# step. Moreover, the ceaseless nagging from the IDE to update perfectly good code to the latest
+# crackpot convention becomes an end in itself. This is not programming; it is mere technocracy.
 
 # Use object initializers
 dotnet_diagnostic.IDE0017.severity = none
