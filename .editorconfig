@@ -1,0 +1,43 @@
+[*.{cs,vb}]
+
+# FU Microsoft and your nagging! Leave me alone! None of these make life simpler,
+# they only make things more complex and cryptic.
+
+# How is "[.. list]" better and simpler than "list.ToArray()"?
+
+# The latter is clear, short and clear on what it does. The former is some kind
+# of regular expression or weird LISP statement.
+
+# In endlessly effectively deprecating perfectly good code and adding new and pointless syntax, MS
+# are polluting the C# language. I'm not saying all changes are bad, but the ones below are.
+
+# When you know how to write something simply, you just write it. When you have half a dozen
+# different but trivial ways to do the same damn thing, you have to consult to the web at every
+# step. The ceaseless process of updating perfectly good code to the latest crackpot convention
+# becomes an end in itself, and gives rise to technocracy rather than creativity because everyone
+# is forced to spend their days managing code, as below, rather than creating it.
+
+# Use object initializers
+dotnet_diagnostic.IDE0017.severity = none
+
+# Use expression body for methods
+dotnet_diagnostic.IDE0022.severity = none
+
+# Collection initialization can be simplified
+dotnet_diagnostic.IDE0028.severity = none
+
+# Variable declaration can be deconstructed (tuples)
+dotnet_diagnostic.IDE0042.severity = none
+
+# Use range operator
+dotnet_diagnostic.IDE0057.severity = none
+
+# Use switch expression
+dotnet_diagnostic.IDE0066.severity = none
+
+# Collection initialization can be simplified -- no it can't!
+dotnet_diagnostic.IDE0301.severity = none
+
+# Collection initialization can be simplified -- no it can't!
+dotnet_diagnostic.IDE0305.severity = none
+

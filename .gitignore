@@ -2,8 +2,6 @@
 # Project specific
 ###############################################################################
 
-TODO
-/INTERNAL
 
 ###############################################################################
 # Hidden
@@ -20,6 +18,7 @@ TODO
 
 # Explicitly Allow
 !.gitignore
+!.editorconfig
 
 Thumbs.db
 desktop.ini
