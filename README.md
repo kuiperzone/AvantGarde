@@ -7,18 +7,23 @@ Avant Garde is completely IDE agnostic.
 
 **[DOWNLOAD & INSTALL](https://github.com/kuiperzone/AvantGarde/releases/latest)**
 
-*If you like this project, don't forget to like and share. If you don't like it, please keep it to yourself.*
-
-Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer** for Windows. It isn't actively tested on MacOS,
-although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will
-need to clone and build from source. This is straight-forward as there are no special build requirements.
-
 Avant Garde is licensed under GPLv3 or later.
 
-<img src="Media/Screenshot-main.png" style="width:75%;max-width:1200px;margin-bottom:2em;"/>
+*If you like this project, don't forget to like and share. If you don't like it, please keep that to yourself.*
 
-**IMPORTANT.** Avant Garde supports only .NET projects (not .NET Framework), and Avalonia XAML (AXAML) forms. It cannot be
-used to preview WPF XAML.
+**IMPORTANT NOTE:** Avant Garde supports only .NET projects (not .NET Framework), and Avalonia XAML (AXAML) forms.
+It cannot be used to preview WPF or MAUI XAML.
+
+## Linux & Windows ##
+Downloads include AppImages, deb and RPMs for **Linux** and a **Setup Installer** for Windows.
+
+## MacOS? ##
+It isn't actively tested on MacOS, although there are reports of it [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16).
+However, you will need to clone and build from source. This is straight-forward as there are no special build requirements.
+You may, however, need to set the `$DOTNET_HOST_PATH` variable to point to the
+[dotnet command](https://github.com/dotnet/docs/blob/main/docs/core/tools/dotnet-environment-variables.md#dotnet_host_path).
+
+<img src="Media/Screenshot-main.png" style="width:75%;max-width:1200px;margin-bottom:2em;"/>
 
 
 ## Features ##
@@ -29,16 +34,17 @@ used to preview WPF XAML.
 
 * Set its main window to stay-on-top, and it will update the moment you save your files from your IDE.
 
-* While Avant Garde looks like a simple IDE and, indeed, can be used to browse your entire project, the generation
-of XAML previews is the primary use case. It is not a XAML designer or an editor. It does not modify your
-project files or write to your project directories.
+* While Avant Garde looks like a simple IDE and, indeed, can be used to browse your entire project,
+the generation of XAML previews is the primary use case. It is not a XAML designer or an editor. It
+does not modify your project files or write to your project directories.
 
-* It supports preview scale, mouse interaction and a range of other features, including the ability to generate
-and export an Avalonia schema (XSD) file. See below for information.
+* It supports preview scale, mouse interaction and a range of other features, including the ability
+to generate and export an Avalonia schema (XSD) file. See below for information.
 
-* Command line arguments provide for integration with IDEs where supported. For example, it is possible to launch
-Avant Garde so that a particular AXAML file is selected and shown on opening. It is also possible to launch it
-with its built-in **Project Explorer** hidden so as to minimize the application window foot-print.
+* Command line arguments provide for integration with IDEs where supported. For example, it is
+possible to launch Avant Garde so that a particular AXAML file is selected and shown on opening. It
+is also possible to launch it with its built-in **Project Explorer** hidden so as to minimize the
+application window foot-print.
 
 * It supports a **dark theme**, so can match your desktop. See the application "Preferences".
 
@@ -56,20 +62,21 @@ footprint. The preview will be updated as XAML changes are saved to file from yo
 
 <img src="Media/Screenshot-ide.png" style="width:50%;max-width:1200px;margin-bottom:2em;"/>
 
-**NOTE.** In order to generate previews, Avant Garde must find your application assembly which must first be
-built. Normally, if your assembly is in the usual place, i.e. under "project/bin/Debug...", Avant Garde will find it.
-If, however, if you are using variables or a "Directory.Build.props" file to set your output location, you will need
+### Finding Your Assembly ###
+In order to generate previews, Avant Garde must find your application assembly which must first be
+built. Normally, if your assembly is in the usual place, i.e. under `project/bin/Debug...`, Avant Garde will find it.
+If, however, if you are using variables or a `Directory.Build.props` file to set your output location, you will need
 to specify this location at the project level (see below).
 
 
 ### Solution Settings ###
 Avant Garde keeps state and settings for each solution or project you open. Solution and project
 settings are specific to Avant Garde and, typically, the default values suffice and you will not
-have to change them. Any changes you do make, however, are saved by Avant Garde so that changes
+need to change them. Any changes you do make, however, are saved by Avant Garde so that changes
 persist between application launches. Note that these settings are stored outside of your project as
 Avant Garde does not write to your project directories.
 
-With a solution file open, click "Edit -> Solution" (or the "cog icon" in the toolbar) to view solution level
+With a solution file open, click `Edit`->`Solution` (or the "cog icon" in the toolbar) to view solution level
 settings. As shown below, these apply to your "solution", and all sub-projects contained within it.
 
 <img src="Media/Screenshot-solution.png" style="width:50%;max-width:500px;margin-bottom:2em;"/>
@@ -77,10 +84,10 @@ settings. As shown below, these apply to your "solution", and all sub-projects c
 For example, setting "Include File Pattern" to "*" will cause **all project files** to be shown in the Explorer.
 Remember, however, that views are read-only and Avant Garde is not intended to be used as a text editor or IDE.
 
-#### Project Settings ####
+### Project Settings ###
 Project settings pertain to each project within a solution.
 
-Click "Edit -> Project", or the "cog icon" beside the project in the Explorer.
+Click `Edit`->`Project`, or the "cog icon" beside the project in the Explorer on the left side.
 
 <img src="Media/Screenshot-project.png" style="width:50%;max-width:500px;margin-bottom:2em;"/>
 
@@ -88,6 +95,10 @@ As described, if your target assembly output cannot be located on disk, this is 
 
 Moreover, if your project is a class library, it will be necessary to specify a relevant application project
 before previews can be generated.
+
+Normally, Avant Garde will detect the Avalonia version from your project `.csproj` file. There are certain instances
+when your project may not include the Avalonia package directly, but instead reference another class library which
+does. In this case, you must set the Avalonia version yourself which must be installed in your development environment.
 
 
 ### Preview Options ###
@@ -97,11 +108,12 @@ There are a number of options associated with preview generation, as shown by th
 <img src="Media/Screenshot-flags.png" style="width:50%;max-width:300px;margin-bottom:1em;"/>
 
 #### Grid Lines & Colors ####
-The "Grid Lines & Colors" options will cause XAML `Grid` to be high-lighted with lines and background shade colours.
+The "Grid Lines & Colors" options will cause instances of XAML `Grid` to be high-lighted with lines and background
+shade colours.
 
 #### Disable Events ####
 The "Disable Events" option disables mouse interaction with the preview. This may be useful because it strips out
-all known Avalonia Control events from the XML prior to generation of the preview. When disabled, events can be added
+all known Avalonia Control events from the XML prior to preview generation. When disabled, events can be added
 and changed in the source code *without* having to re-build the assembly each time.
 
 #### Prefetch Assets ####
@@ -109,17 +121,18 @@ When checked, the "Prefetch Assets" option will cause Avant Garde to locate asse
 project source rather than the assembly. This, like "Disable Events", means that assets may be added or updated
 without having to rebuild on each change.
 
-#### Stay-on-top Pin ####
+### Stay-on-top Pin ###
 When working in an IDE, it is sometimes useful to keep Avant Garde on top while minimising the
 footprint of the main window. On Linux, both Gnome and KDE provide an "Always on Top" option from the titlebar.
 
 <img src="Media/Screenshot-stayontop.png" style="width:50%;max-width:500px;margin-bottom:2em;"/>
 
-On other systems, a "pin" button is available to do the same thing. By default, on Linux, the pin button is hidden*
-but can be made visible from the Preferences window, as shown above.
+On other systems, a "pin" button is available to do the same thing in Avant Garde itself. By
+default, on Linux, the pin button is hidden* but can be made visible from the Preferences window, as
+shown above.
 
-*\* This is done because it is not always possible to align the pin button state with "always on top" check state shown
-in the title bar, that and the fact it is not typically needed.*
+*\* This was done because it is not always possible to align the pin button state with "always on top" check state shown
+in the title bar, that and the fact it is not typically needed on Linux.*
 
 ### Export Avalonia Schema ###
 As a bonus feature, Avant Garde is able to generate and export an Avalonia schema (XSD) file. The schema file is

@@ -1,5 +1,5 @@
 + VERSION 1.4.0.0;2023-12-16
-- Built against Avalonia 11.0.6.
+- Built against .NET 8 / Avalonia 11.0.6.
 - Now detects when dotnet build is occuring and temporarily suspends preview preventing file locking.
 - Add custom setting of Avalonia version for projects which do not directly include package.
 - Auto-hiding of grid splitter reintroduced.
