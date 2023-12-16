@@ -262,7 +262,6 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
         // Stop and restart
         _loader.Stop();
-        PreviewPane.IsPreviewSuspended = true;
         UpdateLoader(ExplorerPane.SelectedItem);
     }
 
@@ -442,7 +441,11 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
     {
         if (DateTime.UtcNow > _suspendPreviewUntil)
         {
+            Debug.WriteLine("");
+            Debug.WriteLine("");
+            Debug.WriteLine("######################################");
             Debug.WriteLine($"LOAD UPDATE: {item?.Name ?? "[null]"}");
+            Debug.WriteLine("######################################");
             _loader.Update(new LoadPayload(item, PreviewPane.LoadFlags));
         }
         else

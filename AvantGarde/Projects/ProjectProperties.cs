@@ -25,6 +25,7 @@ public sealed class ProjectProperties
 {
     private string? _appProjectName;
     private string? _assemblyOverride;
+    private string? _avaloniaOverride;
 
     /// <summary>
     /// Default constructor.
@@ -51,18 +52,19 @@ public sealed class ProjectProperties
     public string? AppProjectName
     {
         get { return _appProjectName; }
+        set { _appProjectName = !string.IsNullOrWhiteSpace(value) ? value.Trim() : null; }
+    }
 
-        set
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                _appProjectName = value.Trim();
-            }
-            else
-            {
-                _appProjectName = null;
-            }
-        }
+    /// <summary>
+    /// Gets or sets the Avalonia version, i.e. "11.0.5", to use for this project. IMPORTANT: This
+    /// should normally be null, as it will be detected automagically by the <see
+    /// cref="DotnetProject"/> class. However, there are some scenarios where an explicit version
+    /// should be used and this allows override.
+    /// </summary>
+    public string? AvaloniaOverride
+    {
+        get { return _avaloniaOverride; }
+        set { _avaloniaOverride = !string.IsNullOrWhiteSpace(value) ? value.Trim() : null; }
     }
 
     /// <summary>
@@ -83,6 +85,7 @@ public sealed class ProjectProperties
     {
         ProjectName = other.ProjectName;
         _appProjectName = other._appProjectName;
+        _avaloniaOverride = other._avaloniaOverride;
         _assemblyOverride = other._assemblyOverride;
     }
 
@@ -91,7 +94,7 @@ public sealed class ProjectProperties
     /// </summary>
     public override int GetHashCode()
     {
-        return HashCode.Combine(_assemblyOverride, _appProjectName);
+        return HashCode.Combine(_appProjectName, _avaloniaOverride, _assemblyOverride);
     }
 
 }

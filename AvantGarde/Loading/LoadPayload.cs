@@ -81,7 +81,7 @@ public class LoadPayload
                     AppAssembly = app.AssemblyPath?.FullName;
                     AppAssemblyHashCode = app.AssemblyPath?.GetHashCode() ?? 0;
                     AppTargetFramework = app.TargetFramework;
-                    AppAvaloniaVersion = app.AvaloniaVersion;
+                    AppAvaloniaVersion = !string.IsNullOrEmpty(app.AvaloniaVersion) ? app.AvaloniaVersion : app.Properties.AvaloniaOverride;
                     AppDepsPath = ChangeExtension(AppAssembly, ".deps.json");
                     AppConfigPath = ChangeExtension(AppAssembly, ".runtimeconfig.json");
                 }

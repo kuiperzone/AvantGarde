@@ -26,6 +26,7 @@ namespace AvantGarde.Projects;
 /// </summary>
 public class NodeItem : PathItem
 {
+    // These look like all default, actually.
     private static readonly EnumerationOptions EnumerateOptions = new()
     {
         IgnoreInaccessible = true,

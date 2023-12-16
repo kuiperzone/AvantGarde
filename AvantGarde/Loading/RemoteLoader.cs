@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -149,25 +150,63 @@ public sealed class RemoteLoader : IDisposable
     }
 
     /// <summary>
+    /// Returns true if the string looks like a version number.
+    /// </summary>
+    public static bool IsAvaloniaVersion([NotNullWhen(true)] string? version)
+    {
+        version = version?.Trim();
+        return !string.IsNullOrEmpty(version) && char.IsAsciiDigit(version[0]);
+    }
+
+    /// <summary>
+    /// Returns an array of installed avalonia version numbers, i.e. ["11.0.4", "11.0.5", "11.0.6"].
+    /// The result is empty if none are detected.
+    /// </summary>
+    public static string[] GetInstalledAvaloniaVersions()
+    {
+        var src = GetAvaloniaPackagesDirectory();
+
+        if (src != null)
+        {
+            var dir = new DirectoryInfo(src);
+
+            if (dir.Exists)
+            {
+                var list = new List<string>();
+
+                foreach (var item in new DirectoryInfo(src).EnumerateDirectories("*", new EnumerationOptions()))
+                {
+                    if (IsAvaloniaVersion(item.Name))
+                    {
+                        list.Add(item.Name);
+                    }
+                }
+
+                list.Sort();
+
+                // Warnings disabled. See editor config
+                return list.ToArray();
+            }
+        }
+
+        return Array.Empty<string>();
+    }
+
+    /// <summary>
     /// Static method which locates fully qualified path of the Avalonia remote preview host.
     /// </summary>
+    /// <exception cref="ArgumentException">Version null or empty</exception>
     /// <exception cref="FileNotFoundException">Unable to locate remote preview host</exception>
     public static PathItem FindDesignerHost(string? version)
     {
         // This should work under both Windows and Linux (MacOS?)
         // ~/.nuget/packages/avalonia/<avalonia-version>/tools/netcoreapp2.0/designer/Avalonia.Designer.HostApp.dll
-        if (!string.IsNullOrWhiteSpace(version))
+        ArgumentException.ThrowIfNullOrWhiteSpace(version);
+
+        var src = GetAvaloniaPackagesDirectory();
+
+        if (src != null)
         {
-            string? src = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
-
-            if (string.IsNullOrEmpty(src))
-            {
-                src = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                src = Path.Combine(src, ".nuget");
-                src = Path.Combine(src, "packages");
-            }
-
-            src = Path.Combine(src, "avalonia");
             src = Path.Combine(src, version);
             src = Path.Combine(src, "tools");
 
@@ -178,11 +217,16 @@ public sealed class RemoteLoader : IDisposable
             node.Properties.FilePatterns = DotnetHostName;
             node.Refresh();
 
-            return node.FindFile(DotnetHostName, StringComparison.OrdinalIgnoreCase) ??
-                throw new FileNotFoundException($"Unable to locate {DotnetHostName} for version {version}");
+            var path = node.FindFile(DotnetHostName, StringComparison.OrdinalIgnoreCase);
+
+            if (path != null)
+            {
+                return path;
+            }
         }
 
-        throw new ArgumentNullException(nameof(version));
+        throw new FileNotFoundException($"Unable to locate {DotnetHostName} for version {version}");
+
     }
 
     /// <summary>
@@ -273,6 +317,25 @@ public sealed class RemoteLoader : IDisposable
             default:
                 throw new NotSupportedException("Unsupported pixel format");
         }
+    }
+
+    private static string? GetAvaloniaPackagesDirectory()
+    {
+        string? src = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
+
+        if (string.IsNullOrEmpty(src))
+        {
+            src = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            src = Path.Combine(src, ".nuget");
+            src = Path.Combine(src, "packages");
+        }
+
+        if (!string.IsNullOrEmpty(src))
+        {
+            return Path.Combine(src, "avalonia");
+        }
+
+        return null;
     }
 
     private void AssertNotDisposed()
@@ -382,27 +445,39 @@ public sealed class RemoteLoader : IDisposable
             StopNoSync();
         }
 
+        Debug.WriteLine("Find host for Avalonia: " + load.AppAvaloniaVersion);
         var host = FindDesignerHost(load.AppAvaloniaVersion);
+        Debug.WriteLine("Host: " + host.FullName);
+
         var port = GetFreePort();
+
+        // Locate dotnet
+        // https://github.com/dotnet/docs/blob/main/docs/core/tools/dotnet-environment-variables.md#dotnet_host_path
+        var dotnet = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+
+        if (string.IsNullOrEmpty(dotnet))
+        {
+            dotnet = "dotnet";
+        }
+
         var args = $@"exec --runtimeconfig ""{load.AppConfigPath}"" --depsfile ""{load.AppDepsPath}"" ""{host}"" --transport tcp-bson://127.0.0.1:{port}/ ""{load.AppAssembly}""";
 
+        Debug.WriteLine($"STARTING: {dotnet} {args}");
         v_listener = new BsonTcpTransport().Listen(IPAddress.Loopback, port, c => { v_connection = c; });
 
         var info = new ProcessStartInfo
         {
             Arguments = args,
             CreateNoWindow = true,
-            FileName = "dotnet",
+            FileName = dotnet,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-
-            // IMPORTANT: Needed for Flatpak (found with trial and error)
             WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         };
 
         var proc = Process.Start(info) ??
-            throw new InvalidOperationException("Failed to start " + host.Name);
+            throw new InvalidOperationException($"Failed to start {host.Name} {load.AppAvaloniaVersion}");
 
         proc.OutputDataReceived += ProcessOutputHandler;
         proc.ErrorDataReceived += ProcessOutputHandler;

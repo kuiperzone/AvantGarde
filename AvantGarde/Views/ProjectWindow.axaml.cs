@@ -21,7 +21,9 @@ using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using AvantGarde.Loading;
 using AvantGarde.Projects;
+using DynamicData;
 
 namespace AvantGarde.Views;
 
@@ -101,16 +103,22 @@ public partial class ProjectWindow : AvantWindow
         if (project != null)
         {
             // Do not refresh here
-            if (AppCombo.IsEnabled)
-            {
-                project.Properties.AppProjectName = AppCombo.SelectedItem as string;
-            }
+            project.Properties.AppProjectName = AppCombo.IsEnabled ? AppCombo.SelectedItem as string : null;
 
-            var path = AssemblyOverrideBox.Text;
+            var temp = AvaloniaCombo.SelectedItem as string;
+
+            if (AvaloniaCombo.IsEnabled && RemoteLoader.IsAvaloniaVersion(temp))
+            {
+                project.Properties.AvaloniaOverride = temp;
+            }
+            else
+            {
+                project.Properties.AvaloniaOverride = null;
+            }
 
             if (AssemblyOverrideCheck.IsChecked == true)
             {
-                project.Properties.AssemblyOverride = project.MakeLocalName(path);
+                project.Properties.AssemblyOverride = project.MakeLocalName(AssemblyOverrideBox.Text);
             }
             else
             {
@@ -132,10 +140,38 @@ public partial class ProjectWindow : AvantWindow
 
             OutputBlock.Text = Project.OutputType + " (" + Project.Solution?.Properties.Build + ")";
             TargetBlock.Text = Project.TargetFramework;
-            AvaloniaBlock.Text = Project.AvaloniaVersion;
 
-            if (!Project.IsApp)
+            if (!string.IsNullOrEmpty(Project.AvaloniaVersion))
             {
+                // Avalonia is known - not allowed to specify some other version
+                AvaloniaCombo.IsEnabled = false;
+                AvaloniaCombo.ItemsSource = new string[] { Project.AvaloniaVersion };
+                AvaloniaCombo.SelectedIndex = 0;
+            }
+            else
+            {
+                // Avalonia version is unknown
+                // Allow version to be specified where it may link to a class library containing Avalonia
+                AvaloniaCombo.IsEnabled = true;
+
+                var items = new List<string>(RemoteLoader.GetInstalledAvaloniaVersions());
+                items.Add("None");
+                AvaloniaCombo.ItemsSource = items;
+
+                int index = items.IndexOf(Project.Properties.AvaloniaOverride ?? "None");
+                AvaloniaCombo.SelectedIndex = index > -1 ? index : items.Count - 1;
+            }
+
+            if (Project.IsApp)
+            {
+                // This is an application
+                AppCombo.IsEnabled = false;
+                AppCombo.ItemsSource = new string[] { "N/A" };
+                AppCombo.SelectedIndex = 0;
+            }
+            else
+            {
+                // Allow host application to be specified
                 var temp = new List<string>();
 
                 if (Project.Solution != null)
@@ -152,12 +188,6 @@ public partial class ProjectWindow : AvantWindow
                 AppCombo.IsEnabled = true;
                 AppCombo.ItemsSource = temp;
                 AppCombo.SelectedItem = Project.GetApp()?.ProjectName;
-            }
-            else
-            {
-                AppCombo.IsEnabled = false;
-                AppCombo.ItemsSource = new string[] { "N/A" };
-                AppCombo.SelectedIndex = 0;
             }
 
             AssemblyOverrideCheck.IsChecked = Project.Properties.AssemblyOverride != null;

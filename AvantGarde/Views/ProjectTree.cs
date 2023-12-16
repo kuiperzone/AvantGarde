@@ -406,6 +406,7 @@ namespace AvantGarde.Views
             var bt = CreateButton(CreateImage(GlobalModel.Global.Assets.Gear2Icon, GlobalModel.Global.IconSize));
             bt.Margin = new Thickness(0, 0, 0, 1);
             bt.Tag = project;
+            ToolTip.SetTip(bt, "Project properties");
             bt.Click += ProjectSettingsClickHandler;
             Grid.SetColumn(bt, 2);
             g0.Children.Add(bt);

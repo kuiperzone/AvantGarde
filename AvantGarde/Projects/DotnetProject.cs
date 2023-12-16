@@ -19,6 +19,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using AvantGarde.Loading;
 
 namespace AvantGarde.Projects;
 
@@ -133,6 +134,7 @@ public sealed class DotnetProject : PathItem
 
     /// <summary>
     /// Gets the Avalonia version. If not located, the value is empty. The initial value is empty until refreshed.
+    /// Note, this is version (if any) given in the csproj file and not any override.
     /// </summary>
     public string AvaloniaVersion { get; private set; } = string.Empty;
 
@@ -247,7 +249,7 @@ public sealed class DotnetProject : PathItem
     {
         if (root != null)
         {
-            if (root.Name.LocalName == name)
+            if (root.Name.LocalName.Equals(name, StringComparison.OrdinalIgnoreCase))
             {
                 return root.Value;
             }
@@ -270,17 +272,25 @@ public sealed class DotnetProject : PathItem
     {
         if (root != null)
         {
-            if (root.Name.LocalName == "PackageReference" || root.Name.LocalName == "PackageVersion")
+            if (root.Name.LocalName.Equals("PackageReference", StringComparison.OrdinalIgnoreCase) ||
+                root.Name.LocalName.Equals("PackageVersion", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var a0 in root.Attributes())
                 {
-                    if (a0.Name.LocalName == "Include" && a0.Value == "Avalonia")
+                    if (a0.Name.LocalName.Equals("Include", StringComparison.OrdinalIgnoreCase) &&
+                        a0.Value.Equals("Avalonia", StringComparison.OrdinalIgnoreCase))
                     {
                         foreach (var a1 in root.Attributes())
                         {
-                            if (a1.Name.LocalName == "Version" || a1.Name.LocalName == "VersionOverride")
+                            var temp = a1.Name.LocalName;
+
+                            if (temp.Equals("Version", StringComparison.OrdinalIgnoreCase) ||
+                                temp.Equals("VersionOverride", StringComparison.OrdinalIgnoreCase))
                             {
-                                return a1.Value;
+                                if (RemoteLoader.IsAvaloniaVersion(a1.Value))
+                                {
+                                    return a1.Value;
+                                }
                             }
                         }
 
@@ -388,7 +398,7 @@ public sealed class DotnetProject : PathItem
             return new ProjectError(this, "TargetFramework not found", "Project must specifiy a TargetFramework");
         }
 
-        if (string.IsNullOrEmpty(AvaloniaVersion))
+        if (string.IsNullOrEmpty(AvaloniaVersion) && Properties.AvaloniaOverride == null)
         {
             return new ProjectError(this, "Avalonia Package not found", "Project must reference Avalonia to preview controls");
         }
