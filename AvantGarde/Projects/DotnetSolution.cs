@@ -27,10 +27,10 @@ public sealed class DotnetSolution : PathItem
     private int _hashCode;
 
     /// <summary>
-    /// Constructor with "csproj" or "sln" file path. A call to <see cref="Refresh"/> is needed after construction.
+    /// Constructor with "csproj", "fsproj" or "sln" file path. A call to <see cref="Refresh"/> is needed after construction.
     /// </summary>
     /// <exception cref="ArgumentException">Path is empty"</exception>
-    /// <exception cref="ArgumentException">Path must be a .sln or .csproj file"</exception>
+    /// <exception cref="ArgumentException">Path must be a .sln, .csproj or .fsproj file"</exception>
     /// <exception cref="DirectoryNotFoundException"></exception>
     /// <exception cref="FileNotFoundException"></exception>
     public DotnetSolution(string path)
@@ -62,7 +62,7 @@ public sealed class DotnetSolution : PathItem
 
     /// <summary>
     /// Gets read-only projects keyed on <see cref="DotnetProject.ProjectName"/>. It is empty until
-    /// <see cref="Refresh"/> is called. If the solution path points to .csproj file, it will contain a single item.
+    /// <see cref="Refresh"/> is called. If the solution path points to .csproj/.fsproj file, it will contain a single item.
     /// </summary>
     public IReadOnlyDictionary<string, DotnetProject> Projects { get; }
 
@@ -207,7 +207,8 @@ public sealed class DotnetSolution : PathItem
                 // Source\AvantGarde\AvantGarde.csproj
                 line = items[1].Trim('"');
 
-                if (line.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
+                if (line.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase)
+                    || line.EndsWith(".fsproj", StringComparison.OrdinalIgnoreCase))
                 {
                     return MakeFullName(line);
                 }
