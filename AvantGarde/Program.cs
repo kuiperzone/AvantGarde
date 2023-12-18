@@ -48,7 +48,7 @@ namespace AvantGarde
                     var Indent = new string(' ', 4);
                     Console.WriteLine("Usage:");
                     Console.WriteLine(Indent + nameof(AvantGarde) + " [filename] [-options]");
-                    Console.WriteLine(Indent + "where filename is path to .sln, .csproj or any file within project");
+                    Console.WriteLine(Indent + "where filename is path to .sln, .csproj, .fsproj, or any file within project");
                     Console.WriteLine();
 
                     Console.WriteLine("Options:");

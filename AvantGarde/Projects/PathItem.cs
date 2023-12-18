@@ -382,6 +382,7 @@ public class PathItem
         {
             case ".sln":
             case ".csproj":
+            case ".fsproj":
                 return PathKind.Solution;
 
             case ".cs":
@@ -445,6 +446,18 @@ public class PathItem
         if (Extension != ext)
         {
             throw new ArgumentException($"Path must be a {ext} file");
+        }
+    }
+
+    /// <summary>
+    /// Assert extension.
+    /// </summary>
+    /// <exception cref="ArgumentException">Path must be one of these: {extensions}</exception>
+    protected void AssertExtensions(params string[] extensions)
+    {
+        if (extensions.All(e => e != Extension))
+        {
+            throw new ArgumentException($"Path must be one of these: {String.Join(", ", extensions)}");
         }
     }
 

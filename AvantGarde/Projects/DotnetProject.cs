@@ -74,12 +74,12 @@ public sealed class DotnetProject : PathItem
         }
     }
 
-    /// Constructor with "csproj" file path and <see cref="Solution"/>. If null, a default
+    /// Constructor with "csproj" of "fsproj" file path and <see cref="Solution"/>. If null, a default
     /// instance will be created. A call to <see cref="Refresh"/> is needed after construction.
     public DotnetProject(string path, DotnetSolution? solution = null)
         : base(path, PathKind.Solution)
     {
-        AssertExtension(".csproj");
+        AssertExtensions(".csproj", ".fsproj");
         ProjectName = Path.GetFileNameWithoutExtension(Name);
         Properties.ProjectName = ProjectName;
         Solution = solution ?? new DotnetSolution(path);
@@ -134,7 +134,7 @@ public sealed class DotnetProject : PathItem
 
     /// <summary>
     /// Gets the Avalonia version. If not located, the value is empty. The initial value is empty until refreshed.
-    /// Note, this is version (if any) given in the csproj file and not any override.
+    /// Note, this is version (if any) given in the csproj/fsproj file and not any override.
     /// </summary>
     public string AvaloniaVersion { get; private set; } = string.Empty;
 

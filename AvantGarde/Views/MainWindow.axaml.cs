@@ -89,8 +89,8 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
         opts.Title = "Open Solution or Project";
         opts.AllowMultiple = false;
 
-        var type = new FilePickerFileType("Solution (*.sln; *.csproj)");
-        type.Patterns = new string[] { "*.sln", "*.csproj" };
+        var type = new FilePickerFileType("Solution (*.sln; *.csproj; *.fsproj)");
+        type.Patterns = new string[] { "*.sln", "*.csproj", "*.fsproj" };
         opts.FileTypeFilter = new FilePickerFileType[] { type };
 
         var paths = await StorageProvider.OpenFilePickerAsync(opts);
@@ -314,8 +314,12 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
                 {
                     item = new PathItem(item.ParentDirectory, PathKind.Directory);
 
-                    foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.csproj"))
+                    foreach (var file in item.GetDirectoryInfo().EnumerateFiles("*.?sproj"))
                     {
+                        var extension = file.Extension;
+                        if (extension != ".csproj" && extension != ".fsproj") {
+                            continue;
+                        }
                         OpenSolution(file.FullName, openExplorer);
                         ExplorerPane.TrySelect(App.Arguments["s"] ?? App.Arguments["select"] ?? fullname);
                         return;
