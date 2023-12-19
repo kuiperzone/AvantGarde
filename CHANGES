@@ -1,3 +1,9 @@
++ VERSION 1.x.x;2023-xx-xx
+- Now possible to open a .fsproj file.
+- Bugfix: Made main window more responsive (change watcher now run in background thread).
+- Bugfix: Ensure preview closes when closing solution or opening a different one.
+- Other minor changes and bugfixes.
+
 + VERSION 1.4.0.0;2023-12-16
 - Built against .NET 8 / Avalonia 11.0.6.
 - Now detects when dotnet build is occuring and temporarily suspends preview preventing file locking.

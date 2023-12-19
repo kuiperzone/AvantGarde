@@ -134,7 +134,7 @@ public sealed class DotnetProject : PathItem
 
     /// <summary>
     /// Gets the Avalonia version. If not located, the value is empty. The initial value is empty until refreshed.
-    /// Note, this is version (if any) given in the csproj/fsproj file and not any override.
+    /// Note, this is the version (if any) given in the csproj/fsproj file and not any override.
     /// </summary>
     public string AvaloniaVersion { get; private set; } = string.Empty;
 
@@ -547,7 +547,7 @@ public sealed class DotnetProject : PathItem
             }
         }
 
-        Debug.WriteLine("Finally look for manadory assembly file");
+        Debug.WriteLine("Finally look for mandatory assembly file");
         return node.FindFile(assemblyName, StringComparison.OrdinalIgnoreCase);
     }
 
