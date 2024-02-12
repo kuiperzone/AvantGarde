@@ -97,7 +97,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
         if (paths?.Count > 0)
         {
-            OpenSolution(paths[0].Path.AbsolutePath);
+            OpenSolution(Uri.UnescapeDataString(paths[0].Path.AbsolutePath));
         }
     }
 
