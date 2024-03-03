@@ -16,6 +16,7 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media;
@@ -265,8 +266,11 @@ namespace AvantGarde.Settings
 
             foreach (var item in _recentFiles)
             {
+                Debug.WriteLine("ITEM: " + item.Path);
+
                 if (item.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase))
                 {
+                    Debug.WriteLine("Exists");
                     item.Update();
                     exists = true;
                     break;
@@ -275,6 +279,7 @@ namespace AvantGarde.Settings
 
             if (!exists)
             {
+                Debug.WriteLine("Upsert recent: " + path);
                 _recentFiles.Add(new RecentFile(path));
             }
 

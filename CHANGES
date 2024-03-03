@@ -1,8 +1,14 @@
-+ VERSION 1.x.x;2023-xx-xx
++ VERSION 1.5.0;2024-03-03
 - Now possible to open a .fsproj file.
-- Bugfix: Made main window more responsive (change watcher now run in background thread).
+- BuildWatcher class added so file watcher runs in thread (main window more responsive).
+- Changed default app font to Inter.
+- Bugfix: Loading of a solution when path contains spaces.
 - Bugfix: Ensure preview closes when closing solution or opening a different one.
+- Bugfix: Crash when specifying custom assembly path.
+- Bugfix: Watching incorrect directory when custom assembly path was specified.
+- Built against .NET 8 / Avalonia 11.0.7 (intentionally not 11.0.9).
 - Other minor changes and bugfixes.
+
 
 + VERSION 1.4.0.0;2023-12-16
 - Built against .NET 8 / Avalonia 11.0.6.

@@ -217,6 +217,7 @@ public class MainWindowViewModel : PreviewOptionsViewModel
 
         foreach (var item in App.Settings.RecentFiles)
         {
+            Debug.WriteLine("UpdateRecentMenu: " + item.Path);
             var m = new MenuItem();
             m.Header = item.Path;
             m.Tag = item.Path;

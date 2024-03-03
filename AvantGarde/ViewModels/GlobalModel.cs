@@ -57,7 +57,7 @@ public class GlobalModel : ReactiveObject
     /// <summary>
     /// Default app font family.
     /// </summary>
-    public const string DefaultAppFamily = "Ubuntu, Noto Sans, sans";
+    public const string DefaultAppFamily = "Inter, sans";
 
     /// <summary>
     /// Default mono font family.

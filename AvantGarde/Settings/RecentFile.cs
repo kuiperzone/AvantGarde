@@ -42,11 +42,7 @@ namespace AvantGarde.Settings
 
         public int CompareTo(RecentFile? other)
         {
-            if (other == null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
+            ArgumentNullException.ThrowIfNull(other);
             return other.Timestamp.CompareTo(Timestamp);
         }
 

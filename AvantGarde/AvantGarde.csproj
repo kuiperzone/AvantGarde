@@ -16,7 +16,7 @@
 
 		<Product>Avant Garde</Product>
 		<Authors>Andy Thomas</Authors>
-		<Copyright>© Andy Thomas 2022-23</Copyright>
+		<Copyright>© Andy Thomas 2022-24</Copyright>
 		<Company>Kuiper Zone</Company>
 		<Description>Avant Garde is a cross-platform XAML previewer for the Avalonia .NET Framework.</Description>
 		<Language>en-US</Language>
@@ -37,14 +37,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.0.6" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.6" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
-		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
+		<PackageReference Include="Avalonia" Version="11.0.7" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.7" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.7" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.7" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.7" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.7" />
 
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.9" />
 
 		<PackageReference Include="KuiperZone.Utility.Yaap" Version="1.0.2" />
 	</ItemGroup>
