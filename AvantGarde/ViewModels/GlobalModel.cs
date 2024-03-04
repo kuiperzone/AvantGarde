@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-23
+// COPYRIGHT : Andy Thomas (C) 2022-24
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -77,7 +77,7 @@ public class GlobalModel : ReactiveObject
     /// <summary>
     /// Gets the copyright string.
     /// </summary>
-    public static string Copyright { get; } = "Copyright (C) 2022-23 Andy Thomas";
+    public static string Copyright { get; } = "Copyright (C) 2022-24 Andy Thomas";
 
     /// <summary>
     /// Gets the application version.
