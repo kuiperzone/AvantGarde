@@ -287,8 +287,8 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
         if (App.Arguments != null)
         {
-            var path = App.Arguments.Value;
-            Debug.WriteLine(App.Arguments.ToString());
+            Debug.WriteLine("ARGS: " + App.Arguments.ToString());
+            string? path = App.Arguments.Values.Count != 0 ? App.Arguments.Values[0] : null;
 
             var openExplorer = !(App.Arguments.GetOrDefault("m", false) || App.Arguments.GetOrDefault("min-explorer", false));
 

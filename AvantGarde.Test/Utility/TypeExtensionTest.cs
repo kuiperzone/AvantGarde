@@ -23,13 +23,8 @@ using Xunit.Abstractions;
 
 namespace AvantGarde.Utility.Test;
 
-public class TypeExtensionTest : TestUtilBase
+public class TypeExtensionTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
-    public TypeExtensionTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
-
     [Fact]
     public void GetFriendlyType_TupleInt()
     {

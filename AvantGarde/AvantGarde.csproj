@@ -46,7 +46,5 @@
 
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
-
-		<PackageReference Include="KuiperZone.Utility.Yaap" Version="1.0.2" />
 	</ItemGroup>
 </Project>

@@ -23,13 +23,8 @@ using Xunit.Abstractions;
 
 namespace AvantGarde.Markup.Test;
 
-public class SchemaGeneratorTest : TestUtilBase
+public class SchemaGeneratorTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
-    public SchemaGeneratorTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
-
     [Fact]
     public void GetSchema()
     {

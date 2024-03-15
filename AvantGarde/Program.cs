@@ -16,76 +16,93 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System.Reflection;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using AvantGarde.Utility;
 using AvantGarde.ViewModels;
-using KuiperZone.Utility.Yaap;
 
-namespace AvantGarde
+namespace AvantGarde;
+
+class Program
 {
-    class Program
+    /// <summary>
+    /// Gets the copyright string.
+    /// </summary>
+    public const string Copyright = "Copyright (C) 2022-24 Andy Thomas";
+
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    [STAThread]
+    public static int Main(string[] args)
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        [STAThread]
-        public static int Main(string[] args)
+        try
         {
-            try
+            App.Arguments = new ArgumentParser(args);
+
+            if (App.Arguments.GetOrDefault("v", false) || App.Arguments.GetOrDefault("version", false))
             {
-                App.Arguments = new ArgumentParser(args);
-
-                if (App.Arguments.GetOrDefault("v", false) || App.Arguments.GetOrDefault("version", false))
-                {
-                    Console.WriteLine("Avant Garde: " + GlobalModel.Version);
-                    Console.WriteLine(GlobalModel.Copyright);
-                    Console.WriteLine();
-                    return 0;
-                }
-
-                if (App.Arguments.GetOrDefault("h", false) || App.Arguments.GetOrDefault("help", false))
-                {
-                    var Indent = new string(' ', 4);
-                    Console.WriteLine("Usage:");
-                    Console.WriteLine(Indent + nameof(AvantGarde) + " [filename] [-options]");
-                    Console.WriteLine(Indent + "where filename is path to .sln, .csproj, .fsproj, or any file within project");
-                    Console.WriteLine();
-
-                    Console.WriteLine("Options:");
-
-                    Console.WriteLine(Indent + "-h, --help");
-                    Console.WriteLine(Indent + "Show help information.");
-                    Console.WriteLine();
-
-                    Console.WriteLine(Indent + "-v, --version");
-                    Console.WriteLine(Indent + "Show version information.");
-                    Console.WriteLine();
-
-                    Console.WriteLine(Indent + "-m, --min-explorer");
-                    Console.WriteLine(Indent + "Show with minimized explorer and non-maximized main window.");
-                    Console.WriteLine();
-
-                    Console.WriteLine(Indent + "-s=name");
-                    Console.WriteLine(Indent + "Select and preview given item on opening.");
-                    Console.WriteLine(Indent + "Name can be a leaf name or fully qualified path.");
-                    Console.WriteLine();
-                    return 0;
-                }
-
-                return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e);
-                return 1;
+                Console.WriteLine("Avant Garde: " + GetVersion());
+                Console.WriteLine(Copyright);
+                Console.WriteLine();
+                return 0;
             }
 
+            if (App.Arguments.GetOrDefault("h", false) || App.Arguments.GetOrDefault("help", false))
+            {
+                var Indent = new string(' ', 4);
+                Console.WriteLine("Usage:");
+                Console.WriteLine(Indent + nameof(AvantGarde) + " [filename] [-options]");
+                Console.WriteLine(Indent + "where filename is path to .sln, .csproj, .fsproj, or any file within project");
+                Console.WriteLine();
+
+                Console.WriteLine("Options:");
+
+                Console.WriteLine(Indent + "-h, --help");
+                Console.WriteLine(Indent + "Show help information.");
+                Console.WriteLine();
+
+                Console.WriteLine(Indent + "-v, --version");
+                Console.WriteLine(Indent + "Show version information.");
+                Console.WriteLine();
+
+                Console.WriteLine(Indent + "-m, --min-explorer");
+                Console.WriteLine(Indent + "Show with minimized explorer and non-maximized main window.");
+                Console.WriteLine();
+
+                Console.WriteLine(Indent + "-s=name");
+                Console.WriteLine(Indent + "Select and preview given item on opening.");
+                Console.WriteLine(Indent + "Name can be a leaf name or fully qualified path.");
+                Console.WriteLine();
+                return 0;
+            }
+
+            return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e);
+            return 1;
         }
 
-        // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
-        {
-            return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace().UseReactiveUI();
-        }
+    }
+
+    /// <summary>
+    /// Get version from assembly.
+    /// </summary>
+    public static string GetVersion()
+    {
+        string rslt = Assembly.GetAssembly(typeof(Program))?.GetName()?.Version?.ToString(3) ?? "Unknown";
+#if DEBUG
+        rslt += " (Debug)";
+#endif
+        return rslt;
+    }
+
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace().UseReactiveUI();
     }
 }

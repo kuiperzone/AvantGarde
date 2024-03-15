@@ -16,7 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
 using Avalonia.Controls;
 using AvantGarde.Test.Internal;
 using Xunit;
@@ -24,13 +23,8 @@ using Xunit.Abstractions;
 
 namespace AvantGarde.Markup.Test;
 
-public class MarkupDictionaryTest : TestUtilBase
+public class MarkupDictionaryTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
-    public MarkupDictionaryTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
-
     [Fact]
     public void Types_NotEmpty()
     {

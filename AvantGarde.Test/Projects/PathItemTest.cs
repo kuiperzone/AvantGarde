@@ -16,8 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using AvantGarde.Test.Internal;
@@ -26,13 +24,8 @@ using Xunit.Abstractions;
 
 namespace AvantGarde.Projects.Test;
 
-public class PathItemTest : TestUtilBase
+public class PathItemTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
-    public PathItemTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
-
     [Fact]
     public void Refresh_UpdatesForFile()
     {

@@ -16,21 +16,14 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.IO;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace AvantGarde.Projects.Test;
 
-public class NodeItemTest : TestUtilBase
+public class NodeItemTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
-    public NodeItemTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
-
     [Fact]
     public void Refresh_UpdatesForFile()
     {

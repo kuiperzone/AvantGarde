@@ -16,7 +16,6 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System.Reflection;
 using Avalonia.Media;
 using AvantGarde.Markup;
 using ReactiveUI;
@@ -75,14 +74,14 @@ public class GlobalModel : ReactiveObject
     public static string WebUrl { get; } = "https://github.com/kuiperzone/AvantGarde";
 
     /// <summary>
-    /// Gets the copyright string.
+    /// Gets the copyright string. Needs to be a property rather than constant.
     /// </summary>
-    public static string Copyright { get; } = "Copyright (C) 2022-24 Andy Thomas";
+    public static string Copyright { get; } = Program.Copyright;
 
     /// <summary>
-    /// Gets the application version.
+    /// Gets the application version. Needs to be a property rather than constant.
     /// </summary>
-    public static string Version { get; } = GetVersion();
+    public static string Version { get; } = Program.GetVersion();
 
     /// <summary>
     /// Gets the Avalonia framework version.
@@ -243,15 +242,6 @@ public class GlobalModel : ReactiveObject
     public double MinStdButtonHeight
     {
         get { return Scale * 28; }
-    }
-
-    private static string GetVersion()
-    {
-        string rslt = Assembly.GetAssembly(typeof(Program))?.GetName()?.Version?.ToString(3) ?? "Unknown";
-#if DEBUG
-        rslt += " (Debug)";
-#endif
-        return rslt;
     }
 
 }

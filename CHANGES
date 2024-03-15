@@ -1,3 +1,9 @@
++ VERSION 1.5.1;2024-03-15
+- Built against Avalonia .NET 8 / 11.0.10
+- Removed dependency on Yaap.
+- Bugfix: Fixed failure to output version information on command line.
+
+
 + VERSION 1.5.0;2024-03-03
 - Now possible to open a .fsproj file.
 - BuildWatcher class added so file watcher runs in thread (main window more responsive).

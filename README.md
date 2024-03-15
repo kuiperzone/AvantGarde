@@ -10,10 +10,10 @@ Avant Garde is completely IDE agnostic.
 
 Avant Garde is licensed under GPLv3 or later.
 
-*If you like this project, don't forget to like and share. If you don't like it, please keep that to yourself.*
+*If you like this project, don't forget to like and share. If you don't like it, just keep that to yourself. :)*
 
 **IMPORTANT NOTE:** Avant Garde supports Avalonia XAML (AXAML) with .NET. It cannot be used to
-preview WPF or MAUI applications. If you find it doesn't work with MAUI, please don't raise a bug.
+preview WPF or MAUI applications. If you find it doesn't work with MAUI, there's no use raising a bug.
 
 ## Linux & Windows ##
 [Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)
@@ -206,7 +206,7 @@ Below, opens a solution and selects/previews `MainWindow.axaml` immediately on o
 Below, as with the first example, except that the project explorer will also be minimized to the
 side of the window.
 
-    AvantGarde ~/MyProject/MyProject.sln -min-explorer -s=MainWindow.axaml
+    AvantGarde ~/MyProject/MyProject.sln --min-explorer -s=MainWindow.axaml
 
 
 Below, we supply a .axaml file rather than a .sln or .csproj.
@@ -218,6 +218,10 @@ supplied path level. The result will be similar to the first example above becau
 `MainWindow.axaml` preview will be shown on opening so that the "--select" option is not necessary
 here.
 
+## Miscellanous ##
+
+Avant Garde will read the `$DOTNET_HOST_PATH` environment variable to determine the location of
+`dotnet`. If this is undefined, `dotnet` is assumed to be in the path.
 
 ## Copyright & License ##
 

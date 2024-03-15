@@ -503,9 +503,9 @@ public sealed class RemoteLoader : IDisposable
         cnx.OnMessage += MessageHandler;
 
         var fmt = new ClientSupportedPixelFormatsMessage();
-        fmt.Formats = new[] { Avalonia.Remote.Protocol.Viewport.PixelFormat.Bgra8888,
+        fmt.Formats = [ Avalonia.Remote.Protocol.Viewport.PixelFormat.Bgra8888,
             Avalonia.Remote.Protocol.Viewport.PixelFormat.Rgba8888,
-            Avalonia.Remote.Protocol.Viewport.PixelFormat.Rgb565};
+            Avalonia.Remote.Protocol.Viewport.PixelFormat.Rgb565];
 
         if (!Send(cnx, fmt) || !SendScale(cnx, _scale))
         {

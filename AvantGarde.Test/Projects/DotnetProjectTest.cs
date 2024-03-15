@@ -16,15 +16,13 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-using System;
-using System.IO;
 using AvantGarde.Test.Internal;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace AvantGarde.Projects.Test;
 
-public class DotnetProjectTest : TestUtilBase
+public class DotnetProjectTest(ITestOutputHelper helper) : TestUtilBase(helper)
 {
     private const string ProjectNet5 =
         "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><TargetFramework>net5.0</TargetFramework></PropertyGroup>" +
@@ -32,11 +30,6 @@ public class DotnetProjectTest : TestUtilBase
     private const string ProjectNet6 =
         "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><TargetFramework>net6.0</TargetFramework></PropertyGroup>" +
         "<ItemGroup><PackageReference Include=\"Avalonia\" Version=\"0.10.12\"/></ItemGroup></Project>";
-
-    public DotnetProjectTest(ITestOutputHelper helper)
-        : base(helper)
-    {
-    }
 
     [Fact]
     public void Refresh_Updates()
