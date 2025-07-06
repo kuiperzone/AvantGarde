@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,7 +16,9 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using AvantGarde.ViewModels;
 
 namespace AvantGarde.Views;
@@ -64,6 +66,14 @@ public class AvantWindow<T> : Window
     /// </summary>
     protected override void OnOpened(EventArgs e)
     {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            if (this != desktop.MainWindow)
+            {
+                ShowInTaskbar = false;
+            }
+        }
+
         base.OnOpened(e);
         ScaleSize();
     }

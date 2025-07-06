@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -34,7 +34,6 @@ public class MainWindowViewModel : PreviewOptionsViewModel
     private bool _isWelcomeVisible;
     private bool _isPinVisible;
     private double _welcomeWidth = 150;
-    private bool _hasSolution;
     private bool _hasProject;
     private IEnumerable? _recentFiles;
     private bool _isFormattedXsdChecked;
@@ -98,12 +97,6 @@ public class MainWindowViewModel : PreviewOptionsViewModel
     {
         get { return _welcomeWidth; }
         set { this.RaiseAndSetIfChanged(ref _welcomeWidth, value, nameof(WelcomeWidth)); }
-    }
-
-    public bool HasSolution
-    {
-        get { return _hasSolution; }
-        set { this.RaiseAndSetIfChanged(ref _hasSolution, value, nameof(HasSolution)); }
     }
 
     public bool HasProject
@@ -206,9 +199,9 @@ public class MainWindowViewModel : PreviewOptionsViewModel
     /// <summary>
     /// Override.
     /// </summary>
-    protected override void ColorChangedHandler()
+    protected override void OnThemeChanged()
     {
-        base.ColorChangedHandler();
+        base.OnThemeChanged();
     }
 
     private void UpdateRecentMenu()

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -22,7 +22,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvantGarde.Loading;
 using AvantGarde.Settings;
@@ -84,16 +83,15 @@ public partial class PreviewControl : UserControl
     /// <summary>
     /// Updates the preview at the given scale.
     /// </summary>
-    public void Update(PreviewPayload? payload, double scale)
+    public void Update(PreviewPayload? payload, double scale, bool showDimensions = true)
     {
-        Debug.WriteLine($"{nameof(PreviewControl)}.{nameof(PreviewControl.Update)}");
+        Debug.WriteLine($"{nameof(PreviewControl)}.{nameof(Update)}");
+        Debug.WriteLine("PAYLOAD: " + payload?.Name ?? "{null}");
+        Debug.WriteLine("Dimension: " + payload?.Source?.PixelSize);
+        Debug.WriteLine("Error: " + payload?.Error);
 
         Payload = payload;
         IsEmpty = payload?.Source == null;
-        Debug.WriteLine("PAYLOAD: " + payload?.Name ?? "{null}");
-        Debug.WriteLine("IsEmpty: " + IsEmpty);
-        Debug.WriteLine("Dimension: " + payload?.Source?.PixelSize);
-        Debug.WriteLine("Error: " + payload?.Error);
 
         if (payload?.Source != null)
         {
@@ -104,9 +102,18 @@ public partial class PreviewControl : UserControl
             _model.WindowCanResize = payload.WindowCanResize;
 
             _model.MainImage = payload.Source;
-            _model.MainBackground = Brushes.Gray;
-            _model.WidthText = payload.Width.ToString(true);
-            _model.HeightText = payload.Height.ToString(true);
+            _model.MainBackground = GlobalModel.Global.Colors.PreviewTile;
+
+            if (showDimensions)
+            {
+                _model.WidthText = payload.Width.ToString(true);
+                _model.HeightText = payload.Height.ToString(true);
+            }
+            else
+            {
+                _model.WidthText = null;
+                _model.HeightText = null;
+            }
         }
         else
         {
@@ -136,7 +143,7 @@ public partial class PreviewControl : UserControl
     /// </summary>
     public Bitmap? GetBitmap()
     {
-        if (Payload?.Source != null &&  Payload.IsWindow == true)
+        if (Payload?.Source != null && Payload.IsWindow == true)
         {
             var window = new Window();
 
@@ -146,29 +153,24 @@ public partial class PreviewControl : UserControl
                 var temp = Payload.Clone();
                 temp.Error = null;
 
-                clone.Update(temp, Scale);
-
-                window.Content = clone;
-                window.SizeToContent |= SizeToContent.Width | SizeToContent.Height;
-                window.SizeToContent |= SizeToContent.Height;
+                clone.Update(temp, Scale, false);
 
                 // Keep window from displaying
                 window.ShowInTaskbar = false;
                 window.WindowState = WindowState.Minimized;
                 window.SystemDecorations = SystemDecorations.None;
 
+                window.Content = clone;
+                window.SizeToContent = SizeToContent.WidthAndHeight;
+
                 window.Show();
 
-                double scale = 1.0;
-                int width = (int)(window.Width * scale);
-                int height = (int)(window.Height * scale);
-
-                double scale96 = scale * 96;
-                var pxz = new PixelSize(width, height);
-                var dpi = new Vector(scale96, scale96);
-                var bmp = new RenderTargetBitmap(pxz, dpi);
+                var pxz = new PixelSize((int)window.DesiredSize.Width, (int)window.DesiredSize.Height);
+                var bmp = new RenderTargetBitmap(pxz, new Vector(96, 96));
 
                 bmp.Render(window);
+
+                window.Close();
                 return bmp;
             }
             finally

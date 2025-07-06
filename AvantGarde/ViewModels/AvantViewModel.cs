@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -52,14 +52,14 @@ public class AvantViewModel : ReactiveObject
     /// <summary>
     /// Override to receive theme change.
     /// </summary>
-    protected virtual void ColorChangedHandler()
+    protected virtual void OnThemeChanged()
     {
     }
 
     /// <summary>
     /// Override to receive font size change.
     /// </summary>
-    protected virtual void FontChangedHandler()
+    protected virtual void OnFontChanged()
     {
     }
 
@@ -68,7 +68,7 @@ public class AvantViewModel : ReactiveObject
         if (Global.Colors.IsDarkTheme != _isDark)
         {
             _isDark = Global.Colors.IsDarkTheme;
-            ColorChangedHandler();
+            OnThemeChanged();
         }
 
         if (Global.AppFontSize != _appFontSize || Global.MonoFontSize != _monoFontSize || Global.MonoFontFamily != _monoFontFamily)
@@ -76,7 +76,7 @@ public class AvantViewModel : ReactiveObject
             _appFontSize = Global.AppFontSize;
             _monoFontSize = Global.MonoFontSize;
             _monoFontFamily = Global.MonoFontFamily;
-            FontChangedHandler();
+            OnFontChanged();
         }
     }
 

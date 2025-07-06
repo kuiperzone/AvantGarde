@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -94,9 +94,9 @@ public class ExplorerPaneViewModel : AvantViewModel
     /// <summary>
     /// Override.
     /// </summary>
-    protected override void ColorChangedHandler()
+    protected override void OnThemeChanged()
     {
-        base.ColorChangedHandler();
+        base.OnThemeChanged();
         this.RaisePropertyChanged(nameof(SolutionIcon));
         this.RaisePropertyChanged(nameof(CollapseIcon));
         this.RaisePropertyChanged(nameof(ToggleViewIcon));

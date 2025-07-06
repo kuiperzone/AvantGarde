@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -79,17 +79,17 @@ namespace AvantGarde.ViewModels
         /// <summary>
         /// Override.
         /// </summary>
-        protected override void ColorChangedHandler()
+        protected override void OnThemeChanged()
         {
-            base.ColorChangedHandler();
+            base.OnThemeChanged();
         }
 
         /// <summary>
         /// Override.
         /// </summary>
-        protected override void FontChangedHandler()
+        protected override void OnFontChanged()
         {
-            base.FontChangedHandler();
+            base.OnFontChanged();
             this.RaisePropertyChanged(nameof(MinButtonWidth));
         }
 

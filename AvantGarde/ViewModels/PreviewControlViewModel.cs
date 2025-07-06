@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -39,7 +39,7 @@ public class PreviewControlViewModel : AvantViewModel
     private string? _windowTitleText;
     private bool _windowCanResize;
     private IImage? _mainImage;
-    private ISolidColorBrush? _mainBackground;
+    private IBrush? _mainBackground;
     private string? _widthText;
     private string? _heightText;
     private string? _messageText;
@@ -80,7 +80,7 @@ public class PreviewControlViewModel : AvantViewModel
     /// </summary>
     public ISolidColorBrush? WindowBorder
     {
-        get { return _isWindow ? _theme.GetBorder() : null; }
+        get { return _isWindow ? Brushes.Red : null; } //return _isWindow ? _theme.GetBorder() : null; }
     }
 
     /// <summary>
@@ -204,18 +204,18 @@ public class PreviewControlViewModel : AvantViewModel
             {
                 _mainImage = value;
                 this.RaisePropertyChanged(nameof(MainImage));
-                this.RaisePropertyChanged(nameof(MaxTotalWidth));
+                this.RaisePropertyChanged(nameof(MaxImageWidth));
             }
         }
     }
 
-    public ISolidColorBrush? MainBackground
+    public IBrush? MainBackground
     {
         get { return _mainBackground; }
         set { this.RaiseAndSetIfChanged(ref _mainBackground, value, nameof(MainBackground)); }
     }
 
-    public double MaxTotalWidth
+    public double MaxImageWidth
     {
         get { return _mainImage?.Size.Width ?? 0; }
     }

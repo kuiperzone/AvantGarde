@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -95,6 +96,15 @@ public partial class PreviewPane : UserControl
     }
 
     /// <summary>
+    /// Gets or sets whether a solution is open.
+    /// </summary>
+    public bool HasSolution
+    {
+        get { return _model.HasSolution; }
+        set { _model.HasSolution = value; }
+    }
+
+    /// <summary>
     /// Gets or sets whether preview is suspended.
     /// </summary>
     public bool IsPreviewSuspended
@@ -138,11 +148,11 @@ public partial class PreviewPane : UserControl
     }
 
     /// <summary>
-    /// Gets has any content, including a non-xaml image.
+    /// Gets has an image.
     /// </summary>
-    public bool HasContent
+    public bool HasImage
     {
-        get { return _model.HasContent; }
+        get { return _model.HasImage; }
     }
 
     /// <summary>
@@ -197,11 +207,40 @@ public partial class PreviewPane : UserControl
     /// <summary>
     /// Copies preview bitmap.
     /// </summary>
-    public void CopyToClipboard()
+    public async void CopyToClipboard()
     {
-        // TBD - need clipboard BMP support
-        // var bmp = _previewControl.GetBitmap();
-        throw new NotImplementedException();
+        var window = TopLevel.GetTopLevel(this);
+
+        if (window == null)
+        {
+            return;
+        }
+
+        var bmp = PreviewControl.GetBitmap();
+
+        if (bmp != null)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Windows currently needs a helper
+                await Clowd.Clipboard.ClipboardAvalonia.SetImageAsync(bmp);
+                return;
+            }
+
+
+            // Linux (mac?)
+            using var ms = new MemoryStream();
+            bmp.Save(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var data = new DataObject();
+            data.Set("image/png", ms.ToArray());
+
+            if (window.Clipboard != null)
+            {
+                await window.Clipboard.SetDataObjectAsync(data);
+            }
+         }
     }
 
     /// <summary>
@@ -220,26 +259,31 @@ public partial class PreviewPane : UserControl
     }
 
     /// <summary>
-    /// Updates the content. The result is true if there is content (not necessarily a XAML preview).
+    /// Updates the content. The result is true if there is content (not necessarily an image preview).
     /// </summary>
     public bool Update(PreviewPayload? payload)
     {
         Debug.WriteLine($"{nameof(PreviewPane)}.{nameof(Update)}");
+        bool rslt = false;
 
         if (payload != null && !payload.IsProjectHeader)
         {
             Debug.WriteLine("Payload: " + payload.ItemKind);
-            _model.HasContent = payload.Source != null || payload.Text != null;
+            _model.HasImage = payload.Source != null;
             _model.IsXamlViewable = payload.ItemKind == PathKind.Xaml;
             _model.IsPlainTextViewable = payload.Text != null && payload.Source == null && !_model.IsXamlViewable;
+            _model.IsCheckered = payload.IsWindow;
             PreviewControl.Update(payload, ScaleFactor);
+
+            rslt = payload.Source != null || payload.Text != null;
         }
         else
         {
             Debug.WriteLine("Payload: none");
-            _model.HasContent = false;
+            _model.HasImage = false;
             _model.IsXamlViewable = false;
             _model.IsPlainTextViewable = false;
+            _model.IsCheckered = false;
             PreviewControl.Update(null, ScaleFactor);
         }
 
@@ -256,7 +300,7 @@ public partial class PreviewPane : UserControl
             ResetSplitter();
         }
 
-        return _model.HasContent;
+        return rslt;
     }
 
     private RowDefinition GetSplitRow()

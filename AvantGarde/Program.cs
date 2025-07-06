@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -20,7 +20,6 @@ using System.Reflection;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using AvantGarde.Utility;
-using AvantGarde.ViewModels;
 
 namespace AvantGarde;
 
@@ -29,7 +28,7 @@ class Program
     /// <summary>
     /// Gets the copyright string.
     /// </summary>
-    public const string Copyright = "Copyright (C) 2022-24 Andy Thomas";
+    public const string Copyright = "Copyright (C) 2022-25 Andy Thomas";
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized

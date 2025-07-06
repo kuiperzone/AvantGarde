@@ -10,26 +10,24 @@ Avant Garde is completely IDE agnostic.
 
 Avant Garde is licensed under GPLv3 or later.
 
-*If you like this project, don't forget to like and share. If you don't like it, just keep that to yourself. :)*
+*If you like this project, don't forget to like and share. If you don't like it, best you keep that to yourself. *
 
-**IMPORTANT NOTE:** Avant Garde supports Avalonia XAML (AXAML) with .NET. It cannot be used to
-preview WPF or MAUI applications. If you find it doesn't work with MAUI, there's no use raising a bug.
+**IMPORTANT NOTE:** Avant Garde supports Avalonia XAML (AXAML) with .NET. It cannot be used to preview WPF or MAUI
+applications.
 
-## Linux & Windows ##
+## Linux & Windows
 [Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)
 include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.
 
 ### MacOS? ###
 Avant Garde is not actively supported or tested on MacOS, although there are reports of it
 [working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will need to clone and build
-from source. This is straight-forward as there are no special build requirements. You may also need to set the
-`$DOTNET_HOST_PATH` variable to point to the
-[dotnet command](https://github.com/dotnet/docs/blob/main/docs/core/tools/dotnet-environment-variables.md#dotnet_host_path).
+from source.
 
 <img src="Media/Screenshot-main.png" style="width:75%;max-width:1200px;margin-bottom:2em;"/>
 
 
-## Features ##
+## Features
 
 * Avant Garde is a standalone application rather than an extension to an IDE.
 
@@ -52,7 +50,7 @@ application window foot-print.
 * It supports a **dark theme**, so can match your desktop. See the application "Preferences".
 
 
-## Using Avant Garde ##
+## Using Avant Garde
 
 Simply open a *.sln or *.csproj as you would in any IDE.
 
@@ -68,7 +66,7 @@ your IDE.
 <img src="Media/Screenshot-ide.png" style="width:50%;max-width:1200px;margin-bottom:2em;"/>
 
 
-### Finding Your Assembly ###
+### Finding Your Assembly
 In order to generate previews, Avant Garde must find your application assembly which must first be
 built. This is usual practice with XAML previewers. If your assembly is in the usual place, i.e.
 under `project/bin/Debug...`, Avant Garde will find it. If, however, if you are using variables or a
@@ -76,7 +74,7 @@ under `project/bin/Debug...`, Avant Garde will find it. If, however, if you are 
 the project level (see below).
 
 
-### Solution Settings ###
+### Solution Settings
 Avant Garde keeps state and settings for each solution or project you open. Solution and project
 settings are specific to Avant Garde and, typically, the default values suffice and you will not
 need to change them. Any changes you do make, however, are saved by Avant Garde so that such changes
@@ -94,7 +92,7 @@ the Explorer. Remember, however, that views are read-only and Avant Garde is not
 as a text editor or IDE.
 
 
-### Project Settings ###
+### Project Settings
 Project settings pertain to each project within a solution.
 
 Click `Edit`->`Project`, or the "cog icon" beside the project in the Explorer on the left side.
@@ -113,28 +111,28 @@ reference another class library which does. In this case, you must set the Avalo
 which must be installed in your development environment.
 
 
-### Preview Options ###
+### Preview Options
 There are a number of options associated with preview generation, as shown by the drop-down button
 below:
 
 <img src="Media/Screenshot-flags.png" style="width:50%;max-width:300px;margin-bottom:1em;"/>
 
-#### Grid Lines & Colors ####
+#### Grid Lines & Colors
 The "Grid Lines & Colors" options will cause instances of XAML `Grid` to be high-lighted with lines
 and background shade colours.
 
-#### Disable Events ####
+#### Disable Events
 The "Disable Events" option disables mouse interaction with the preview. This may be useful because
 it strips out all known Avalonia Control events from the XML prior to preview generation. When
 disabled, events can be added and changed in the source code *without* having to re-build the
 assembly each time.
 
-#### Prefetch Assets ####
+#### Prefetch Assets
 When checked, the "Prefetch Assets" option will cause Avant Garde to locate asset files (i.e.
 images) within your project source rather than the assembly. This, like "Disable Events", means that
 assets may be added or updated without having to rebuild on each change.
 
-### Stay-on-top Pin ###
+### Stay-on-top Pin
 When working in an IDE, it is sometimes useful to keep Avant Garde on top while minimising the
 footprint of the main window. On Linux, both Gnome and KDE provide an "Always on Top" option from
 the titlebar.
@@ -148,28 +146,25 @@ shown above.
 *\* This was done because it is not always possible to align the pin button state with "always on
 top" check state shown in the title bar, that and the fact it is not typically needed on Linux.*
 
-### Export Avalonia Schema ###
+### Export Avalonia Schema
 As a bonus feature, Avant Garde is able to generate and export an Avalonia schema (XSD) file. The
 schema file is generated by querying all Avalonia types, and is specific to the Avalonia version
 against which Avant Garde was built.
 
 <img src="Media/Screenshot-xsd-export.png" style="width:50%;max-width:400px;margin-bottom:2em;"/>
 
-The exported XSD file may be used with an IDE plugin extension to provide AXAML auto-completion and
-help reference hints. Below, Visual Code with the [Xml Complete](https://marketplace.visualstudio.com/items?itemName=rogalmic.vscode-xml-complete)
-extension, but referencing the XSD generated by Avant Garde.
+The exported XSD file may be used with an IDE plugin extension to provide AXAML auto-completion and help reference
+hints. Below, Visual Code with the [Xml
+Complete](https://marketplace.visualstudio.com/items?itemName=rogalmic.vscode-xml-complete) extension, but referencing
+the XSD generated by Avant Garde.
 
 <img src="Media/Screenshot-xml-hint.png" style="width:50%;max-width:500px;margin-bottom:2em;"/>
 
-Note, although the XmlComplete extension ships with its own Avalonia XSD file, it is possible to
-furnish it with an alternative one using the extension's settings. This is exactly what we have done
-above, using an Avant Garde generated XSD stored locally. You should find the XSD generated by Avant
-Garde to be much more comprehension than that shipped by Xml Complete because it is auto-generated
-by querying all available Avalonia types, and aims to provide comprehensive auto-completion and
-reference information, rather than a limited number of human generated explanations.
+You should find the XSD generated by Avant Garde useful as it provides comprehensive auto-completion and reference
+information, rather than a limited number of human generated explanations.
 
 
-## Command Line Options ##
+## Command Line Options
 Command line options can be utilized to launch Avant Garde from an IDE, as supported.
 
 **Usage:**
@@ -218,15 +213,15 @@ supplied path level. The result will be similar to the first example above becau
 `MainWindow.axaml` preview will be shown on opening so that the "--select" option is not necessary
 here.
 
-## Miscellanous ##
+## Miscellanous
 
 Avant Garde will read the `$DOTNET_HOST_PATH` environment variable to determine the location of
 `dotnet`. If this is undefined, `dotnet` is assumed to be in the path.
 
-## Copyright & License ##
+## Copyright & License
 
-Copyright (C) Andy Thomas, 2022-24.
-Website: https://kuiper.zone
+Copyright (C) Andy Thomas, 2022-25
+Website: https://github.com/kuiperzone
 
 Avant Garde Previewer for Avalonia is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software Foundation, either
@@ -236,7 +231,7 @@ Avant Garde is distributed in the hope that it will be useful, but WITHOUT ANY W
 even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 General Public License for more details.
 
-### Non-code Assets ###
+### Non-code Assets
 Images and non-code assets are not subject to GPL.
 
 Avant Garde Project Logo: Copyright (C) Andy Thomas, 2022.

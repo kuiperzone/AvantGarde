@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -16,6 +16,7 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using Avalonia.Media;
 using AvantGarde.Views;
 using ReactiveUI;
 
@@ -25,6 +26,7 @@ namespace AvantGarde.ViewModels
     {
         private string? _caretText;
         private bool _isPreviewSuspended;
+        private bool _isCheckered;
 
         public PreviewPane? Owner { get; set; }
 
@@ -62,6 +64,26 @@ namespace AvantGarde.ViewModels
             }
         }
 
+        public bool IsCheckered
+        {
+            get { return _isCheckered; }
+
+            set
+            {
+                if (_isCheckered != value)
+                {
+                    _isCheckered = value;
+                    this.RaisePropertyChanged(nameof(IsCheckered));
+                    this.RaisePropertyChanged(nameof(Background));
+                }
+            }
+        }
+
+        public IBrush Background
+        {
+            get { return _isCheckered ? GlobalModel.Global.Colors.PreviewTile : GlobalModel.Global.Colors.PreviewBackground; }
+        }
+
         public void CopyCommand()
         {
             Owner?.CopyToClipboard();
@@ -80,10 +102,16 @@ namespace AvantGarde.ViewModels
             }
         }
 
+        protected override void OnThemeChanged()
+        {
+            this.RaisePropertyChanged(nameof(Background));
+        }
+
         protected override void OnFlagChanged(bool invoke)
         {
             this.RaisePropertyChanged(nameof(StatusText));
             base.OnFlagChanged(invoke);
         }
+
     }
 }

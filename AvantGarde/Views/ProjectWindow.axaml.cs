@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -23,7 +23,6 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using AvantGarde.Loading;
 using AvantGarde.Projects;
-using DynamicData;
 
 namespace AvantGarde.Views;
 

@@ -2,6 +2,7 @@
 Type=Application
 Name=${APP_FRIENDLY_NAME}
 Icon=${APP_ID}
+StartupWMClass=AvantGarde
 Comment=${APP_SHORT_SUMMARY}
 Exec=${INSTALL_EXEC}
 TryExec=${INSTALL_EXEC}

@@ -119,17 +119,16 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
-                <!--
                 <Separator/>
-                <MenuItem Header="Copy"
-                    HotKey="Ctrl+C"
-                    InputGesture="Ctrl+C"
+                <MenuItem Header="Copy Image"
+                    HotKey="Ctrl+Alt+C"
+                    InputGesture="Ctrl+Alt+C"
+                    IsEnabled="{Binding HasImage}"
                     Command="{Binding CopyCommand}">
                     <MenuItem.Icon>
                         <Image Source="{Binding Global.Assets.CopyIcon}"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                -->
 
                 <Separator/>
                 <MenuItem Header="Preferences"

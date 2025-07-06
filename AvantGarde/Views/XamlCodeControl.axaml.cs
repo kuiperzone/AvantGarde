@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -17,10 +17,8 @@
 // -----------------------------------------------------------------------------
 
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using AvantGarde.Loading;
 using AvantGarde.Projects;
-using AvantGarde.Utility;
 using AvantGarde.ViewModels;
 
 namespace AvantGarde.Views;
@@ -76,11 +74,6 @@ public partial class XamlCodeControl : UserControl
         return HasXaml != temp;
     }
 
-    public string? GetSelectedText(bool focusedOnly = true)
-    {
-        return GetCheckedBox(focusedOnly)?.SelectedText;
-    }
-
     public int GetCaretIndex(bool focusedOnly = true)
     {
         return GetCheckedBox(focusedOnly)?.CaretIndex ?? -1;
@@ -122,6 +115,11 @@ public partial class XamlCodeControl : UserControl
         }
 
         return false;
+    }
+
+    private string? GetSelectedText(bool focusedOnly = true)
+    {
+        return GetCheckedBox(focusedOnly)?.SelectedText;
     }
 
     private CodeTextBox? GetCheckedBox(bool focusedOnly)

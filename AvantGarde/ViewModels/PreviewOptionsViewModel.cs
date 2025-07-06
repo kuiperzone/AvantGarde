@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -31,8 +31,9 @@ namespace AvantGarde.ViewModels
     {
         private readonly int _scaleNormIndex;
         private readonly List<string> _scaleItems = new();
+        private bool _hasSolution;
         private LoadFlags _loadFlags = LoadFlags.None;
-        private bool _hasContent;
+        private bool _hasImage;
         private bool _isXamlViewable;
         private bool _isPlainTextViewable;
         private bool _isXamlViewOpen;
@@ -63,6 +64,12 @@ namespace AvantGarde.ViewModels
 
             _scaleNormIndex = 4;
             _scaleSelectedIndex = _scaleNormIndex;
+        }
+
+        public bool HasSolution
+        {
+            get { return _hasSolution; }
+            set { this.RaiseAndSetIfChanged(ref _hasSolution, value, nameof(HasSolution)); }
         }
 
         /// <summary>
@@ -183,10 +190,10 @@ namespace AvantGarde.ViewModels
             set { SetScaleIndex(value, true); }
         }
 
-        public bool HasContent
+        public bool HasImage
         {
-            get { return _hasContent; }
-            set { this.RaiseAndSetIfChanged(ref _hasContent, value, nameof(HasContent)); }
+            get { return _hasImage; }
+            set { this.RaiseAndSetIfChanged(ref _hasImage, value, nameof(HasImage)); }
         }
 
         public bool IsPlainTextViewable
@@ -207,7 +214,6 @@ namespace AvantGarde.ViewModels
                     this.RaisePropertyChanged(nameof(IsXamlViewable));
                     this.RaisePropertyChanged(nameof(IsXamlViewOpen));
                     this.RaisePropertyChanged(nameof(XamlViewIcon));
-                    this.RaisePropertyChanged(nameof(XamlViewDarkIcon));
                 }
             }
         }
@@ -223,17 +229,11 @@ namespace AvantGarde.ViewModels
                     _isXamlViewOpen = value;
                     this.RaisePropertyChanged(nameof(IsXamlViewOpen));
                     this.RaisePropertyChanged(nameof(XamlViewIcon));
-                    this.RaisePropertyChanged(nameof(XamlViewDarkIcon));
                 }
             }
         }
 
         public IImage? XamlViewIcon
-        {
-            get { return IsXamlViewOpen ? Global.Assets.DownIcon : Global.Assets.UpIcon; }
-        }
-
-        public IImage? XamlViewDarkIcon
         {
             get { return IsXamlViewOpen ? AssetModel.DownDark : AssetModel.UpDark; }
         }
@@ -332,9 +332,9 @@ namespace AvantGarde.ViewModels
         /// <summary>
         /// Override.
         /// </summary>
-        protected override void ColorChangedHandler()
+        protected override void OnThemeChanged()
         {
-            base.ColorChangedHandler();
+            base.OnThemeChanged();
             this.RaisePropertyChanged(nameof(LoadFlagIcon));
         }
 

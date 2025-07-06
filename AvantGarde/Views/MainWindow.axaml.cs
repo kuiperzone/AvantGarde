@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
-// COPYRIGHT : Andy Thomas (C) 2022-24
+// COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
 // HOMEPAGE  : https://github.com/kuiperzone/AvantGarde
 //
@@ -117,6 +117,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
             ExplorerPane.Solution = sol;
             ResetWatcher(ExplorerPane.SelectedProject);
+            PreviewPane.HasSolution = true;
             PreviewPane.IsPreviewSuspended = false;
 
             Model.HasSolution = true;
@@ -181,6 +182,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
 
         ResetWatcher(null);
         ExplorerPane.Solution = null;
+        PreviewPane.HasSolution = false;
         Model.HasSolution = false;
         Model.HasProject = false;
         Model.IsWelcomeVisible = GetIsWelcomeVisible(false);
@@ -402,7 +404,7 @@ public partial class MainWindow : AvantWindow<MainWindowViewModel>
     private void PreviewReadyHandler(PreviewPayload? payload)
     {
         Debug.WriteLine($"{nameof(MainWindow)}.{nameof(PreviewReadyHandler)}");
-        Model.HasContent = PreviewPane.Update(payload);
+        Model.HasImage = PreviewPane.Update(payload) && payload?.Source != null;
         Model.IsXamlViewable = PreviewPane.IsXamlViewable;
         Model.IsPlainTextViewable = PreviewPane.IsPlainTextViewable;
     }

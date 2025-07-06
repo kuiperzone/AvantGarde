@@ -17,14 +17,14 @@
 # Comment out for fossil
 #.*
 #**/.*/
-!.gitignore
-!.editorconfig
+#!.gitignore
+#!.editorconfig
 
 # UNCOMMENT FOR FOSSIL
 # Comment out for git
-#.git/
-#**/.git/
-#.gitignore
+.git/
+**/.git/
+.gitignore
 
 
 ###############################################################################

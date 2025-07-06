@@ -11,60 +11,55 @@
 
     <Grid ColumnDefinitions="Auto Auto Auto" RowDefinitions="Auto Auto, Auto Auto">
 
-        <Border Grid.Column="1" Grid.Row="0"
-            BorderBrush="{Binding WindowBorder}"
-            BorderThickness="1">
+        <Grid Grid.Column="1" Grid.Row="0"
+            RowDefinitions="Auto Auto"
+            Background="{Binding MainBackground}"
+            MaxWidth="{Binding MaxImageWidth}">
 
-            <Grid RowDefinitions="Auto Auto"
-                Background="{Binding MainBackground}"
-                MaxWidth="{Binding MaxTotalWidth}">
+            <Grid Grid.Row="0"
+                ColumnDefinitions="Auto * Auto"
+                RowDefinitions="*"
+                IsVisible="{Binding IsWindow}"
+                Background="{Binding WindowTitleBackground}"
+                TextBlock.Foreground="{Binding WindowTitleForeground}">
 
-                <Grid Grid.Row="0"
-                    ColumnDefinitions="Auto * Auto"
-                    RowDefinitions="*"
-                    IsVisible="{Binding IsWindow}"
-                    Background="{Binding WindowTitleBackground}"
-                    TextBlock.Foreground="{Binding WindowTitleForeground}">
+                <Image Grid.Column="0" Grid.Row="0"
+                    Margin="6"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Stretch="Uniform"
+                    Source="{Binding WindowIcon}"
+                    MaxHeight="{Binding WindowIconHeight}"
+                />
 
-                    <Image Grid.Column="0" Grid.Row="0"
-                        Margin="6"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left"
-                        Stretch="Uniform"
-                        Source="{Binding WindowIcon}"
-                        MaxHeight="{Binding WindowIconHeight}"
-                    />
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                    TextAlignment="Center"
+                    VerticalAlignment="Center"
+                    TextTrimming="CharacterEllipsis"
+                    Text="{Binding WindowTitleText}"
+                    FontSize="{Binding WindowTitleFontSize}"
+                    FontWeight="Bold"
+                />
 
-                    <TextBlock Grid.Column="1" Grid.Row="0"
-                        TextAlignment="Center"
-                        VerticalAlignment="Center"
-                        TextTrimming="CharacterEllipsis"
-                        Text="{Binding WindowTitleText}"
-                        FontSize="{Binding WindowTitleFontSize}"
-                        FontWeight="Bold"
-                    />
-
-                    <Image Grid.Column="2" Grid.Row="0"
-                        Margin="6"
-                        VerticalAlignment="Center"
-                        Stretch="Uniform"
-                        Source="{Binding WindowDecorBitmap}"
-                        MaxHeight="{Binding WindowDecorHeight}"
-                    />
-
-                </Grid>
-
-                <Image Grid.Row="1"
-                    Stretch="None"
-                    Source="{Binding MainImage}"
-                    PointerMoved="PreviewPointerMovedHandler"
-                    PointerPressed="PreviewPointerPressedHandler"
-                    PointerReleased="PreviewPointerReleasedHandler"
+                <Image Grid.Column="2" Grid.Row="0"
+                    Margin="6"
+                    VerticalAlignment="Center"
+                    Stretch="Uniform"
+                    Source="{Binding WindowDecorBitmap}"
+                    MaxHeight="{Binding WindowDecorHeight}"
                 />
 
             </Grid>
 
-        </Border>
+            <Image Grid.Row="1"
+                Stretch="None"
+                Source="{Binding MainImage}"
+                PointerMoved="PreviewPointerMovedHandler"
+                PointerPressed="PreviewPointerPressedHandler"
+                PointerReleased="PreviewPointerReleasedHandler"
+            />
+
+        </Grid>
 
         <TextBlock Grid.Column="0" Grid.Row="0"
             Margin="0 0 12 0"

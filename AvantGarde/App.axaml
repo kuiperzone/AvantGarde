@@ -7,14 +7,31 @@
         RequestedThemeVariant="Default"
         x:Class="AvantGarde.App">
 
+    <!--
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+    -->
 
     <Application.Styles>
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <!-- Make app look a little more like Gnome -->
+                <!-- Must match WindowBackground in ColorModel -->
+                <ColorPaletteResources x:Key="Dark" RegionColor="#ff242424" BaseHigh="#ffeeeeee" />
+                <ColorPaletteResources x:Key="Light" RegionColor="#fffafafa" BaseHigh="#ff111111" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
+    </Application.Styles>
+
+
+    <Application.Styles>
+
+        <!--
         <Style Selector="Window">
             <Setter Property="Background" Value="{Binding Global.Colors.WindowBackground}"/>
         </Style>
+-->
 
         <Style Selector="TextBlock.small">
             <Setter Property="FontSize" Value="{Binding Global.SmallFontSize}"/>
