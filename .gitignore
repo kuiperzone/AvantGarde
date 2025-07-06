@@ -15,8 +15,8 @@
 
 # UNCOMMENT FOR GIT
 # Comment out for fossil
-#.*
-#**/.*/
+.*
+**/.*/
 !.gitignore
 !.editorconfig
 
