@@ -10,7 +10,7 @@ Avant Garde is completely IDE agnostic.
 
 Avant Garde is licensed under GPLv3 or later.
 
-*If you like this project, don't forget to like and share. If you don't like it, best you keep that to yourself. *
+*If you like this project, don't forget to like and share. If you don't like it, best keep that to yourself. *
 
 **IMPORTANT NOTE:** Avant Garde supports Avalonia XAML (AXAML) with .NET. It cannot be used to preview WPF or MAUI
 applications.
