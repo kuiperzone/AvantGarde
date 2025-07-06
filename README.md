@@ -3,7 +3,7 @@
 # Avant Garde #
 
 **Avant Garde** is a cross-platform XAML previewer for the C# [Avalonia Framework](https://github.com/AvaloniaUI/Avalonia).
-It operates as a standalone application that works with your IDE, rather than an extension to an IDE. This means that
+It operates as a standalone application that works with your IDE, rather than as an extension to an IDE. This means that
 Avant Garde is completely IDE agnostic.
 
 **[DOWNLOAD & INSTALL](https://github.com/kuiperzone/AvantGarde/releases/latest)**
