@@ -17,13 +17,10 @@ applications.
 
 
 ## Linux & Windows
-[Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)
-include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.
+**[Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)** - *include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.*
 
-### MacOS? ###
-Avant Garde is not actively supported or tested on MacOS, although there are reports of it
-[working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will need to clone and build
-from source.
+## MacOS
+**[Downloads](https://github.com/saiitanaa/AvantGarde-macOS/releases/latest)** - *Unofficial Fork*
 
 <img src="Media/Screenshot-main.png" style="width:75%;max-width:1200px;margin-bottom:2em;"/>
 
