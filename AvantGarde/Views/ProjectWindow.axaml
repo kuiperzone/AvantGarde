@@ -50,7 +50,7 @@
                 <ComboBox Grid.Column="2" Grid.Row="4"
                     Name="AvaloniaCombo"
                     MinWidth="200"
-                    ToolTip.Tip="Select Avalonia SDK version"
+                    ToolTip.Tip="Fallback Avalonia SDK version. Normally has no effect: the designer host is located by evaluating the project with MSBuild. This is used only where that evaluation fails."
                 />
 
                 <!-- App selection -->

@@ -35,7 +35,6 @@ public class PreviewFactory
         { "#3F976194", "#3F619764", "#3F617997", "#3F977F61" };
 
     private readonly PreviewPayload _source = new();
-    private int _resendFlag;
     private int _wheelIndex;
 
     /// <summary>
@@ -52,7 +51,7 @@ public class PreviewFactory
 
         if (load.Error != null)
         {
-            _source.Error = new PreviewError(load.Error.Message);
+            _source.Error = new PreviewError(load.Error);
         }
 
         if (!load.IsEmpty && load.FullPath != null)
@@ -69,7 +68,13 @@ public class PreviewFactory
                 {
                     if (load.ItemKind == PathKind.Xaml && !string.IsNullOrWhiteSpace(_source.Text))
                     {
-                        var doc = XDocument.Parse(_source.Text);
+                        // Whitespace is preserved so ProcessXaml writes the document back out with
+                        // the source indentation. The host reports errors against the markup it
+                        // was sent and Goto jumps there, so re-indenting moves the target.
+                        // This does not make the two identical - attributes carry no whitespace of
+                        // their own, so a start tag spread over several lines still collapses to
+                        // one and shifts everything below it. It fixes the column and the body.
+                        var doc = XDocument.Parse(_source.Text, LoadOptions.PreserveWhitespace);
                         var root = doc.Root ?? throw new XmlException("No root element");
                         _source.DesignWidth = ParseOrNaN(GetLocalAttribute(root, "DesignWidth")?.Value, "DesignWidth");
                         _source.DesignHeight = ParseOrNaN(GetLocalAttribute(root, "DesignHeight")?.Value, "DesignHeight");
@@ -106,7 +111,6 @@ public class PreviewFactory
                         {
                             Debug.WriteLine("ProcessXaml");
                             ProcessedXaml = ProcessXaml(root, doc, load);
-                            _resendFlag = 1;
                         }
                     }
                     else
@@ -153,22 +157,13 @@ public class PreviewFactory
     }
 
     /// <summary>
-    /// Gets the XAML text to be sent. If processed is true, the result will be <see cref="ProcessedXaml"/> if
-    /// it is not null. Otherwise, it is the verbatim source text. The value is null if nothing should be sent
-    /// to the remote host.
+    /// Gets the XAML text to be sent. The result is <see cref="ProcessedXaml"/> where it is not null,
+    /// and the verbatim source text otherwise. The value is null if nothing should be sent to the
+    /// remote host.
     /// </summary>
-    public string? GetXaml(bool processed)
+    public string? GetXaml()
     {
-        return processed && ProcessedXaml != null ? ProcessedXaml : _source.Text;
-    }
-
-    /// <summary>
-    /// Gets a one-time only flag indicating that resend is necessary. The call is thread-safe and reset
-    /// to false, so that an instance of this class returns true only once.
-    /// </summary>
-    public bool GetResendAndReset()
-    {
-        return Interlocked.Exchange(ref _resendFlag, 0) != 0;
+        return ProcessedXaml ?? _source.Text;
     }
 
     /// <summary>
@@ -224,7 +219,9 @@ public class PreviewFactory
     private string? ProcessXaml(XElement root, XDocument doc, LoadPayload payload)
     {
         ProcessElement(root, doc, payload);
-        return doc.ToString();
+
+        // DisableFormatting keeps the whitespace preserved on parse, rather than re-indenting.
+        return doc.ToString(SaveOptions.DisableFormatting);
     }
 
     private void ProcessElement(XElement e, XDocument doc, LoadPayload payload)

@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
@@ -34,9 +34,6 @@ public partial class SolutionWindow : AvantWindow
     {
         InitializeComponent();
 
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     /// <summary>

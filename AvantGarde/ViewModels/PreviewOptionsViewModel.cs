@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using AvantGarde.Loading;
@@ -29,6 +30,27 @@ namespace AvantGarde.ViewModels
     /// </summary>
     public class PreviewOptionsViewModel : AvantViewModel
     {
+        /// <summary>
+        /// Index of the fit-to-window entry in <see cref="ScaleItems"/>. It heads the list because
+        /// the rest of it is an ordered ladder and inserting elsewhere would break Inc/Dec.
+        /// </summary>
+        public const int FitScaleIndex = 0;
+
+        /// <summary>
+        /// Upper bound on the factor fit-to-window will compute. A control with a tiny natural size
+        /// - a bare TextBlock measures around 91 x 19 - would otherwise demand an absurd DPI of the
+        /// host and a frame to match.
+        /// </summary>
+        public const double MaxFitScale = 4.0;
+
+        /// <summary>
+        /// Relative change below which a recomputed fit factor is discarded. The preview control's
+        /// top-bar scales with the zoom, so the space left for the bitmap depends on the very factor
+        /// being solved for; without a deadband the correction can alternate between two values a
+        /// fraction of a percent apart and never settle. Far below anything visible.
+        /// </summary>
+        public const double FitScaleDeadband = 0.005;
+
         private readonly int _scaleNormIndex;
         private readonly List<string> _scaleItems = new();
         private bool _hasSolution;
@@ -51,6 +73,7 @@ namespace AvantGarde.ViewModels
 
         public PreviewOptionsViewModel()
         {
+            _scaleItems.Add("Fit");
             _scaleItems.Add("25%");
             _scaleItems.Add("50%");
             _scaleItems.Add("67%");
@@ -62,7 +85,7 @@ namespace AvantGarde.ViewModels
             _scaleItems.Add("300%");
             _scaleItems.Add("400%");
 
-            _scaleNormIndex = 4;
+            _scaleNormIndex = _scaleItems.IndexOf("100%");
             _scaleSelectedIndex = _scaleNormIndex;
         }
 
@@ -243,6 +266,60 @@ namespace AvantGarde.ViewModels
         /// </summary>
         public double ScaleFactor { get; private set; } = 1.0;
 
+        /// <summary>
+        /// Gets whether the scale is fit-to-window, in which case <see cref="ScaleFactor"/> is
+        /// supplied by <see cref="SetFitScaleFactor"/> rather than read from the ladder.
+        /// </summary>
+        public bool IsFitToWindow
+        {
+            get { return _scaleSelectedIndex == FitScaleIndex; }
+        }
+
+        /// <summary>
+        /// Computes the factor which fits a control of the given natural size into the given
+        /// viewport, or NaN if either is not yet known. Never enlarges beyond
+        /// <see cref="MaxFitScale"/>.
+        /// </summary>
+        public static double CalcFitScaleFactor(Size natural, Size viewport)
+        {
+            if (!(natural.Width > 0) || !(natural.Height > 0) ||
+                !(viewport.Width > 0) || !(viewport.Height > 0))
+            {
+                return double.NaN;
+            }
+
+            var factor = Math.Min(viewport.Width / natural.Width, viewport.Height / natural.Height);
+
+            if (!double.IsFinite(factor) || factor <= 0)
+            {
+                return double.NaN;
+            }
+
+            return Math.Clamp(factor, 0.01, MaxFitScale);
+        }
+
+        /// <summary>
+        /// Sets <see cref="ScaleFactor"/> while fit-to-window is selected. The result is true if the
+        /// value changed. Does not invoke <see cref="ScaleChanged"/> - the caller drives the loader,
+        /// and re-entering the event from a size change is how a resize loop starts.
+        /// </summary>
+        public bool SetFitScaleFactor(double factor)
+        {
+            if (!IsFitToWindow || !double.IsFinite(factor) || factor <= 0)
+            {
+                return false;
+            }
+
+            if (Math.Abs(factor - ScaleFactor) <= ScaleFactor * FitScaleDeadband)
+            {
+                return false;
+            }
+
+            ScaleFactor = factor;
+            this.RaisePropertyChanged(nameof(ScaleFactor));
+            return true;
+        }
+
         public void GridLinesToggle()
         {
             IsGridLinesChecked = !IsGridLinesChecked;
@@ -304,7 +381,10 @@ namespace AvantGarde.ViewModels
 
         public void IncScale(bool invoke)
         {
-            int idx = _scaleSelectedIndex + 1;
+            // Stepping up out of fit must not land on 25%, which is what index+1 would give and
+            // would shrink the preview on a button marked "increase". Lands on the first rung above
+            // the factor the fit had settled at instead.
+            int idx = IsFitToWindow ? GetRungAbove(ScaleFactor) : _scaleSelectedIndex + 1;
 
             if (idx < _scaleItems.Count)
             {
@@ -322,7 +402,9 @@ namespace AvantGarde.ViewModels
         {
             int idx = _scaleSelectedIndex - 1;
 
-            if (idx > -1)
+            // Stops at the smallest percentage rather than stepping into fit-to-window, which is a
+            // mode rather than a rung of the ladder.
+            if (idx > FitScaleIndex)
             {
                 _scaleSelectedIndex = idx;
                 OnScaleChanged(invoke);
@@ -360,13 +442,46 @@ namespace AvantGarde.ViewModels
             }
         }
 
+        /// <summary>
+        /// Returns the index of the lowest rung whose factor exceeds the given value, or the top
+        /// rung if none does. Never returns <see cref="FitScaleIndex"/>.
+        /// </summary>
+        private int GetRungAbove(double factor)
+        {
+            for (int n = FitScaleIndex + 1; n < _scaleItems.Count; ++n)
+            {
+                if (GetRungFactor(n) > factor)
+                {
+                    return n;
+                }
+            }
+
+            return _scaleItems.Count - 1;
+        }
+
+        /// <summary>
+        /// Parses a ladder entry. Not valid for <see cref="FitScaleIndex"/>, which carries no
+        /// percentage.
+        /// </summary>
+        private double GetRungFactor(int index)
+        {
+            return double.Parse(_scaleItems[index].TrimEnd('%')) / 100;
+        }
+
         private void OnScaleChanged(bool invoke)
         {
             try
             {
-                var s = _scaleItems[_scaleSelectedIndex];
-                ScaleFactor = double.Parse(s.TrimEnd('%')) / 100;
+                if (!IsFitToWindow)
+                {
+                    // The fit entry carries no percentage. Its factor is computed against the
+                    // viewport and pushed in by SetFitScaleFactor, so the last ladder value is
+                    // held here until that happens.
+                    ScaleFactor = GetRungFactor(_scaleSelectedIndex);
+                }
+
                 this.RaisePropertyChanged(nameof(ScaleFactor));
+                this.RaisePropertyChanged(nameof(IsFitToWindow));
                 this.RaisePropertyChanged(nameof(ScaleSelectedIndex));
 
                 if (invoke)

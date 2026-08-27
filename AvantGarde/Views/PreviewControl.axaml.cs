@@ -52,9 +52,38 @@ public partial class PreviewControl : UserControl
     public Action<PointerEventMessage>? PointerEventOccurred;
 
     /// <summary>
+    /// Occurs when the user types while the preview has focus. The handler returns true if it
+    /// forwarded the message to the guest, which decides whether the gesture is also consumed - a
+    /// key the guest never received must be left for AvantGarde to act on instead.
+    /// </summary>
+    public Func<KeyboardEventMessage, bool>? KeyboardEventOccurred;
+
+    /// <summary>
+    /// Occurs when the wheel is turned over the preview bitmap, carrying both the gesture and the
+    /// message which would forward it to the guest. The handler decides which of the two it wants
+    /// and marks the arguments handled if it consumed them - only the enclosing pane knows whether
+    /// the wheel should zoom, pan its own scroll viewer, or reach the guest.
+    /// </summary>
+    public Action<PointerWheelEventArgs, PointerEventMessage>? WheelEventOccurred;
+
+    /// <summary>
     /// Occurs when the user clicks on "Goto" to locate error.
     /// </summary>
     public Action<PreviewError>? GotoClick;
+
+    /// <summary>
+    /// Occurs when the user clicks on "Build" to clear a missing assembly.
+    /// </summary>
+    public Action? BuildClick;
+
+    /// <summary>
+    /// Gets or sets whether the Build button is enabled. It is disabled while a build runs.
+    /// </summary>
+    public bool IsBuildEnabled
+    {
+        get { return _model.IsBuildEnabled; }
+        set { _model.IsBuildEnabled = value; }
+    }
 
     /// <summary>
     /// Gets or sets the preview window color.
@@ -79,6 +108,30 @@ public partial class PreviewControl : UserControl
     /// Gets the current scale value.
     /// </summary>
     public double Scale { get; private set; } = 1.0;
+
+    /// <summary>
+    /// Gets the size in dips of what the control draws around the preview bitmap - the window
+    /// top-bar above it and the dimension labels either side. Fit-to-window has to allow for it,
+    /// and it is measured rather than modelled because it varies with the payload: the top-bar is
+    /// there only for a window, the labels only when dimensions are shown, and the top-bar scales
+    /// with the zoom. The result is empty until a bitmap has been arranged.
+    /// </summary>
+    public Size ChromeSize
+    {
+        get
+        {
+            var image = _model.MainImage?.Size ?? default;
+            var bounds = Bounds.Size;
+
+            if (!(image.Width > 0) || !(image.Height > 0) ||
+                bounds.Width < image.Width || bounds.Height < image.Height)
+            {
+                return default;
+            }
+
+            return new Size(bounds.Width - image.Width, bounds.Height - image.Height);
+        }
+    }
 
     /// <summary>
     /// Updates the preview at the given scale.
@@ -106,8 +159,8 @@ public partial class PreviewControl : UserControl
 
             if (showDimensions)
             {
-                _model.WidthText = payload.Width.ToString(true);
-                _model.HeightText = payload.Height.ToString(true);
+                _model.WidthText = GetDimensionText(payload.Width, payload.NaturalWidth);
+                _model.HeightText = GetDimensionText(payload.Height, payload.NaturalHeight);
             }
             else
             {
@@ -128,12 +181,14 @@ public partial class PreviewControl : UserControl
         {
             Debug.WriteLine("Error line: " + payload.Error.LineNum);
             _model.HasErrorLocation = payload.Error.LineNum > 0;
+            _model.HasBuildAction = payload.Error.CanBuild;
             _model.MessageText = payload.Error.Message;
             _model.MainImage ??= GlobalModel.Global.Assets.WarnIcon;
         }
         else
         {
             _model.HasErrorLocation = false;
+            _model.HasBuildAction = false;
             _model.MessageText = _model.MainImage == null ? "None" : null;
         }
     }
@@ -158,7 +213,7 @@ public partial class PreviewControl : UserControl
                 // Keep window from displaying
                 window.ShowInTaskbar = false;
                 window.WindowState = WindowState.Minimized;
-                window.SystemDecorations = SystemDecorations.None;
+                window.WindowDecorations = WindowDecorations.None;
 
                 window.Content = clone;
                 window.SizeToContent = SizeToContent.WidthAndHeight;
@@ -182,6 +237,118 @@ public partial class PreviewControl : UserControl
         return Payload?.Source;
     }
 
+    /// <summary>
+    /// Formats a dimension label, preferring the size the designer host actually rendered at over
+    /// the locally parsed d:DesignWidth/Height. The two agree where a design size is declared; where
+    /// one is not, the host's value is the only one there is and the declared value shows as NaN.
+    /// Any min/max from the markup is retained, as it still describes the control.
+    /// </summary>
+    private static string GetDimensionText(ControlDimension declared, double natural)
+    {
+        if (!double.IsFinite(natural) || natural <= 0)
+        {
+            return declared.ToString(true);
+        }
+
+        natural = Math.Round(natural);
+
+        if (declared.HasRange)
+        {
+            return new ControlDimension(natural, declared.Min, declared.Max).ToString(true);
+        }
+
+        return new ControlDimension(natural).ToString(true);
+    }
+
+    /// <summary>
+    /// Override. Forwards the key press to the guest.
+    /// </summary>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        HandleKey(e, true);
+    }
+
+    /// <summary>
+    /// Override. Forwards the key release to the guest.
+    /// </summary>
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        base.OnKeyUp(e);
+        HandleKey(e, false);
+    }
+
+    /// <summary>
+    /// Override. Forwards composed text to the guest.
+    /// </summary>
+    protected override void OnTextInput(TextInputEventArgs e)
+    {
+        base.OnTextInput(e);
+
+        if (!e.Handled && !string.IsNullOrEmpty(e.Text))
+        {
+            // Consumed only if it went somewhere. Nothing in AvantGarde acts on text input reaching
+            // the window, so consuming costs nothing and keeps a typed character from being taken
+            // as a menu access key - but with forwarding switched off there is nothing to consume
+            // it on behalf of.
+            e.Handled = KeyboardEventOccurred?.Invoke(new KeyboardEventMessage(e)) == true;
+        }
+    }
+
+    /// <summary>
+    /// Sends a key transition to the guest, and decides whether AvantGarde keeps the gesture.
+    /// </summary>
+    private void HandleKey(KeyEventArgs e, bool isDown)
+    {
+        if (e.Handled)
+        {
+            return;
+        }
+
+        bool forwarded = KeyboardEventOccurred?.Invoke(new KeyboardEventMessage(e, isDown)) == true;
+
+        // Every key is offered to the guest; only the Handled flag is in question, and it decides
+        // whether AvantGarde acts on the gesture as well. Consuming is the exception rather than the
+        // rule, for two measured reasons - and never happens for a key which was not forwarded,
+        // because with events disabled these keys must go on scrolling the pane as they did before.
+        //
+        // Consuming a KeyDown suppresses the TextInput which would have followed it - the Win32
+        // backend drops the WM_CHAR for a key event the application handled - so a blanket
+        // "consume unmodified keys" stops the preview receiving any typed character at all. That
+        // was measured against the fixture: letters vanished while Backspace, which produces no
+        // character, still worked.
+        //
+        // And every HotKey in MainWindow.axaml carries Ctrl or Alt. HotKey installs a KeyBinding on
+        // the window, evaluated on the bubbled KeyDown, so consuming a modified gesture here would
+        // disable the menu accelerators whenever the preview has focus.
+        //
+        // What is left is the set of keys which produce no text and which the enclosing ScrollViewer
+        // would otherwise act on, scrolling the pane instead of reaching the guest. Space belongs to
+        // that set by behaviour but not by consequence - it types - so it is left to bubble.
+        e.Handled = forwarded && IsScrollKey(e.Key) && e.KeyModifiers == KeyModifiers.None;
+    }
+
+    /// <summary>
+    /// Returns true for keys the pane's scroll viewer acts on, and which carry no text of their own.
+    /// </summary>
+    private static bool IsScrollKey(Key key)
+    {
+        switch (key)
+        {
+            case Key.Left:
+            case Key.Right:
+            case Key.Up:
+            case Key.Down:
+            case Key.PageUp:
+            case Key.PageDown:
+            case Key.Home:
+            case Key.End:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void PreviewPointerMovedHandler(object? sender, PointerEventArgs e)
     {
         if (sender is Visual visual)
@@ -194,7 +361,27 @@ public partial class PreviewControl : UserControl
     {
         if (sender is Visual visual)
         {
+            // Both sides of the click matter. This one gives the preview the keyboard focus within
+            // AvantGarde, so that OnKeyDown and OnTextInput start firing here; the forwarded press
+            // below gives the guest a focused control for them to be delivered to, which it does not
+            // otherwise have. Keyboard forwarding does not work until the user has clicked the
+            // preview, and this is why.
+            Focus();
+
             PointerEventOccurred?.Invoke(new PointerEventMessage(visual, e));
+        }
+    }
+
+    private void PreviewPointerWheelHandler(object? sender, PointerWheelEventArgs e)
+    {
+        if (sender is Visual visual)
+        {
+            // The message is built here, against the sender, for the same reason the pointer
+            // handlers above do it: the class does not call the generated InitializeComponent, so
+            // its x:Name fields are never assigned and reaching for the image by name would give
+            // null - which GetCurrentPoint accepts, silently returning coordinates relative to the
+            // window instead of to the preview.
+            WheelEventOccurred?.Invoke(e, new PointerEventMessage(visual, e));
         }
     }
 
@@ -212,5 +399,10 @@ public partial class PreviewControl : UserControl
         {
             GotoClick?.Invoke(Payload.Error);
         }
+    }
+
+    private void BuildClickHandler(object? sender, RoutedEventArgs e)
+    {
+        BuildClick?.Invoke();
     }
 }

@@ -207,6 +207,12 @@ namespace AvantGarde.Settings
         public bool ShowPin { get; set; } = !RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         /// <summary>
+        /// Gets or sets whether the preview host runs against a temporary copy of the build
+        /// output. See <see cref="Loading.RemoteLoader.IsShadowCopyEnabled"/>. Opt-in.
+        /// </summary>
+        public bool IsShadowCopy { get; set; }
+
+        /// <summary>
         /// Gets or sets whether window is maximized.
         /// </summary>
         public bool IsMaximized { get; set; }
@@ -310,6 +316,7 @@ namespace AvantGarde.Settings
             Height = other.Height;
             ShowWelcome = other.ShowWelcome;
             ShowPin = other.ShowPin;
+            IsShadowCopy = other.IsShadowCopy;
             SolutionDefaults = other.SolutionDefaults;
             RecentFiles = other.RecentFiles;
         }

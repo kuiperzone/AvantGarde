@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
@@ -44,9 +44,6 @@ public partial class ProjectWindow : AvantWindow
         _timer = new(TimeSpan.FromSeconds(1), DispatcherPriority.Normal, UpdateTimerHandler);
         Closed += WindowClosedHandler;
 
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     /// <summary>

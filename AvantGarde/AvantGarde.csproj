@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
@@ -37,15 +37,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.3.2" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.3.2" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.2" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.2" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.2" />
+		<PackageReference Include="Avalonia" />
+		<PackageReference Include="Avalonia.Desktop" />
+		<PackageReference Include="Avalonia.Fonts.Inter" />
+		<PackageReference Include="Avalonia.Themes.Fluent" />
+		<PackageReference Include="ReactiveUI.Avalonia" />
+		<PackageReference Include="Avalonia.Remote.Protocol" />
 
-		<PackageReference Include="Clowd.Clipboard.Avalonia" Version="1.1.4" />
+		<!--Clowd.Clipboard.Avalonia was dropped at the Avalonia 12 bump. It existed solely to put a
+		bitmap on the Windows clipboard; Avalonia 12 does that cross-platform via
+		IClipboard.SetBitmapAsync. See Views/PreviewPane.CopyToClipboard.-->
 
-		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.2" />
+		<!--Avalonia.Diagnostics (DevTools) was dropped at the Avalonia 12 bump. It has no 12.x
+		release - the latest is 11.3.18 - and no replacement package ships in its place. The
+		this.AttachDevTools() calls it backed were removed with it.-->
 	</ItemGroup>
+
 </Project>

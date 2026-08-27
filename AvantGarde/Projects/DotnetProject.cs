@@ -32,10 +32,16 @@ public sealed class DotnetProject : PathItem
         { IgnoreInaccessible = true, RecurseSubdirectories = true,
         ReturnSpecialDirectories = false, MatchType = MatchType.Simple };
 
+    private readonly object _evalSync = new();
+
     private int _hashCode;
     private int _propHash;
     private bool _refreshed;
     private bool _customOverride;
+    private MsBuildResult? _evaluation;
+    private MsBuildResult? _appliedEvaluation;
+    private int _evaluationStamp;
+    private bool _evaluating;
 
     static DotnetProject()
     {
@@ -151,6 +157,114 @@ public sealed class DotnetProject : PathItem
     public ProjectError? Error { get; private set; }
 
     /// <summary>
+    /// Gets the fully qualified path of the designer host serving this project, as stated by
+    /// MSBuild. The value is null until <see cref="Evaluate"/> has succeeded, where the project
+    /// does not reference Avalonia, or where the stated host does not exist on disk. It supersedes
+    /// the NuGet cache lookup in <see cref="Loading.RemoteLoader.FindDesignerHost"/>, which cannot
+    /// see a custom globalPackagesFolder and has to be told a version.
+    /// </summary>
+    public string? PreviewerToolPath { get; private set; }
+
+    /// <summary>
+    /// Gets whether the project has been restored, which is known only once <see cref="Evaluate"/>
+    /// has run. The initial value is true, so that an unevaluated project does not report a restore
+    /// error it has no evidence for.
+    /// </summary>
+    public bool IsRestored { get; private set; } = true;
+
+    /// <summary>
+    /// Gets the result of the last MSBuild evaluation, or null if none has completed.
+    /// </summary>
+    public MsBuildResult? Evaluation
+    {
+        get { lock (_evalSync) { return _evaluation; } }
+    }
+
+    /// <summary>
+    /// Gets whether an evaluation is in progress. The UI shows a resolving state for this.
+    /// </summary>
+    public bool IsEvaluating
+    {
+        get { lock (_evalSync) { return _evaluating; } }
+    }
+
+    /// <summary>
+    /// Gets whether <see cref="Evaluate"/> should be called, i.e. it has never run, or one of the
+    /// files feeding it has changed since it did.
+    /// </summary>
+    public bool NeedsEvaluation
+    {
+        get
+        {
+            lock (_evalSync)
+            {
+                if (_evaluating)
+                {
+                    return false;
+                }
+
+                return _evaluation == null || _evaluationStamp != GetEvaluationStamp();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Marks the project as awaiting evaluation where it needs one, and returns whether it does.
+    /// Call on the UI thread ahead of queueing the work, so that the resolving state is visible
+    /// from the moment it is queued rather than from when a worker picks it up. Otherwise the
+    /// project briefly reports the stale XML-derived answer, which is the visible flicker on open
+    /// that the whole ordering exists to avoid. <see cref="Evaluate"/> clears the state.
+    /// </summary>
+    public bool BeginEvaluation()
+    {
+        lock (_evalSync)
+        {
+            if (_evaluating || (_evaluation != null && _evaluationStamp == GetEvaluationStamp()))
+            {
+                return false;
+            }
+
+            _evaluating = true;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Runs an MSBuild evaluation and caches the result. It blocks for the duration of an out of
+    /// process MSBuild run - typically half a second, but seconds on a cold SDK - and so must never
+    /// be called from the UI thread or from the refresh path. It does not throw. A subsequent
+    /// <see cref="Refresh"/> applies the result.
+    /// </summary>
+    public void Evaluate()
+    {
+        int stamp;
+
+        lock (_evalSync)
+        {
+            stamp = GetEvaluationStamp();
+            _evaluating = true;
+        }
+
+        try
+        {
+            var rslt = MsBuildEvaluator.Evaluate(FullName, Solution.Properties.Build);
+
+            lock (_evalSync)
+            {
+                _evaluation = rslt;
+                _evaluationStamp = stamp;
+            }
+        }
+        finally
+        {
+            lock (_evalSync)
+            {
+                _evaluating = false;
+            }
+        }
+    }
+
+    /// <summary>
     /// Overrides <see cref="PathItem.Refresh"/>. Updates <see cref="TargetFramework"/> and
     /// <see cref="TargetAssembly"/>. It also returns true if the assembly dll file changes.
     /// </summary>
@@ -159,10 +273,18 @@ public sealed class DotnetProject : PathItem
         ProjectError? error = null;
         bool changed = base.Refresh();
 
-        if (changed || !_refreshed)
+        var evaluation = Evaluation;
+
+        if (changed || !_refreshed || evaluation != _appliedEvaluation)
         {
             changed = true;
             error = ParseProject();
+
+            // MSBuild wins over the XML parse wherever it has an answer. The parse is not a fast
+            // path that this later overrides - it is the fallback for a project that has not been,
+            // or cannot be, evaluated.
+            _appliedEvaluation = evaluation;
+            error = ApplyEvaluation(evaluation) ?? error;
         }
 
         bool newCustom = false;
@@ -376,6 +498,103 @@ public sealed class DotnetProject : PathItem
         }
     }
 
+    /// <summary>
+    /// Applies an MSBuild evaluation over the values obtained from the project XML. Returns an
+    /// error where the evaluation itself failed, otherwise null.
+    /// </summary>
+    private ProjectError? ApplyEvaluation(MsBuildResult? evaluation)
+    {
+        PreviewerToolPath = null;
+        IsRestored = true;
+
+        if (evaluation == null)
+        {
+            return null;
+        }
+
+        if (!evaluation.IsSuccess)
+        {
+            return new ProjectError(this, evaluation.Message ?? "Cannot evaluate project", evaluation.Detail);
+        }
+
+        var value = evaluation.GetPropertyOrNull(MsBuildEvaluator.TargetFrameworkProperty);
+
+        if (value != null)
+        {
+            // The case that motivated all of this: a TargetFramework declared in
+            // Directory.Build.props is invisible to the XML parse, leaving the project unusable.
+            TargetFramework = value;
+        }
+
+        value = evaluation.GetPropertyOrNull(MsBuildEvaluator.OutputTypeProperty);
+
+        if (value != null)
+        {
+            OutputType = value;
+        }
+
+        var assets = evaluation.GetPropertyOrNull(MsBuildEvaluator.ProjectAssetsFileProperty);
+
+        if (assets != null)
+        {
+            // The property is defined whether or not restore has run, so the file is the evidence.
+            IsRestored = File.Exists(assets);
+        }
+
+        var tool = MsBuildEvaluator.NormalizePath(
+            evaluation.GetPropertyOrNull(MsBuildEvaluator.PreviewerToolPathProperty));
+
+        if (tool != null && File.Exists(tool))
+        {
+            PreviewerToolPath = tool;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Returns a hash of everything that can change what an MSBuild evaluation would answer.
+    /// </summary>
+    private int GetEvaluationStamp()
+    {
+        var hash = HashCode.Combine(Solution.Properties.Build, GetWriteStamp(FullName));
+
+        // Directory.Build.props and Directory.Packages.props can sit at any level above the
+        // project, and either can supply TargetFramework or the Avalonia version.
+        var root = Solution.GetFileInfo().Directory?.FullName;
+        var current = GetFileInfo().Directory;
+
+        for (int n = 0; n < 8 && current != null; ++n)
+        {
+            hash = HashCode.Combine(hash,
+                GetWriteStamp(Path.Combine(current.FullName, "Directory.Build.props")),
+                GetWriteStamp(Path.Combine(current.FullName, "Directory.Packages.props")));
+
+            if (root != null && current.FullName.Equals(root, PathItem.PlatformComparison))
+            {
+                break;
+            }
+
+            current = current.Parent;
+        }
+
+        return hash;
+    }
+
+    private static long GetWriteStamp(string path)
+    {
+        try
+        {
+            var info = new FileInfo(path);
+            return info.Exists ? info.LastWriteTimeUtc.Ticks : 0;
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+            return 0;
+        }
+    }
+
     private ProjectError? CheckForError()
     {
         if (!Exists)
@@ -383,9 +602,21 @@ public sealed class DotnetProject : PathItem
             return new ProjectError(this, "Project not found", FullName);
         }
 
+        if (!IsRestored)
+        {
+            // Distinct from "assembly not found", and the actionable root cause of it - an
+            // unrestored project also has no designer host in the NuGet cache to find.
+            return new ProjectError(this, "Project not restored", "Run 'dotnet restore' on the project");
+        }
+
         if (AssemblyPath == null || !AssemblyPath.Exists)
         {
-            return new ProjectError(this, Solution.Properties.Build + " assembly not found", "Build project or set custom path");
+            // The one error AvantGarde can act on itself. Everything else here needs the user to
+            // change something first, so only this one carries the build affordance - and not even
+            // this one where the path came from AssemblyOverride, since building the project will
+            // not put a file where the user pointed.
+            return new ProjectError(this, Solution.Properties.Build + " assembly not found",
+                "Build project or set custom path", !_customOverride);
         }
 
         if (AssemblyPath.Kind != PathKind.Assembly)
@@ -398,8 +629,11 @@ public sealed class DotnetProject : PathItem
             return new ProjectError(this, "TargetFramework not found", "Project must specifiy a TargetFramework");
         }
 
-        if (string.IsNullOrEmpty(AvaloniaVersion) && Properties.AvaloniaOverride == null)
+        if (PreviewerToolPath == null && string.IsNullOrEmpty(AvaloniaVersion) && Properties.AvaloniaOverride == null)
         {
+            // A resolved previewer tool path is proof enough on its own. It covers the projects the
+            // XML parse cannot read a version from - central package management without a version
+            // attribute, or a version supplied by an import.
             return new ProjectError(this, "Avalonia Package not found", "Project must reference Avalonia to preview controls");
         }
 
@@ -414,6 +648,21 @@ public sealed class DotnetProject : PathItem
     private PathItem? FindTargetAssembly(string? framework, BuildKind build)
     {
         Debug.WriteLine($"{nameof(FindTargetAssembly)} {framework}, {build}");
+
+        var target = MsBuildEvaluator.NormalizePath(
+            _appliedEvaluation?.GetPropertyOrNull(MsBuildEvaluator.TargetPathProperty));
+
+        if (target != null)
+        {
+            // MSBuild states the output path outright, so the directory walk below - which exists
+            // to guess between bin/, artifacts/ and runtime-identifier layouts - is not needed. If
+            // the stated assembly is absent the project simply has not been built; do not fall
+            // back to searching, which can turn up a stale assembly from another configuration.
+            Debug.WriteLine("TargetPath: " + target);
+            var item = new PathItem(target, PathKind.AnyFile);
+            item.Refresh();
+            return item.Exists ? item : null;
+        }
 
         if (string.IsNullOrEmpty(framework))
         {
@@ -586,11 +835,12 @@ public sealed class DotnetProject : PathItem
                     return null;
                 }
 
-                var sol = dir.GetDirectoryInfo().EnumerateFiles("*.sln", opts);
+                // "*.sln*" also covers the .slnx format.
+                var sol = dir.GetDirectoryInfo().EnumerateFiles("*.sln*", opts);
 
                 if (sol.Any())
                 {
-                    Debug.WriteLine("Found *.sln file - terminate here");
+                    Debug.WriteLine("Found solution file - terminate here");
                     return null;
                 }
 

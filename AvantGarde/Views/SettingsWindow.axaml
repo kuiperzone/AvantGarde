@@ -115,12 +115,24 @@
                     ToolTip.Tip="Monospace font family"
                 />
 
-                <CheckBox Grid.Column="0" Grid.Row="7"
-                    Name="WelcomeCheck"
-                    VerticalAlignment="Center"
-                    Content="Show Welcome"
-                    ToolTip.Tip="Show open button in explorer when no solution"
-                />
+                <StackPanel Grid.Column="0" Grid.Row="7"
+                    Orientation="Vertical"
+                    Spacing="6"
+                    VerticalAlignment="Center">
+
+                    <CheckBox
+                        Name="WelcomeCheck"
+                        Content="Show Welcome"
+                        ToolTip.Tip="Show open button in explorer when no solution"
+                    />
+
+                    <CheckBox
+                        Name="ShadowCheck"
+                        Content="Shadow Copy"
+                        ToolTip.Tip="Run the preview from a temporary copy of the build output, so that building does not stop the preview"
+                    />
+
+                </StackPanel>
 
                 <CheckBox Grid.Column="2" Grid.Row="7"
                     Name="PinCheck"

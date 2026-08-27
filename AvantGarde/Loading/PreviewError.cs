@@ -34,6 +34,15 @@ public class PreviewError
     }
 
     /// <summary>
+    /// Constructor which carries a project error through to the preview.
+    /// </summary>
+    public PreviewError(Projects.ProjectError error)
+    {
+        Message = error.Message;
+        CanBuild = error.IsBuildable;
+    }
+
+    /// <summary>
     /// Gets the message.
     /// </summary>
     public string Message { get; }
@@ -47,6 +56,12 @@ public class PreviewError
     /// Gets the line position. A value of 0 or less is NA.
     /// </summary>
     public int LinePos { get; }
+
+    /// <summary>
+    /// Gets whether building the project would clear the error, i.e. whether the preview should
+    /// offer to build. See <see cref="Projects.ProjectError.IsBuildable"/>.
+    /// </summary>
+    public bool CanBuild { get; }
 
     /// <summary>
     /// Returns <see cref="Message"/>.

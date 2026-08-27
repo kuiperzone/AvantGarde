@@ -381,6 +381,7 @@ public class PathItem
         switch (ext)
         {
             case ".sln":
+            case ".slnx":
             case ".csproj":
             case ".fsproj":
                 return PathKind.Solution;

@@ -21,6 +21,7 @@ using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using AvantGarde.Utility;
 
@@ -179,7 +180,9 @@ public class CodeTextBox : TextBox
         }
     }
 
-    private void GotFocusHandler(object? sender, GotFocusEventArgs e)
+    // Avalonia 12 renamed GotFocusEventArgs to FocusChangedEventArgs, which now serves both
+    // the GotFocus and LostFocus events.
+    private void GotFocusHandler(object? sender, FocusChangedEventArgs e)
     {
     }
 

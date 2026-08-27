@@ -26,11 +26,12 @@ public class ProjectError
     /// <summary>
     /// Constructor.
     /// </summary>
-    public ProjectError(DotnetProject project, string message, string? details = null)
+    public ProjectError(DotnetProject project, string message, string? details = null, bool isBuildable = false)
     {
         ProjectName = project.ProjectName;
         Message = message;
         Details = details;
+        IsBuildable = isBuildable;
     }
 
     public ProjectError(string message, string? details = null)
@@ -54,6 +55,13 @@ public class ProjectError
     /// Gets the details string.
     /// </summary>
     public string? Details { get; }
+
+    /// <summary>
+    /// Gets whether building the project is what would clear the error. Only the constructor taking
+    /// a project sets it, so the transient messages the UI raises against no project in particular
+    /// ("Resolving project...", "Please wait...") cannot acquire a Build button by accident.
+    /// </summary>
+    public bool IsBuildable { get; }
 
     /// <summary>
     /// Returns <see cref="Message"/>.

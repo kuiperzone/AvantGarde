@@ -7,7 +7,10 @@
     xmlns:vm="using:AvantGarde.ViewModels"
     x:DataType="vm:PreviewControlViewModel"
 
-    x:Class="AvantGarde.Views.PreviewControl">
+    x:Class="AvantGarde.Views.PreviewControl"
+
+    Focusable="True"
+    FocusAdorner="{x:Null}">
 
     <Grid ColumnDefinitions="Auto Auto Auto" RowDefinitions="Auto Auto, Auto Auto">
 
@@ -57,6 +60,7 @@
                 PointerMoved="PreviewPointerMovedHandler"
                 PointerPressed="PreviewPointerPressedHandler"
                 PointerReleased="PreviewPointerReleasedHandler"
+                PointerWheelChanged="PreviewPointerWheelHandler"
             />
 
         </Grid>
@@ -98,13 +102,26 @@
             MaxWidth="{Binding MaxMessageWidth}"
         />
 
-        <Button Grid.Column="1" Grid.Row="3"
+        <StackPanel Grid.Column="1" Grid.Row="3"
             Margin="0 16 0 0"
-            Content="Goto ..."
-            HorizontalAlignment="Center"
-            IsVisible="{Binding HasErrorLocation}"
-            Click="GotoClickHandler"
-        />
+            Orientation="Horizontal"
+            Spacing="8"
+            HorizontalAlignment="Center">
+
+            <Button
+                Content="Goto ..."
+                IsVisible="{Binding HasErrorLocation}"
+                Click="GotoClickHandler"
+            />
+
+            <Button
+                Content="Build"
+                IsVisible="{Binding HasBuildAction}"
+                IsEnabled="{Binding IsBuildEnabled}"
+                Click="BuildClickHandler"
+            />
+
+        </StackPanel>
 
     </Grid>
 

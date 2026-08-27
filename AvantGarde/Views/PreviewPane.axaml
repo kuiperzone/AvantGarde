@@ -24,9 +24,11 @@
             IsVisible="{Binding !IsPlainTextViewable}">
 
             <ScrollViewer Grid.Row="0"
+                Name="PreviewScroll"
                 Background="{Binding Background}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SizeChanged="PreviewScrollSizeChangedHandler">
 
                 <views:PreviewControl Name="PreviewControl"
                     HorizontalAlignment="Center"

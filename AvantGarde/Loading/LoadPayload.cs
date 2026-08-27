@@ -82,6 +82,7 @@ public class LoadPayload
                     AppAssemblyHashCode = app.AssemblyPath?.GetHashCode() ?? 0;
                     AppTargetFramework = app.TargetFramework;
                     AppAvaloniaVersion = !string.IsNullOrEmpty(app.AvaloniaVersion) ? app.AvaloniaVersion : app.Properties.AvaloniaOverride;
+                    AppPreviewerToolPath = app.PreviewerToolPath;
                     AppDepsPath = ChangeExtension(AppAssembly, ".deps.json");
                     AppConfigPath = ChangeExtension(AppAssembly, ".runtimeconfig.json");
                 }
@@ -157,9 +158,16 @@ public class LoadPayload
     public string? AppTargetFramework { get; }
 
     /// <summary>
-    /// Gets the application Avalonia framework version.
+    /// Gets the application Avalonia framework version. Used only where
+    /// <see cref="AppPreviewerToolPath"/> is null.
     /// </summary>
     public string? AppAvaloniaVersion { get; }
+
+    /// <summary>
+    /// Gets the designer host path stated by MSBuild for the application project, or null where the
+    /// project has not been evaluated. This is the primary means of locating the host.
+    /// </summary>
+    public string? AppPreviewerToolPath { get; }
 
     /// <summary>
     /// Gets the assembly ".deps.json" file path.

@@ -1,12 +1,14 @@
 <img src="Media/Github-banner.png" style="width:50%;max-width:1200px;margin-bottom:4em;"/>
 
-# Avant Garde #
+# ⌘ Avant Garde macOS #
 
 **Avant Garde** is a cross-platform XAML previewer for the C# [Avalonia Framework](https://github.com/AvaloniaUI/Avalonia).
 It operates as a standalone application that works with your IDE, rather than as an extension to an IDE. This means that
 Avant Garde is completely IDE agnostic.
 
-**[DOWNLOAD & INSTALL](https://github.com/kuiperzone/AvantGarde/releases/latest)**
+**[DOWNLOAD & INSTALL](https://github.com/saiitanaa/AvantGarde-macOS/releases)**
+
+**[ORIGINAL PROJECT](https://github.com/kuiperzone/AvantGarde)**
 
 Avant Garde is licensed under GPLv3 or later.
 
@@ -15,17 +17,7 @@ applications.
 
 *If you like this project, don't forget to like and share. If you don't like it, best keep that to yourself.*
 
-
-## Linux & Windows
-[Downloads](https://github.com/kuiperzone/AvantGarde/releases/latest)
-include AppImages, deb and RPMs for **Linux**, and a **Setup Installer** for Windows.
-
-### MacOS? ###
-Avant Garde is not actively supported or tested on MacOS, although there are reports of it
-[working fine](https://github.com/kuiperzone/AvantGarde/discussions/16). However, you will need to clone and build
-from source.
-
-<img src="Media/Screenshot-main.png" style="width:75%;max-width:1200px;margin-bottom:2em;"/>
+<img width="912" height="740" alt="image" src="https://github.com/user-attachments/assets/a5addadf-1a9e-49aa-8e46-4eb46052f583" />
 
 
 ## Features

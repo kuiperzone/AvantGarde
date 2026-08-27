@@ -44,6 +44,8 @@ public class PreviewControlViewModel : AvantViewModel
     private string? _heightText;
     private string? _messageText;
     private bool _hasErrorLocation;
+    private bool _hasBuildAction;
+    private bool _isBuildEnabled = true;
 
     static PreviewControlViewModel()
     {
@@ -289,6 +291,26 @@ public class PreviewControlViewModel : AvantViewModel
     {
         get { return _hasErrorLocation; }
         set { this.RaiseAndSetIfChanged(ref _hasErrorLocation, value, nameof(HasErrorLocation)); }
+    }
+
+    /// <summary>
+    /// Gets or sets whether the error can be cleared by building the project, i.e. whether the
+    /// Build button is shown.
+    /// </summary>
+    public bool HasBuildAction
+    {
+        get { return _hasBuildAction; }
+        set { this.RaiseAndSetIfChanged(ref _hasBuildAction, value, nameof(HasBuildAction)); }
+    }
+
+    /// <summary>
+    /// Gets or sets whether the Build button is enabled. False while a build is running, as the
+    /// error and its button remain on screen for the duration.
+    /// </summary>
+    public bool IsBuildEnabled
+    {
+        get { return _isBuildEnabled; }
+        set { this.RaiseAndSetIfChanged(ref _isBuildEnabled, value, nameof(IsBuildEnabled)); }
     }
 
 }

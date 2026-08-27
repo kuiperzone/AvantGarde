@@ -32,7 +32,8 @@ namespace AvantGarde.Loading;
 public sealed class PointerEventMessage
 {
     private readonly Point _position;
-    private readonly List<ProtocolModifiers> _modifiers = new();
+    private readonly Vector _delta;
+    private readonly ProtocolModifiers[] _modifiers;
     private readonly ProtocolButton _button = ProtocolButton.None;
 
     /// <summary>
@@ -41,7 +42,7 @@ public sealed class PointerEventMessage
     public PointerEventMessage(Visual sender, PointerEventArgs e)
     {
         IsMoved = true;
-        _position = GetModifiers(sender, e, _modifiers);
+        _position = GetPositionAndModifiers(sender, e, out _modifiers);
     }
 
     /// <summary>
@@ -50,7 +51,7 @@ public sealed class PointerEventMessage
     public PointerEventMessage(Visual sender, PointerPressedEventArgs e)
     {
         IsPressed = true;
-        _position = GetModifiers(sender, e, _modifiers);
+        _position = GetPositionAndModifiers(sender, e, out _modifiers);
         _button = GetPressButton(sender, e);
     }
 
@@ -60,8 +61,18 @@ public sealed class PointerEventMessage
     public PointerEventMessage(Visual sender, PointerReleasedEventArgs e)
     {
         IsReleased = true;
-        _position = GetModifiers(sender, e, _modifiers);
+        _position = GetPositionAndModifiers(sender, e, out _modifiers);
         _button = GetReleaseButton(e);
+    }
+
+    /// <summary>
+    /// Constructor. Wheel scrolled.
+    /// </summary>
+    public PointerEventMessage(Visual sender, PointerWheelEventArgs e)
+    {
+        IsScrolled = true;
+        _position = GetPositionAndModifiers(sender, e, out _modifiers);
+        _delta = e.Delta;
     }
 
     /// <summary>
@@ -78,6 +89,11 @@ public sealed class PointerEventMessage
     /// Gets whether is released event.
     /// </summary>
     public readonly bool IsReleased;
+
+    /// <summary>
+    /// Gets whether is wheel scroll event.
+    /// </summary>
+    public readonly bool IsScrolled;
 
     /// <summary>
     /// Gets whether is press or release event.
@@ -119,11 +135,23 @@ public sealed class PointerEventMessage
             msg = released;
         }
         else
+        if (IsScrolled)
+        {
+            var scrolled = new ScrollEventMessage();
+
+            // Not divided by the scale. The delta is in wheel notches on both sides of the wire -
+            // Avalonia's own wheel handling multiplies it by the scrollable's line height - whereas
+            // X and Y below are positions in the guest's own dips and do need dividing.
+            scrolled.DeltaX = _delta.X;
+            scrolled.DeltaY = _delta.Y;
+            msg = scrolled;
+        }
+        else
         {
             throw new ArgumentException("Invalid pointer type code");
         }
 
-        msg.Modifiers = _modifiers.ToArray();
+        msg.Modifiers = _modifiers;
         msg.X = _position.X / scale;
         msg.Y = _position.Y / scale;
 
@@ -151,6 +179,13 @@ public sealed class PointerEventMessage
         if (IsReleased)
         {
             sb.Append(nameof(IsReleased));
+        }
+        else
+        if (IsScrolled)
+        {
+            sb.Append(nameof(IsScrolled));
+            sb.Append(' ');
+            sb.Append(_delta);
         }
 
         sb.Append(", ");
@@ -198,42 +233,12 @@ public sealed class PointerEventMessage
         return ProtocolButton.None;
     }
 
-    private static Point GetModifiers(Visual sender, PointerEventArgs e, List<ProtocolModifiers> mods)
+    private static Point GetPositionAndModifiers(Visual sender, PointerEventArgs e, out ProtocolModifiers[] mods)
     {
         var p = e.GetCurrentPoint(sender);
 
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
-        {
-            mods.Add(ProtocolModifiers.Alt);
-        }
-
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
-        {
-            mods.Add(ProtocolModifiers.Control);
-        }
-
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-        {
-            mods.Add(ProtocolModifiers.Shift);
-        }
-
-        // KeyModifiers.Meta?
-        // ProtocolModifiers.Windows?
-
-        if (p.Properties.IsLeftButtonPressed)
-        {
-            mods.Add(ProtocolModifiers.LeftMouseButton);
-        }
-
-        if (p.Properties.IsRightButtonPressed)
-        {
-            mods.Add(ProtocolModifiers.RightMouseButton);
-        }
-
-        if (p.Properties.IsMiddleButtonPressed)
-        {
-            mods.Add(ProtocolModifiers.MiddleMouseButton);
-        }
+        mods = InputMapper.GetModifiers(e.KeyModifiers, p.Properties.IsLeftButtonPressed,
+            p.Properties.IsRightButtonPressed, p.Properties.IsMiddleButtonPressed);
 
         return p.Position;
     }

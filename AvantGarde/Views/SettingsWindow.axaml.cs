@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------------
 // PROJECT   : Avant Garde
 // COPYRIGHT : Andy Thomas (C) 2022-25
 // LICENSE   : GPL-3.0-or-later
@@ -45,9 +45,6 @@ public partial class SettingsWindow : AvantWindow
 
         PreviewCombo.ItemsSource = Enum.GetValues(typeof(PreviewWindowTheme));
         PreviewCombo.SelectedItem = PreviewWindowTheme.DarkGray;
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     /// <summary>
@@ -78,6 +75,7 @@ public partial class SettingsWindow : AvantWindow
         PreviewCombo.SelectedItem = settings.PreviewTheme;
         WelcomeCheck.IsChecked = settings.ShowWelcome;
         PinCheck.IsChecked = settings.ShowPin;
+        ShadowCheck.IsChecked = settings.IsShadowCopy;
     }
 
     private void ResetClickHandler(object? sender, RoutedEventArgs e)
@@ -116,6 +114,7 @@ public partial class SettingsWindow : AvantWindow
             Settings.PreviewTheme = (PreviewWindowTheme?)PreviewCombo.SelectedItem ?? PreviewWindowTheme.DarkGray;
             Settings.ShowWelcome = WelcomeCheck.IsChecked == true;
             Settings.ShowPin = PinCheck.IsChecked == true;
+            Settings.IsShadowCopy = ShadowCheck.IsChecked == true;
             Debug.WriteLine(Settings.PreviewTheme);
         }
 

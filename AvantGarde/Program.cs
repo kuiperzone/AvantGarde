@@ -18,7 +18,7 @@
 
 using System.Reflection;
 using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using AvantGarde.Utility;
 
 namespace AvantGarde;
@@ -53,7 +53,7 @@ class Program
                 var Indent = new string(' ', 4);
                 Console.WriteLine("Usage:");
                 Console.WriteLine(Indent + nameof(AvantGarde) + " [filename] [-options]");
-                Console.WriteLine(Indent + "where filename is path to .sln, .csproj, .fsproj, or any file within project");
+                Console.WriteLine(Indent + "where filename is path to .sln, .slnx, .csproj, .fsproj, or any file within project");
                 Console.WriteLine();
 
                 Console.WriteLine("Options:");
@@ -102,6 +102,10 @@ class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
     {
-        return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace().UseReactiveUI();
+        // ReactiveUI 24 (via ReactiveUI.Avalonia 12) requires an explicit builder action where the
+        // old parameterless UseReactiveUI() sufficed. WithAvalonia() registers the Avalonia platform
+        // services; no view registration is needed, as nothing here implements IViewFor.
+        return AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace()
+            .UseReactiveUI(builder => builder.WithAvalonia());
     }
 }

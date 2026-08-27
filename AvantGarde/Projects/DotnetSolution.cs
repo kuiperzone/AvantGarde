@@ -16,6 +16,9 @@
 // with Avant Garde. If not, see <https://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.Xml.Linq;
+
 namespace AvantGarde.Projects;
 
 /// <summary>
@@ -24,6 +27,7 @@ namespace AvantGarde.Projects;
 public sealed class DotnetSolution : PathItem
 {
     private readonly SortedList<string, DotnetProject> _projects = new();
+    private readonly List<DotnetProject> _pending = new();
     private int _hashCode;
 
     /// <summary>
@@ -38,7 +42,8 @@ public sealed class DotnetSolution : PathItem
     {
         AssertExists();
         AssertKind(PathKind.Solution);
-        IsSolutionFile = Extension == ".sln";
+        IsXmlSolutionFile = Extension == ".slnx";
+        IsSolutionFile = IsXmlSolutionFile || Extension == ".sln";
         SolutionName = Path.GetFileNameWithoutExtension(Name);
         Projects = _projects;
     }
@@ -50,9 +55,14 @@ public sealed class DotnetSolution : PathItem
     public string SolutionName { get; }
 
     /// <summary>
-    /// Gets whether the file has a ".sln" extension.
+    /// Gets whether the file is a solution rather than a single project, i.e. ".sln" or ".slnx".
     /// </summary>
     public bool IsSolutionFile { get; }
+
+    /// <summary>
+    /// Gets whether the file is the XML solution format, ".slnx".
+    /// </summary>
+    public bool IsXmlSolutionFile { get; }
 
     /// <summary>
     /// Gets the <see cref="SolutionProperties"/> instance. The instance will be shared with all child items.
@@ -133,6 +143,100 @@ public sealed class DotnetSolution : PathItem
     }
 
     /// <summary>
+    /// Gets whether any project wants an MSBuild evaluation. See <see cref="Evaluate"/>.
+    /// </summary>
+    public bool NeedsEvaluation
+    {
+        get
+        {
+            foreach (var item in Projects.Values)
+            {
+                if (item.NeedsEvaluation)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether an evaluation has been queued and not yet finished.
+    /// </summary>
+    public bool IsEvaluating
+    {
+        get { lock (_pending) { return _pending.Count != 0; } }
+    }
+
+    /// <summary>
+    /// Marks every project needing evaluation and returns true where there is work to do. Call on
+    /// the UI thread, then queue <see cref="Evaluate"/> on a worker.
+    /// </summary>
+    public bool BeginEvaluation()
+    {
+        lock (_pending)
+        {
+            if (_pending.Count != 0)
+            {
+                // A batch is already in flight. Starting a second one here would strand any project
+                // it marks: the running batch copied its own list before this call and clears the
+                // shared one when it ends, leaving the newly marked project flagged as evaluating
+                // with nothing left to run or clear it - permanently "Resolving project...", and
+                // never evaluated again. A stamp that moved meanwhile is picked up on the next
+                // tick, once the running batch has finished.
+                return false;
+            }
+
+            foreach (var item in Projects.Values)
+            {
+                if (item.BeginEvaluation())
+                {
+                    _pending.Add(item);
+                }
+            }
+
+            return _pending.Count != 0;
+        }
+    }
+
+    /// <summary>
+    /// Performs the work queued by <see cref="BeginEvaluation"/>. Each project is a separate out of
+    /// process MSBuild run of roughly half a second, so they go in parallel and the whole call must
+    /// be made from a worker thread, never the UI thread. A subsequent <see cref="Refresh"/>
+    /// applies the results.
+    /// </summary>
+    public void Evaluate()
+    {
+        DotnetProject[] pending;
+
+        lock (_pending)
+        {
+            pending = _pending.ToArray();
+        }
+
+        try
+        {
+            if (pending.Length == 1)
+            {
+                pending[0].Evaluate();
+            }
+            else
+            if (pending.Length != 0)
+            {
+                Parallel.ForEach(pending, item => { item.Evaluate(); });
+            }
+        }
+        finally
+        {
+            lock (_pending)
+            {
+                _pending.Clear();
+            }
+        }
+    }
+
+    /// <summary>
     /// Looks for an item in the solution. If name is a leaf name only, the first matching item is returned.
     /// </summary>
     public PathItem? Find(string? name)
@@ -163,6 +267,11 @@ public sealed class DotnetSolution : PathItem
 
     private HashSet<string> ReadProjectsInSolution()
     {
+        if (IsXmlSolutionFile)
+        {
+            return ReadProjectsInXmlSolution();
+        }
+
         int pos = 0;
         var text = ReadAsText();
         var pathSet = new HashSet<string>();
@@ -190,6 +299,60 @@ public sealed class DotnetSolution : PathItem
             }
 
             break;
+        }
+
+        return pathSet;
+    }
+
+    /// <summary>
+    /// Reads the ".slnx" format, which nests Project elements inside optional Folder elements:
+    /// &lt;Solution&gt;&lt;Folder Name="/src/"&gt;&lt;Project Path="src\App\App.csproj" /&gt;...
+    /// </summary>
+    private HashSet<string> ReadProjectsInXmlSolution()
+    {
+        var pathSet = new HashSet<string>();
+
+        try
+        {
+            var doc = XDocument.Parse(ReadAsText());
+
+            if (doc.Root == null)
+            {
+                return pathSet;
+            }
+
+            foreach (var item in doc.Root.Descendants())
+            {
+                if (!item.Name.LocalName.Equals("Project", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                foreach (var attrib in item.Attributes())
+                {
+                    if (!attrib.Name.LocalName.Equals("Path", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    var value = attrib.Value.Trim();
+
+                    if (value.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                        value.EndsWith(".fsproj", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var path = MakeFullName(value);
+
+                        if (path != null)
+                        {
+                            pathSet.Add(path);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Failed to parse solution: " + e.Message);
         }
 
         return pathSet;

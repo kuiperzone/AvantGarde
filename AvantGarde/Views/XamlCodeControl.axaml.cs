@@ -56,9 +56,21 @@ public partial class XamlCodeControl : UserControl
             if (_model.OutputText != value)
             {
                 _model.OutputText = value;
-                OutputBox.CaretIndex = int.MaxValue;
+
+                // Tail-follow at the start of the last line rather than its end. Build diagnostics
+                // carry an absolute project path, so scrolling to the end of one puts the
+                // "error CSxxxx" that explains the failure off the left edge of the box.
+                OutputBox.CaretIndex = GetLastLineStart(value);
             }
         }
+    }
+
+    /// <summary>
+    /// Selects the OUTPUT tab.
+    /// </summary>
+    public void ShowOutput()
+    {
+        _model.IsOutputChecked = true;
     }
 
     /// <summary>
@@ -115,6 +127,19 @@ public partial class XamlCodeControl : UserControl
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Returns the index of the first character of the last non-empty line, or 0.
+    /// </summary>
+    private static int GetLastLineStart(string? text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return 0;
+        }
+
+        return text.TrimEnd('\r', '\n').LastIndexOf('\n') + 1;
     }
 
     private string? GetSelectedText(bool focusedOnly = true)

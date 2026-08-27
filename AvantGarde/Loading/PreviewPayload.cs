@@ -84,6 +84,18 @@ public class PreviewPayload
     public double DesignHeight { get; set; } = double.NaN;
 
     /// <summary>
+    /// Gets or sets the natural width in dips, i.e. the width the designer host renders the control
+    /// at when the scale is 1.0. NaN until the host has stated it. Unlike <see cref="DesignWidth"/>
+    /// this is the size actually used, so it is correct for a control which declares no design size.
+    /// </summary>
+    public double NaturalWidth { get; set; } = double.NaN;
+
+    /// <summary>
+    /// Gets or sets the natural height in dips. See <see cref="NaturalWidth"/>.
+    /// </summary>
+    public double NaturalHeight { get; set; } = double.NaN;
+
+    /// <summary>
     /// Gets or sets width dimension.
     /// </summary>
     public ControlDimension Width { get; set; } = ControlDimension.Empty;
@@ -122,6 +134,8 @@ public class PreviewPayload
         clone.Source = Source;
         clone.DesignWidth = DesignWidth;
         clone.DesignHeight = DesignHeight;
+        clone.NaturalWidth = NaturalWidth;
+        clone.NaturalHeight = NaturalHeight;
         clone.Width = Width;
         clone.Height = Height;
         clone.Error = Error;

@@ -1,0 +1,27 @@
+<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Avalonia" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Desktop" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.0" />
+
+		<!--Avalonia's ReactiveUI integration was renamed from Avalonia.ReactiveUI to
+		ReactiveUI.Avalonia. The old ID stops at 11.3.8; 12.x ships under the new one.-->
+		<PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.0" />
+
+		<!--Referenced explicitly, rather than relied upon transitively, so that the version of the
+		remote designer protocol client is pinned deliberately. See AvantGarde/Loading/RemoteLoader.cs.-->
+		<PackageVersion Include="Avalonia.Remote.Protocol" Version="12.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageVersion Include="xunit" Version="2.9.3" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
+		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
+	</ItemGroup>
+</Project>
